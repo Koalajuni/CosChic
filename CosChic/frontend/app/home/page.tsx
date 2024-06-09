@@ -25,65 +25,6 @@ export default function Home() {
     ];
 
 
-    // const chgRefName = (e) => {
-    //     refModel.map((data, index) => {
-    //         if (index == e.target.value) {
-    //             console.log(data.image)
-    //             setRefImage(data.image)
-    //         }
-
-    //     })
-    //     setSelRef(e.target.value)
-    // }
-
-    // const messageClick = () => {
-    //     Swal.fire({
-    //         title: "에러!",
-    //         text: "월요일 오픈 예정",
-    //         icon: "error"
-    //     })
-    // }
-
-    //서버에서 ref 모델 정보 가져오는 비동기 함수 
-    // const getRefModel = async () => {
-    //     try {
-    //         setLoading(true);
-    //         const res = await axios.get('/v1/getmodellist/')
-    //         console.log(res.data.refModel)
-    //         console.log(res.data.code)
-    //         setRefModel(res.data.refModel)
-
-    //         console.log('refModel =' + refModel)
-
-    //         setLoading(false);
-
-    //         if (res.data.code != 1) {
-    //             Swal.fire({
-    //                 title: "에러!",
-    //                 text: "데이터 가져오기 실패",
-    //                 icon: "error"
-    //             })
-    //         }
-    //     }
-    //     catch (e) {
-    //         Swal.fire({
-    //             title: "에러!",
-    //             text: "서버에서 데이터 가져오기 실패",
-    //             icon: "error"
-    //         })
-    //     }
-    // }
-
-    // function plusHandle() {
-    //     setCnt(cnt + 1)
-    // }
-
-    // useEffect(() => {
-    //     console.log("useEffect 실행했습니다.")
-    //     getRefModel()
-    // }, []);
-
-
     return (
         <>
             <Header />

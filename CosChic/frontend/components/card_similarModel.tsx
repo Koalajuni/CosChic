@@ -1,9 +1,18 @@
+'use client';
+
 import React from 'react';
+import { useRouter } from 'next/navigation';
 
 const CardSimilarModel = ({ models }) => {
+    const router = useRouter();
+
+    const handleRedirect = () => {
+        router.push('/test-product');
+    };
+
     return (
         <div className="p-4">
-            <h2 className="text-2xl font-bold mb-4">추천 모델</h2>
+            <h2 className="text-2xl font-bold mb-4">비슷한 모델</h2>
             <div className="space-y-4">
                 {models.map((model, index) => (
                     <div key={index} className="flex items-center border-b pb-4">
@@ -28,6 +37,7 @@ const CardSimilarModel = ({ models }) => {
                                 <button
                                     type="button"
                                     className="text-white bg-red-500 hover:bg-red-600 font-medium rounded-lg text-sm px-4 py-2"
+                                    onClick={handleRedirect}
                                 >
                                     가상 화장 입히기
                                 </button>
