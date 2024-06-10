@@ -1,9 +1,16 @@
 
-from django.urls import path
-from . import views
-
+from django.urls import path,include
+from .views import index_views, camera_views
 
 urlpatterns = [
-    path('v1/', views.api_index, name='api_index'),
-    
+    # 일반
+    path('v1/', index_views.api_index, name='api_index'),
+    # path('v1/', include('api.urls')), 
+
+    # 카메라  views/camera_views 파일에 있는 함수 
+    path('v1/camera_video_feed', camera_views.video_feed, name='camera_video_feed'),
+
+
+    #프로필뷰 
+
 ]
