@@ -11,11 +11,13 @@ import CardSimilarModel from "@/components/card_similarModel"
 
 export default function Home() {
     const [loading, setLoading] = useState(false);
+    const [cameraOn, setCamera] = useState(false);
     const [cnt, setCnt] = useState(0);  // 상태를 바꾸기 위해 useState을 사용해야 한다. 
     const [refModel, setRefModel] = useState(null);
     // const [selfRef, setSelRef] = ("");
     const [refImage, setRefImage] = useState(-1);
     const [refId, setRefId] = useState(-1);
+    const baseUrl = 'http://127.0.0.1:8000/api/';
 
     const models = [
         { name: "브랜드 모델 A", lips: 28, eyes: 48, contour: 78, similarity: 78, product: "A" },
@@ -23,6 +25,15 @@ export default function Home() {
         { name: "브랜드 모델 C", lips: 32, eyes: 52, contour: 82, similarity: 70, product: "C" },
         // 나중에 DB되면 여기다 정보 가져올겁니다.
     ];
+
+    const cameraClick = () => {
+        if (!cameraOn) {
+            setCamera(true);
+        }
+        else {
+            setCamera(false);
+        }
+    }
 
 
     return (
@@ -43,12 +54,17 @@ export default function Home() {
                             <div className="flex flex-wrap -mx-4 -mb-10 text-center">
                                 <div className="sm:w-1/2 mb-10 px-4">
                                     <div className="relative rounded-lg h-[350px] overflow-hidden flex justify-center items-center bg-black bg-opacity-50">
-                                        <img
-                                            alt="content"
-                                            className="object-cover object-center w-3/4 filter blur-md"
-                                            src="https://pds.joongang.co.kr/news/component/htmlphoto_mmdata/202306/04/138bdfca-3e86-4c09-9632-d22df52a0484.jpg"
-                                        />
+                                        {cameraOn ?
+                                            (<img className="object-cover object-center rounded" alt="hero" src={`${baseUrl}/v1/camera_video_feed`} />)
+                                            :
+                                            (<img
+                                                alt="content"
+                                                className="object-cover object-center w-3/4 filter blur-md"
+                                                src="https://pds.joongang.co.kr/news/component/htmlphoto_mmdata/202306/04/138bdfca-3e86-4c09-9632-d22df52a0484.jpg"
+                                            />)
+                                        }
                                         <button
+                                            onClick={cameraClick}
                                             type="button"
                                             className="absolute text-gray-900 bg-white bg-opacity-90 hover:bg-gray-100 border border-gray-200 focus:ring-4 focus:outline-none focus:ring-gray-100 font-medium rounded-lg text-sm px-3.5 py-2.5 text-left inline-flex items-center w-1/2 justify-center dark:focus:ring-gray-600 dark:bg-gray-800 dark:border-gray-700 dark:text-white dark:hover:bg-gray-700"
                                         >
@@ -66,7 +82,7 @@ export default function Home() {
                                         <p className="mb-6 text-sm text-gray-500 dark:text-gray-300" id="file_input_help">SVG, PNG, JPG or GIF (MAX. 800x400px).</p>
                                     </div>
                                     <div className="relative mb-4 flex">
-                                        <button type="button" className="text-gray-900 bg-white hover:bg-gray-100 border border-gray-200 focus:ring-4 focus:outline-none focus:ring-gray-100 font-medium rounded-lg text-sm px-3.5 py-2.5 text-left inline-flex items-center w-full dark:focus:ring-gray-600 dark:bg-gray-800 dark:border-gray-700 dark:text-white dark:hover:bg-gray-700">
+                                        <button onClick={cameraClick} type="button" className="text-gray-900 bg-white hover:bg-gray-100 border border-gray-200 focus:ring-4 focus:outline-none focus:ring-gray-100 font-medium rounded-lg text-sm px-3.5 py-2.5 text-left inline-flex items-center w-full dark:focus:ring-gray-600 dark:bg-gray-800 dark:border-gray-700 dark:text-white dark:hover:bg-gray-700">
                                             <img src="./icons/camera.png" alt="Icon" className="w-10 h- me-4 -ms-1" />
                                             카메라 사용하기
                                         </button>
