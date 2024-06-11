@@ -53,6 +53,7 @@ def api_sendimage(request):
 
 
 def video_feed(request):
+    print("someone requested the video_feed")
     return StreamingHttpResponse(
         stream(),
         content_type='multipart/x-mixed-replace; boundary=frame')
@@ -68,6 +69,7 @@ def stream():
 
     while True:
         ret, frame = cap.read()
+        frame = cv2.flip(frame,1)
         if not ret:
             print("cant find the camera")
             break
