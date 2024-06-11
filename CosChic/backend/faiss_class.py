@@ -4,13 +4,14 @@ from PIL import Image
 import faiss
 import face_recognition
 
-class CosChicPreprocessing:
+class CosChicFaiss:
     def __init__(self, dataset_path):
         self.dataset_path = dataset_path
         self.dataset_imgs = self.read_file(dataset_path)
         self.faceEncode = []
         self.img_paths = []
-
+    
+    # train
     def read_file(self, path):
         img_path = []
         for paths, subdirs, files in os.walk(path):
@@ -55,7 +56,8 @@ class CosChicPreprocessing:
         face_index.add(faceEncode)
         faiss.write_index(face_index, "/content/drive/MyDrive/datasets/CosChic_data/CosChic_model.bin")
         print("인덱스 학습이 완료되었습니다.")
-
+    
+    # test
     def detect_faces(self, img_path):
         img = face_recognition.load_image_file(img_path)
         test_face = face_recognition.face_locations(img)
@@ -75,9 +77,30 @@ class CosChicPreprocessing:
         face_rst = most_frequent(label)
         return face_rst[0]
 
+
+# 많이 나온 단어 확인
+def most_frequent(data):
+    count_list=[]
+    # count를 담을 리스트 변수 설정
+    for x in data:
+        count_list.append(data.count(x))
+
+        # append를 사용하여서 크기를 미리 정하지 않고 초기화 가능
+    return data[count_list.index(max(count_list))], max(count_list)
+
+
+
+
 # 예시 사용법
-preprocessor = CosChicPreprocessing('/content/drive/MyDrive/datasets/CosChic_data/dataset')
-preprocessor.preprocess_images()
-preprocessor.encode_faces()
-preprocessor.train_index()
-preprocessor.detect_faces('/content/drive/MyDrive/datasets/beautygan_web/media/src/source.jpg')
+
+# 학습결과
+#face_index = faiss.read_index('./pretrained/CosChic_model.bin')
+
+# 학습결과 정답 (y_train)
+# train_labels = np.load('./pretrained/CosChic_labels.npy')
+
+# preprocessor = CosChicPreprocessing('/content/drive/MyDrive/datasets/CosChic_data/dataset')
+# preprocessor.preprocess_images()
+# preprocessor.encode_faces()
+# preprocessor.train_index()
+# preprocessor.detect_faces('/content/drive/MyDrive/datasets/beautygan_web/media/src/source.jpg')
