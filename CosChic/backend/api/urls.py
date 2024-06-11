@@ -1,6 +1,6 @@
 
 from django.urls import path,include
-from .views import index_views, camera_views
+from .views import index_views, camera_views, profile_veiws
 
 urlpatterns = [
     # 일반
@@ -12,5 +12,7 @@ urlpatterns = [
 
 
     #프로필뷰 
-
+    path('v1/userdata', profile_veiws.api_userdata, name='api_userdata'),
+    path('v1/product', profile_veiws.api_product, name='api_product'),
+    path('v1/recommend', profile_veiws.api_recommend, name='api_recommend'),
 ]
