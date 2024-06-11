@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <title>사용자 프로필 및 유사 모델</title>
+    <style>
+        body {
+            background-color: #f3f4f6; /* Tailwind의 gray-100 */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+        }
+        .profile-card, .models-card {
+            background-color: transparent;
+            padding: 20px;
+            margin-bottom: 20px;
+            width: 100%;
+            max-width: 720px;
+        }
+        .models-card {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .model img {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            border: 2px solid #f00;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container mx-auto flex flex-col items-center">
+        <!-- 사용자 프로필 섹션 -->
+        <div class="profile-card text-center">
+            <img src="https://via.placeholder.com/150" alt="User Profile Image" class="w-24 h-24 rounded-full mx-auto mb-4">
+            <h2 class="text-2xl font-medium text-gray-900">사용자 프로필</h2>
+            <div class="text-left mt-4">
+                <h2 class="text-xl font-semibold mt-4 mb-2">이름</h2>
+                <p class="text-gray-700">여기에 이름을 작성하세요. 예를 들어, 이 박스는 특정 이름을 위한 것입니다.</p>
+                <h2 class="text-xl font-semibold mt-4 mb-2">나이</h2>
+                <p class="text-gray-700">여기에 나이를 작성하세요. 예를 들어, 이 박스는 특정 나이를 위한 것입니다.</p>
+                <h2 class="text-xl font-semibold mt-4 mb-2">설명</h2>
+                <p class="text-gray-700">여기에 설명을 작성하세요. 예를 들어, 이 박스는 특정 설명을 위한 것입니다.</p>
+            </div>
+        </div>
+
+        <!-- 유사 모델 섹션 -->
+        <div class="models-card">
+            <h2 class="text-xl font-semibold mt-4 mb-2">추가로 비슷한 모델</h2>
+            <div class="flex flex-wrap justify-center">
+                <div class="model text-center m-2">
+                    <img src="https://via.placeholder.com/100" alt="모델 A" class="w-20 h-20 rounded-full border-2 border-red-500 mb-2">
+                    <p>모델 A - 87%</p>
+                </div>
+                <div class="model text-center m-2">
+                    <img src="https://via.placeholder.com/100" alt="모델 B" class="w-20 h-20 rounded-full border-2 border-red-500 mb-2">
+                    <p>모델 B - 63%</p>
+                </div>
+                <div class="model text-center m-2">
+                    <img src="https://via.placeholder.com/100" alt="모델 C" class="w-20 h-20 rounded-full border-2 border-red-500 mb-2">
+                    <p>모델 C - 43%</p>
+                </div>
+                <div class="model text-center m-2">
+                    <img src="https://via.placeholder.com/100" alt="모델 D" class="w-20 h-20 rounded-full border-2 border-red-500 mb-2">
+                    <p>모델 D - 23%</p>
+                </div>
+                <div class="model text-center m-2">
+                    <img src="https://via.placeholder.com/100" alt="모델 E" class="w-20 h-20 rounded-full border-2 border-red-500 mb-2">
+                    <p>모델 E - 23%</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

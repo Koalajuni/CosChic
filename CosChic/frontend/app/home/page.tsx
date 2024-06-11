@@ -11,11 +11,14 @@ import CardSimilarModel from "@/components/card_similarModel"
 
 export default function Home() {
     const [loading, setLoading] = useState(false);
+    const [cameraOn, setCamera] = useState(false);
     const [cnt, setCnt] = useState(0);  // 상태를 바꾸기 위해 useState을 사용해야 한다. 
     const [refModel, setRefModel] = useState(null);
+    const isFaceAnalysisButtonDisabled = !cameraOn;
     // const [selfRef, setSelRef] = ("");
     const [refImage, setRefImage] = useState(-1);
     const [refId, setRefId] = useState(-1);
+    const baseUrl = 'http://127.0.0.1:8000/api';
 
     const models = [
         { name: "브랜드 모델 A", lips: 28, eyes: 48, contour: 78, similarity: 78, product: "A" },
@@ -24,64 +27,19 @@ export default function Home() {
         // 나중에 DB되면 여기다 정보 가져올겁니다.
     ];
 
+    const cameraClick = () => {
+        if (!cameraOn) {
+            setCamera(true);
+        }
+        else {
+            setCamera(false);
+        }
 
-    // const chgRefName = (e) => {
-    //     refModel.map((data, index) => {
-    //         if (index == e.target.value) {
-    //             console.log(data.image)
-    //             setRefImage(data.image)
-    //         }
-
-    //     })
-    //     setSelRef(e.target.value)
-    // }
-
-    // const messageClick = () => {
-    //     Swal.fire({
-    //         title: "에러!",
-    //         text: "월요일 오픈 예정",
-    //         icon: "error"
-    //     })
-    // }
-
-    //서버에서 ref 모델 정보 가져오는 비동기 함수 
-    // const getRefModel = async () => {
-    //     try {
-    //         setLoading(true);
-    //         const res = await axios.get('/v1/getmodellist/')
-    //         console.log(res.data.refModel)
-    //         console.log(res.data.code)
-    //         setRefModel(res.data.refModel)
-
-    //         console.log('refModel =' + refModel)
-
-    //         setLoading(false);
-
-    //         if (res.data.code != 1) {
-    //             Swal.fire({
-    //                 title: "에러!",
-    //                 text: "데이터 가져오기 실패",
-    //                 icon: "error"
-    //             })
-    //         }
-    //     }
-    //     catch (e) {
-    //         Swal.fire({
-    //             title: "에러!",
-    //             text: "서버에서 데이터 가져오기 실패",
-    //             icon: "error"
-    //         })
-    //     }
-    // }
-
-    // function plusHandle() {
-    //     setCnt(cnt + 1)
-    // }
-
-    // useEffect(() => {
-    //     console.log("useEffect 실행했습니다.")
-    //     getRefModel()
-    // }, []);
+        const isFaceAnalysisButtonDisabled = !cameraOn;
+        const buttonStyles = isFaceAnalysisButtonDisabled
+            ? "text-gray-500 bg-gray-200 cursor-not-allowed hover:bg-gray-200 focus:ring-0 focus:outline-none" // Disabled styles
+            : "text-gray-900 bg-white hover:bg-gray-100";
+    }
 
 
     return (
@@ -102,18 +60,29 @@ export default function Home() {
                             <div className="flex flex-wrap -mx-4 -mb-10 text-center">
                                 <div className="sm:w-1/2 mb-10 px-4">
                                     <div className="relative rounded-lg h-[350px] overflow-hidden flex justify-center items-center bg-black bg-opacity-50">
-                                        <img
-                                            alt="content"
-                                            className="object-cover object-center w-3/4 filter blur-md"
-                                            src="https://pds.joongang.co.kr/news/component/htmlphoto_mmdata/202306/04/138bdfca-3e86-4c09-9632-d22df52a0484.jpg"
-                                        />
-                                        <button
-                                            type="button"
-                                            className="absolute text-gray-900 bg-white bg-opacity-90 hover:bg-gray-100 border border-gray-200 focus:ring-4 focus:outline-none focus:ring-gray-100 font-medium rounded-lg text-sm px-3.5 py-2.5 text-left inline-flex items-center w-1/2 justify-center dark:focus:ring-gray-600 dark:bg-gray-800 dark:border-gray-700 dark:text-white dark:hover:bg-gray-700"
-                                        >
-                                            <img src="./icons/camera.png" alt="Icon" className="w-10 h-10 me-4 -ms-1" />
-                                            카메라 사용하기
-                                        </button>
+                                        {cameraOn ?
+                                            (<img className="object-cover object-center rounded" alt="hero" src={`${baseUrl}/v1/camera_video_feed`} />)
+                                            :
+                                            (<img
+                                                alt="content"
+                                                className="object-cover object-center w-3/4 filter blur-md"
+                                                src="https://pds.joongang.co.kr/news/component/htmlphoto_mmdata/202306/04/138bdfca-3e86-4c09-9632-d22df52a0484.jpg"
+                                            />
+                                            )
+                                        }
+                                        {cameraOn ? (<div>
+
+                                        </div>) : (
+                                            <button
+                                                onClick={cameraClick}
+                                                type="button"
+                                                className="absolute text-gray-900 bg-white bg-opacity-90 hover:bg-gray-100 border border-gray-200 focus:ring-4 focus:outline-none focus:ring-gray-100 font-medium rounded-lg text-sm px-3.5 py-2.5 text-left inline-flex items-center w-1/2 justify-center dark:focus:ring-gray-600 dark:bg-gray-800 dark:border-gray-700 dark:text-white dark:hover:bg-gray-700"
+                                            >
+                                                <img src="./icons/camera.png" alt="Icon" className="w-10 h-10 me-4 -ms-1" />
+                                                카메라 사용하기
+                                            </button>
+                                        )
+                                        }
                                     </div>
                                     <h4 className="title-font text-2xl font-small text-gray-900 mt-6 mb-3">홍길동</h4>
                                     <div className="relative mb-0 flex">
@@ -125,7 +94,7 @@ export default function Home() {
                                         <p className="mb-6 text-sm text-gray-500 dark:text-gray-300" id="file_input_help">SVG, PNG, JPG or GIF (MAX. 800x400px).</p>
                                     </div>
                                     <div className="relative mb-4 flex">
-                                        <button type="button" className="text-gray-900 bg-white hover:bg-gray-100 border border-gray-200 focus:ring-4 focus:outline-none focus:ring-gray-100 font-medium rounded-lg text-sm px-3.5 py-2.5 text-left inline-flex items-center w-full dark:focus:ring-gray-600 dark:bg-gray-800 dark:border-gray-700 dark:text-white dark:hover:bg-gray-700">
+                                        <button onClick={cameraClick} type="button" className="text-gray-900 bg-white hover:bg-gray-100 border border-gray-200 focus:ring-4 focus:outline-none focus:ring-gray-100 font-medium rounded-lg text-sm px-3.5 py-2.5 text-left inline-flex items-center w-full dark:focus:ring-gray-600 dark:bg-gray-800 dark:border-gray-700 dark:text-white dark:hover:bg-gray-700">
                                             <img src="./icons/camera.png" alt="Icon" className="w-10 h- me-4 -ms-1" />
                                             카메라 사용하기
                                         </button>
@@ -137,7 +106,11 @@ export default function Home() {
                                         <img alt="content" className="object-cover object-center w-full" src={refImage} />
                                     </div> */}
                                     <div className="relative mb-4 flex">
-                                        <button type="button" className="text-gray-900 bg-white hover:bg-gray-100 border border-gray-200 focus:ring-4 focus:outline-none focus:ring-gray-100 font-medium rounded-lg text-sm px-12 py-8 text-center inline-flex items-center dark:focus:ring-gray-600 dark:bg-gray-800 dark:border-gray-700 dark:text-white dark:hover:bg-gray-700">
+                                        <button
+                                            type="button"
+                                            className="text-gray-900 bg-white hover:bg-gray-100 border border-gray-200 focus:ring-4 focus:outline-none focus:ring-gray-100 font-medium rounded-lg text-sm px-12 py-8 text-center inline-flex items-center dark:focus:ring-gray-600 dark:bg-gray-800 dark:border-gray-700 dark:text-white dark:hover:bg-gray-700"
+                                            disabled={isFaceAnalysisButtonDisabled}
+                                        >
                                             <img src="./icons/facial-recognition.png" alt="Icon" className="w-10 h-8 me-2 -ms-1" />
                                             얼굴 분석하기
                                         </button>
