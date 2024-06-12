@@ -1,3 +1,4 @@
 .DS_Store
 backend/model/
 backend/.DS_Store
+.env
