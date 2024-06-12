@@ -28,6 +28,7 @@ export default function Home() {
     ];
 
     const cameraClick = () => {
+        
         if (!cameraOn) {
             setCamera(true);
         }
@@ -39,6 +40,21 @@ export default function Home() {
         const buttonStyles = isFaceAnalysisButtonDisabled
             ? "text-gray-500 bg-gray-200 cursor-not-allowed hover:bg-gray-200 focus:ring-0 focus:outline-none" // Disabled styles
             : "text-gray-900 bg-white hover:bg-gray-100";
+    }
+
+    const takePhoto = async () => {
+        try{
+            const response = await axios.post(`${baseUrl}/v1/camera_take_photo`, {
+                timeout : 30000,
+            }); 
+            if (response.status == 200){
+            setCamera(false);
+            console.log(response)
+            }
+        } catch(error){
+            console.error("Error taking photo:", error); // 콘솔에 상세 오류 메시지 출력
+        Swal.fire("Error", `사진 찍는데 실패했습니다.`, "error"); // 사용자에게 오류 메시지 표시
+        }
     }
 
 
@@ -85,20 +101,24 @@ export default function Home() {
                                         }
                                     </div>
                                     <h4 className="title-font text-2xl font-small text-gray-900 mt-6 mb-3">홍길동</h4>
-                                    <div className="relative mb-0 flex">
-                                        {/* <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white" for="file_input">사진 업로드</label> */}
-                                        {/* <input type="file" accept="image/png, image/gif, image/jpeg" name="name" className="flex-1 bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out mr-2" /> */}
-                                        <input className="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400" aria-describedby="file_input_help" id="file_input" type="file" />
-                                    </div>
-                                    <div>
-                                        <p className="mb-6 text-sm text-gray-500 dark:text-gray-300" id="file_input_help">SVG, PNG, JPG or GIF (MAX. 800x400px).</p>
-                                    </div>
                                     <div className="relative mb-4 flex">
                                         <button onClick={cameraClick} type="button" className="text-gray-900 bg-white hover:bg-gray-100 border border-gray-200 focus:ring-4 focus:outline-none focus:ring-gray-100 font-medium rounded-lg text-sm px-3.5 py-2.5 text-left inline-flex items-center w-full dark:focus:ring-gray-600 dark:bg-gray-800 dark:border-gray-700 dark:text-white dark:hover:bg-gray-700">
                                             <img src="./icons/camera.png" alt="Icon" className="w-10 h- me-4 -ms-1" />
                                             카메라 사용하기
                                         </button>
                                     </div>
+                                    <div>
+                                        <p className="mb-6 text-sm text-gray-500 dark:text-gray-300" id="file_input_help">또는</p>
+                                    </div>
+                                    <div className="relative mb-0 flex">
+                                        {/* <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white" for="file_input">사진 업로드</label> */}
+                                        {/* <input type="file" accept="image/png, image/gif, image/jpeg" name="name" className="flex-1 bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out mr-2" /> */}
+                                        <input className="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400" aria-describedby="file_input_help" id="file_input" type="file" />
+                                    </div>
+                                    <div>
+                                        <p className="mb-6 text-sm text-gray-500 dark:text-gray-300" id="file_input_help">SVG, PNG, JPG or GIF (MAX. 800x400px)</p>
+                                    </div>
+                                    
                                     {/* <button type="submit" href="image_result.html" className="flex mx-auto mt-6 text-white bg-indigo-500 border-0 py-2 px-5 focus:outline-none hover:bg-indigo-600 rounded">사진등록</button> */}
                                 </div>
                                 <div className="sm:w-1/2 mb-10 px-4 flex flex-col justify-center items-center">
@@ -107,6 +127,7 @@ export default function Home() {
                                     </div> */}
                                     <div className="relative mb-4 flex">
                                         <button
+                                            onClick={takePhoto}
                                             type="button"
                                             className="text-gray-900 bg-white hover:bg-gray-100 border border-gray-200 focus:ring-4 focus:outline-none focus:ring-gray-100 font-medium rounded-lg text-sm px-12 py-8 text-center inline-flex items-center dark:focus:ring-gray-600 dark:bg-gray-800 dark:border-gray-700 dark:text-white dark:hover:bg-gray-700"
                                             disabled={isFaceAnalysisButtonDisabled}
