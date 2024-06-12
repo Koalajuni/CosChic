@@ -21,6 +21,7 @@
     "react-dom": "^18",
     "react-lottie": "^1.2.4",
     "react-router-dom": "^6.23.1",
+    "react-typed": "^2.0.12",
     "sweetalert2": "^11.11.1"
   },
   "devDependencies": {
