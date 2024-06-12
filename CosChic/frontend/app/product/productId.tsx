@@ -40,7 +40,7 @@ const ProductPage = () => {
             <div className="p-4 bg-gray-200 rounded-md">
                 GPT가 설명하는 칸입니다. 여기서는 화장품 또는 위에 GAN이 설명할 칸이라고 생각해주시면 되겠습니다.
             </div>
-            <h2 className="text-xl font-semibold mt-4 mb-2">추가로 비슷한 모델</h2>
+            <h2 className="text-xl font-semibold mt-4 mb-2">추가로 비슷한 모델</h2> /
             <div className="flex justify-around">
                 {userResembleModels.map((model, index) => (
                     <div key={index} className="text-center">

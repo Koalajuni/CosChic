@@ -5,11 +5,10 @@ from django.shortcuts import render, redirect
 from django.views.decorators.csrf import csrf_exempt
 from django.core.files.storage import FileSystemStorage  # 장고 파일 처리
 import cv2
+import datetime
 
-
-def api_index(request):
-    return HttpResponse("ChicBytes API v1.0")
-
+now = datetime.datetime.now()
+nowString = now.strftime('%Y-%m-%d %H_%M_%S')
 
 @csrf_exempt
 def api_sendimage(request):
@@ -86,3 +85,19 @@ def stream():
 
     cap.release()
     cv2.destroyAllWindows()
+
+@csrf_exempt
+def take_photo(request):
+    if request.method == 'POST':
+        print("someone requested the take_photo")
+        cap = cv2.VideoCapture(0)
+        ret, frame = cap.read()
+        
+        if not ret:
+            return JsonResponse({'error' : '사진 찍는데 실패했습니다.'}, status = 500)
+        imagePath = f'./media/org_img/{nowString}.jpg'
+        cv2.imwrite(imagePath, frame) #카메라 영상 저장
+        cap.release()
+        cv2.destroyAllWindows()
+
+        return JsonResponse({'message': '사진이 정상적으로 저장되었습니다.', 'imagePath': imagePath})
