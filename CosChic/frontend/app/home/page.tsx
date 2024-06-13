@@ -10,6 +10,46 @@ import CardSimilarModel from "@/components/card_similarModel"
 
 
 export default function Home() {
+    {/*        더미 모델 공간입니다             */ }
+
+    //주의: 
+    //여기서 실제 DB안에 있는 유저 모델 정보를 입력해서 사용해주세요 
+    // String인지, number인지 확인하고 아래 기입해주세요
+
+    const dummyUserData = {
+        "model": "",
+        "pk": "",
+        "fields": {
+            "names": "",
+            "age": "",
+            "gender": "",
+            "email": "",
+            "createDate": "",
+            "password": "",
+            "IP": "",
+            "uploadDate": "",
+            "orgImage": "",
+            "UUID": ""
+        }
+    };
+    const dummyProductData = {
+        "model": "",
+        "pk": 1,
+        "fields": {
+            "productUrl": "",
+            "productName": "",
+            "brandName": "",
+            "price": "",
+            "productImage": "",
+            "modelImage": "",
+            "count": "",
+            "categoryId": "",
+            "category": ""
+        }
+    };
+    {/*        더미 모델 공간입니다             */ }
+
+
     const [loading, setLoading] = useState(false);
     const [cameraOn, setCamera] = useState(false);
     const [cnt, setCnt] = useState(0);  // 상태를 바꾸기 위해 useState을 사용해야 한다. 
@@ -20,7 +60,7 @@ export default function Home() {
     const [refId, setRefId] = useState(-1);
     const baseUrl = 'http://127.0.0.1:8000/api';
 
-    const [buttonText, setButtonText] = useState("카메라 사용하기"); 
+    const [buttonText, setButtonText] = useState("카메라 사용하기");
 
     const models = [
         { name: "브랜드 모델 A", lips: 28, eyes: 48, contour: 78, similarity: 78, product: "A" },
@@ -49,18 +89,18 @@ export default function Home() {
     }
 
     const takePhoto = async () => {
-        try{
+        try {
             const response = await axios.post(`${baseUrl}/v1/camera_take_photo`, {
-                timeout : 30000,
-            }); 
-            if (response.status == 200){
-            // setCamera(false);
-            setCamera(true);
-            console.log(response)
+                timeout: 30000,
+            });
+            if (response.status == 200) {
+                // setCamera(false);
+                setCamera(true);
+                console.log(response)
             }
-        } catch(error){
+        } catch (error) {
             console.error("Error taking photo:", error); // 콘솔에 상세 오류 메시지 출력
-        Swal.fire("Error", `사진 찍는데 실패했습니다.`, "error"); // 사용자에게 오류 메시지 표시
+            Swal.fire("Error", `사진 찍는데 실패했습니다.`, "error"); // 사용자에게 오류 메시지 표시
         }
     }
 
@@ -125,7 +165,7 @@ export default function Home() {
                                     <div>
                                         <p className="mb-6 text-sm text-gray-500 dark:text-gray-300" id="file_input_help">SVG, PNG, JPG or GIF (MAX. 800x400px)</p>
                                     </div>
-                                    
+
                                     {/* <button type="submit" href="image_result.html" className="flex mx-auto mt-6 text-white bg-indigo-500 border-0 py-2 px-5 focus:outline-none hover:bg-indigo-600 rounded">사진등록</button> */}
                                 </div>
                                 <div className="sm:w-1/2 mb-10 px-4 flex flex-col justify-center items-center">
@@ -134,10 +174,10 @@ export default function Home() {
                                     </div> */}
                                     <div className="relative rounded-lg w-476 h-[350px] overflow-hidden flex justify-center items-center bg-black bg-opacity-50">
                                         <img
-                                                alt="content"
-                                                className="object-cover object-center w-3/4 "
-                                                src="https://cdn.pixabay.com/photo/2015/03/08/09/30/head-663997_1280.jpg"
-                                            /></div>
+                                            alt="content"
+                                            className="object-cover object-center w-3/4 "
+                                            src="https://cdn.pixabay.com/photo/2015/03/08/09/30/head-663997_1280.jpg"
+                                        /></div>
                                     <div className="h-20"></div>
                                     <div className="relative mb-4 flex">
                                         <button
