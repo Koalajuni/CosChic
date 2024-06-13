@@ -27,8 +27,8 @@ const LoginComponent = () => {
                 formData,
                 { headers: { 'Content-Type': 'multipart/form-data' } }
             );
-            const user = response.data.user;
-            localStorage.setItem('user', JSON.stringify(user));
+            const user = response.data.UUID;
+            localStorage.setItem('UUID', JSON.stringify(user));
             router.push('/home');
         } catch (error) {
             setLoginErrorMsg('Login failed. Please check your credentials.');

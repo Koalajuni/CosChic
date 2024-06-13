@@ -1,4 +1,5 @@
 import UserProfileImage from '@/components/userProfileImage';
+import React, { useState, useEffect } from 'react';
 import ProductDetails from '@/components/productDetails';
 import SimilarModels from '@/components/similarModels';
 import Header from '@/components/inc_header';
@@ -6,6 +7,17 @@ import Footer from '@/components/inc_footer';
 
 const TestProductPage = () => {
 
+    const [userUid, setUserUid] = useState("");
+
+    useEffect(() => {
+        // User UID 가져와서 저장
+        const storedUserUid = localStorage.getItem('UUID');
+        console.log(storedUserUid)
+        if (storedUserUid) {
+            setUserUid(storedUserUid);
+        }
+        console.log(storedUserUid)
+    }, []);
 
     {/*        더미 모델 공간입니다             */ }
 

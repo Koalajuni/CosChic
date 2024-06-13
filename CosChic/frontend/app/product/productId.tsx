@@ -1,6 +1,19 @@
 import { useRouter } from 'next/router';
+import { useEffect, useState } from "react"
+
 
 const ProductPage = () => {
+    const [userUid, setUserUid] = useState("");
+
+    useEffect(() => {
+        // User UID 가져와서 저장
+        const storedUserUid = localStorage.getItem('UUID');
+        console.log(storedUserUid)
+        if (storedUserUid) {
+            setUserUid(storedUserUid);
+        }
+        console.log(storedUserUid)
+    }, []);
 
     {/*        더미 모델 공간입니다             */ }
 
