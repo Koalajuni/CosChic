@@ -1,8 +1,12 @@
 
 from django.urls import path,include
-from .views import index_views, camera_views, profile_veiws
+from .views import index_views, camera_views, profile_veiws, auth_views
 
 urlpatterns = [
+
+    #계정 로그인/회원가입 
+    path('v1/register', auth_views.register, name='register'),
+
     # 일반
     path('v1/', index_views.api_index, name='api_index'),
     # path('v1/', include('api.urls')), 
