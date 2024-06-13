@@ -27,8 +27,8 @@ const LoginComponent = () => {
                 formData,
                 { headers: { 'Content-Type': 'multipart/form-data' } }
             );
-            const user = response.data.user;
-            localStorage.setItem('user', JSON.stringify(user));
+            const user = response.data.UUID;
+            localStorage.setItem('UUID', JSON.stringify(user));
             router.push('/home');
         } catch (error) {
             setLoginErrorMsg('Login failed. Please check your credentials.');
@@ -50,6 +50,8 @@ const LoginComponent = () => {
             );
             if (response.status === 201) {
                 console.log('Registration successful!');
+                const user = response.data.UUID;
+                localStorage.setItem('UUID', JSON.stringify(user));
                 router.push('/profile');
             } else {
                 console.error('Registration failed:', response.data);
