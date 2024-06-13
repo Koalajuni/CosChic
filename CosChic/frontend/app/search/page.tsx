@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import SearchBar from '@/components/searchBar';
 import CardSearchResult from '@/components/card_searchResult';
@@ -8,6 +8,17 @@ import Footer from '@/components/inc_footer';
 import Pagination from '@/components/inc_pagination';
 
 const SearchPage = () => {
+    const [userUid, setUserUid] = useState("");
+
+    useEffect(() => {
+        // User UID 가져와서 저장
+        const storedUserUid = localStorage.getItem('UUID');
+        console.log(storedUserUid)
+        if (storedUserUid) {
+            setUserUid(storedUserUid);
+        }
+        console.log(storedUserUid)
+    }, []);
     {/*        더미 모델 공간입니다             */ }
 
     //주의: 
