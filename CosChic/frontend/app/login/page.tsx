@@ -1,148 +1,99 @@
+"use client"
+import React from 'react';
+import Lottie from "lottie-react";
+import animationData from '@/public/assets/globeAnimation.json';
+import styles from '@/styles/Login.module.css';
+import LoginComponent from '@/components/LoginComponent';
 
-import Header from "@/components/inc_header"
-import Footer from "@/components/inc_footer"
+const Login = () => {
+    const brands = ["Brand A", "Brand B", "Brand C", "Brand D", "Brand E", "Brand F", "Brand G", "Brand H", "Brand I", "Brand J"];
+    const images = [
+        '/assets/Login_FaceImage/1.jpg',
+        '/assets/Login_FaceImage/2.jpg',
+        '/assets/Login_FaceImage/3.jpg',
+        '/assets/Login_FaceImage/4.jpg',
+        '/assets/Login_FaceImage/5.jpg',
+        '/assets/Login_FaceImage/6.jpg',
+        '/assets/Login_FaceImage/7.jpg',
+        '/assets/Login_FaceImage/8.jpg',
+        '/assets/Login_FaceImage/9.jpg',
+        '/assets/Login_FaceImage/10.jpg',
+    ];
 
-export default function Home() {
+    // Function to generate a random margin-left value
+    const getRandomMargin = () => {
+        return Math.floor(Math.random() * 30); // Adjust the range as needed
+    };
+
     return (
+        <div className={styles.container}>
+            <div className={styles.backgroundAnimation}>
+                <Lottie animationData={animationData} loop={true} />;
+            </div>
+            <div className={styles.overlay}></div>
 
-        <>
-            <main>
-                <section className="absolute w-full h-full">
-                    <div
-                        className="absolute top-0 w-full h-full bg-gray-600"
-                    // style={{
-                    //     backgroundImage:
-                    //         "url(" + require("assets/img/register_bg_2.png").default + ")",
-                    //     backgroundSize: "100%",
-                    //     backgroundRepeat: "no-repeat"
-                    // }}
-                    ></div>
-                    <div className="container mx-auto px-4 h-full">
-                        <div className="flex content-center items-center justify-center h-full">
-                            <div className="w-full lg:w-4/12 px-4">
-                                <div className="relative flex flex-col min-w-0 break-words w-full mb-6 shadow-lg rounded-lg bg-gray-300 border-0">
-                                    <div className="rounded-t mb-0 px-6 py-6">
-                                        <div className="text-center mb-3">
-                                            <h6 className="text-gray-600 text-sm font-bold">
-                                                다음으로 로그인
-                                            </h6>
-                                        </div>
-                                        <div className="btn-wrapper text-center">
-                                            <button
-                                                className="bg-white active:bg-gray-100 text-gray-800 font-normal px-4 py-2 rounded outline-none focus:outline-none mr-2 mb-1 uppercase shadow hover:shadow-md inline-flex items-center font-bold text-xs"
-                                                type="button"
-                                                style={{ transition: "all .15s ease" }}
-                                            >
-                                                <img
-                                                    alt="..."
-                                                    className="w-5 mr-1"
-                                                    src={("assets/github.svg")}
-                                                />
-                                                깃허브
-                                            </button>
-                                            <button
-                                                className="bg-white active:bg-gray-100 text-gray-800 font-normal px-4 py-2 rounded outline-none focus:outline-none mr-1 mb-1 uppercase shadow hover:shadow-md inline-flex items-center font-bold text-xs"
-                                                type="button"
-                                                style={{ transition: "all .15s ease" }}
-                                            >
-                                                <img
-                                                    alt="..."
-                                                    className="w-5 mr-1"
-                                                    src={("assets/google.svg")}
-                                                />
-                                                구글
-                                            </button>
-                                        </div>
-                                        <hr className="mt-6 border-b-1 border-gray-400" />
-                                    </div>
-                                    <div className="flex-auto px-4 lg:px-10 py-10 pt-0">
-                                        <div className="text-gray-500 text-center mb-3 font-bold">
-                                            <small>계정으로 로그인</small>
-                                        </div>
-                                        <form>
-                                            <div className="relative w-full mb-3">
-                                                <label
-                                                    className="block uppercase text-gray-700 text-xs font-bold mb-2"
-                                                    htmlFor="grid-password"
-                                                >
-                                                    이메일
-                                                </label>
-                                                <input
-                                                    type="email"
-                                                    className="border-0 px-3 py-3 placeholder-gray-400 text-gray-700 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full"
-                                                    placeholder="Email"
-                                                    style={{ transition: "all .15s ease" }}
-                                                />
-                                            </div>
-
-                                            <div className="relative w-full mb-3">
-                                                <label
-                                                    className="block uppercase text-gray-700 text-xs font-bold mb-2"
-                                                    htmlFor="grid-password"
-                                                >
-                                                    비밀번호
-                                                </label>
-                                                <input
-                                                    type="password"
-                                                    className="border-0 px-3 py-3 placeholder-gray-400 text-gray-700 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full"
-                                                    placeholder="Password"
-                                                    style={{ transition: "all .15s ease" }}
-                                                />
-                                            </div>
-                                            <div>
-                                                <label className="inline-flex items-center cursor-pointer">
-                                                    <input
-                                                        id="customCheckLogin"
-                                                        type="checkbox"
-                                                        className="form-checkbox border-0 rounded text-gray-800 ml-1 w-5 h-5"
-                                                        style={{ transition: "all .15s ease" }}
-                                                    />
-                                                    <span className="ml-2 text-sm font-semibold text-gray-700">
-                                                        다음에도 기억하기
-                                                    </span>
-                                                </label>
-                                            </div>
-
-                                            <div className="text-center mt-6">
-                                                <button
-                                                    className="bg-gray-900 text-white active:bg-gray-700 text-sm font-bold uppercase px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 w-full"
-                                                    type="button"
-                                                    style={{ transition: "all .15s ease" }}
-                                                >
-                                                    로그인
-                                                </button>
-                                            </div>
-                                        </form>
-                                    </div>
-                                </div>
-                                {/* <div className="flex flex-wrap mt-6">
-                                    <div className="w-1/2">
-                                        <a
-                                            href="#pablo"
-                                            onClick={e => e.preventDefault()}
-                                            className="text-gray-300"
-                                        >
-                                            <small>비밀번호를 잊었나요?</small>
-                                        </a>
-                                    </div>
-                                    <div className="w-1/2 text-right">
-                                        <a
-                                            href="#pablo"
-                                            onClick={e => e.preventDefault()}
-                                            className="text-gray-300"
-                                        >
-                                            <small>계정 생성</small>
-                                        </a>
-                                    </div>
-                                </div> */}
-                            </div>
+            <div className={styles.verticalSlider}>
+                <div className={styles.verticalSliderContent}>
+                    {images.map((image, index) => (
+                        <div key={index} className={styles.imageSlide}>
+                            <img src={image} alt={`slide ${index}`} className={styles.slideImage} />
                         </div>
-                    </div>
-                </section>
-            </main>
-        </>
+                    ))}
+                </div>
+            </div>
+
+            <div className={`${styles.horizontalRow} ${styles.textAnimation}`} style={{ marginLeft: `${getRandomMargin()}%` }}>
+                {Array(10).fill("COSCHIC").map((text, index) => (
+                    <span key={index} className={styles.sparsedText}>{text}</span>
+                ))}
+            </div>
+
+            <div className={`${styles.horizontalRow} ${styles.textAnimation}`} >
+                {["Modern", "Love", "Facial Recognition", "AI", "Global", "Value", "Inclusion", "Passion"].map((text, index) => (
+                    <span key={index} className={styles.smallSparsedText}>{text}</span>
+                ))}
+            </div>
+
+            <div className={`${styles.horizontalRow} ${styles.textAnimation}`} style={{ marginLeft: `${getRandomMargin()}%` }} >
+                {Array(10).fill("COSCHIC").map((text, index) => (
+                    <span key={index} className={styles.sparsedText}>{text}</span>
+                ))}
+            </div>
+
+            <div className={`${styles.horizontalRow} ${styles.textAnimation}`} >
+                {["Global", "Value", "Inclusion", "Passion", "Cosmetic", "Beautiful", "Awareness", "Intelligence"].map((text, index) => (
+                    <span key={index} className={styles.smallSparsedText}>{text}</span>
+                ))}
+            </div>
+
+            <div className={`${styles.horizontalRow} ${styles.textAnimation}`} style={{ marginLeft: `${getRandomMargin()}%` }}>
+                {Array(10).fill("COSCHIC").map((text, index) => (
+                    <span key={index} className={styles.sparsedText}>{text}</span>
+                ))}
+            </div>
+
+            <div className={`${styles.horizontalRow} ${styles.textAnimation}`} >
+                {["Cosmetic", "Beautiful", "Awareness", "Intelligence", "Modern", "Love", "Facial Recognition", "AI",].map((text, index) => (
+                    <span key={index} className={styles.smallSparsedText}>{text}</span>
+                ))}
+            </div>
+            <div className={`${styles.horizontalRow} ${styles.textAnimation}`} style={{ marginLeft: `${getRandomMargin()}%` }}>
+                {Array(10).fill("COSCHIC").map((text, index) => (
+                    <span key={index} className={styles.sparsedText}>{text}</span>
+                ))}
+            </div>
 
 
-    )
+            <div className={styles.bottomBox}>
+                <h1>COSCHIC</h1>
+                <h2>Your AI Stylist</h2>
+            </div>
 
-} 
+            <div className={styles.loginContainer}>
+                <LoginComponent />
+            </div>
+        </div>
+    );
+};
+
+export default Login;

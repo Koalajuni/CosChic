@@ -11,9 +11,10 @@ const LoginComponent = () => {
     const [loginErrorMsg, setLoginErrorMsg] = useState("");
     const [mode, setMode] = useState("login");
 
+
     const login = async () => {
         try {
-            const response = await axios.post('/api/login', { email, password });
+            const response = await axios.post('http://127.0.0.1:8000/api/v1/login', { email, password });
             // Handle successful login (e.g., store token, redirect, etc.)
         } catch (error) {
             setLoginErrorMsg('Login failed. Please check your credentials.');
@@ -22,7 +23,7 @@ const LoginComponent = () => {
 
     const register = async () => {
         try {
-            const response = await axios.post('/api/register', { email, password });
+            const response = await axios.post('http://127.0.0.1:8000/api/v1/register', { email, password });
             // Handle successful registration (e.g., redirect, display message, etc.)
         } catch (error) {
             setLoginErrorMsg('Registration failed. Please check your details.');
