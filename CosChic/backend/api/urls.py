@@ -1,6 +1,6 @@
 
 from django.urls import path,include
-from .views import index_views, camera_views, profile_veiws,auth_views, orgImg_views
+from .views import index_views, camera_views, profile_veiws,auth_views
 
 urlpatterns = [
 
@@ -16,7 +16,7 @@ urlpatterns = [
     path('v1/camera_video_feed', camera_views.video_feed, name='camera_video_feed'),
     path('v1/camera_take_photo', camera_views.take_photo, name='camera_take_photo'),
     # 원본이미지 저장 
-    path('v1/orgIMG/', orgImg_views.img_send, name='img_send'),
+    path('v1/orgIMG', camera_views.img_send, name='img_send'),
 
     #프로필뷰 
     path('v1/userdata', profile_veiws.api_userdata, name='api_userdata'),
