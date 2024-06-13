@@ -6,6 +6,7 @@ urlpatterns = [
 
     #계정 로그인/회원가입 
     path('v1/register', auth_views.register, name='register'),
+    path('v1/login', auth_views.login_user, name='login_user'),
 
     # 일반
     path('v1/', index_views.api_index, name='api_index'),

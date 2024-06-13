@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import styles from '@/styles/CardProfileInformation.module.css';
 
-const CardProfileInformation = ({ user_id }) => {
+const CardProfileInformation = ({ }) => {
     const [formData, setFormData] = useState({
         firstName: '',
         email: '',

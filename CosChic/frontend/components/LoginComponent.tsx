@@ -16,7 +16,8 @@ const LoginComponent = () => {
     const login = async () => {
         try {
             console.log("this is the email:", email)
-            console.log("this is the email:", password)
+            console.log("this is the password:", password)
+
             const formData = new FormData();
             formData.append('email', email);
             formData.append('password', password);
@@ -26,6 +27,9 @@ const LoginComponent = () => {
                 formData,
                 { headers: { 'Content-Type': 'multipart/form-data' } }
             );
+            const user = response.data.user;
+            localStorage.setItem('user', JSON.stringify(user));
+            router.push('/home');
         } catch (error) {
             setLoginErrorMsg('Login failed. Please check your credentials.');
         }

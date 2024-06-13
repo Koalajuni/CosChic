@@ -1,5 +1,6 @@
 "use client";
 import React, { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { Link } from 'react-router-dom';
 
 export default function Header() {
@@ -26,14 +27,14 @@ export default function Header() {
                     </button>
                 </div>
                 <div className="hidden lg:flex lg:gap-x-12">
-                    <a href="http://localhost:18000/home" className="text-sm font-semibold leading-6 text-gray-900">홈</a>
-                    <a href="http://localhost:18000/search" className="text-sm font-semibold leading-6 text-gray-900">검색</a>
-                    <a href="http://localhost:18000/profile" className="text-sm font-semibold leading-6 text-gray-900">내 프로필</a>
-                    <a href="http://localhost:18000/profile" className="text-sm font-semibold leading-6 text-gray-900">팀 소개</a>
-                    <a href="http://localhost:18000/profile" className="text-sm font-semibold leading-6 text-gray-900">문의</a>
+                    <a href="/home" className="text-sm font-semibold leading-6 text-gray-900">홈</a>
+                    <a href="/search" className="text-sm font-semibold leading-6 text-gray-900">검색</a>
+                    <a href="/profile" className="text-sm font-semibold leading-6 text-gray-900">내 프로필</a>
+                    <a href="/profile" className="text-sm font-semibold leading-6 text-gray-900">팀 소개</a>
+                    <a href="/profile" className="text-sm font-semibold leading-6 text-gray-900">문의</a>
                 </div>
                 <div className="hidden lg:flex lg:flex-1 lg:justify-end">
-                    <a href="http://localhost:18000/home" className="text-sm font-semibold leading-6 text-gray-900"> <span aria-hidden="true"></span></a>
+                    <a href="/home" className="text-sm font-semibold leading-6 text-gray-900"> <span aria-hidden="true"></span></a>
                 </div>
                 <div className={!isMobileMenuOpen ? "lg:hidden fixed right-0 top-[90px] w-[30%] h-full border-r border-r-gray-300 bg-[#ffffff] ease-in-out duration-500" : "md:hidden fixed left-[100%]"}>
                     <ul className='p-4'>
