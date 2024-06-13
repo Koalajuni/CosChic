@@ -20,6 +20,8 @@ export default function Home() {
     const [refId, setRefId] = useState(-1);
     const baseUrl = 'http://127.0.0.1:8000/api';
 
+    const [buttonText, setButtonText] = useState("카메라 사용하기"); 
+
     const models = [
         { name: "브랜드 모델 A", lips: 28, eyes: 48, contour: 78, similarity: 78, product: "A" },
         { name: "브랜드 모델 B", lips: 30, eyes: 50, contour: 80, similarity: 75, product: "B" },
@@ -28,13 +30,17 @@ export default function Home() {
     ];
 
     const cameraClick = () => {
-        
+        const newCameraOnState = !cameraOn; // 새로운 카메라 상태 계산
+        const buttonText = newCameraOnState ? "카메라끄기" : "카메라 사용하기"; // 새로운 버튼 텍스트 계산
+        setButtonText(buttonText);
+        setCamera(newCameraOnState); // cameraOn 상태를 토글합니다.
         if (!cameraOn) {
             setCamera(true);
         }
         else {
             setCamera(false);
         }
+
 
         const isFaceAnalysisButtonDisabled = !cameraOn;
         const buttonStyles = isFaceAnalysisButtonDisabled
@@ -48,7 +54,8 @@ export default function Home() {
                 timeout : 30000,
             }); 
             if (response.status == 200){
-            setCamera(false);
+            // setCamera(false);
+            setCamera(true);
             console.log(response)
             }
         } catch(error){
@@ -95,7 +102,7 @@ export default function Home() {
                                                 className="absolute text-gray-900 bg-white bg-opacity-90 hover:bg-gray-100 border border-gray-200 focus:ring-4 focus:outline-none focus:ring-gray-100 font-medium rounded-lg text-sm px-3.5 py-2.5 text-left inline-flex items-center w-1/2 justify-center dark:focus:ring-gray-600 dark:bg-gray-800 dark:border-gray-700 dark:text-white dark:hover:bg-gray-700"
                                             >
                                                 <img src="./icons/camera.png" alt="Icon" className="w-10 h-10 me-4 -ms-1" />
-                                                카메라 사용하기
+                                                {buttonText}
                                             </button>
                                         )
                                         }
@@ -104,7 +111,7 @@ export default function Home() {
                                     <div className="relative mb-4 flex">
                                         <button onClick={cameraClick} type="button" className="text-gray-900 bg-white hover:bg-gray-100 border border-gray-200 focus:ring-4 focus:outline-none focus:ring-gray-100 font-medium rounded-lg text-sm px-3.5 py-2.5 text-left inline-flex items-center w-full dark:focus:ring-gray-600 dark:bg-gray-800 dark:border-gray-700 dark:text-white dark:hover:bg-gray-700">
                                             <img src="./icons/camera.png" alt="Icon" className="w-10 h- me-4 -ms-1" />
-                                            카메라 사용하기
+                                            {buttonText}
                                         </button>
                                     </div>
                                     <div>
@@ -123,8 +130,15 @@ export default function Home() {
                                 </div>
                                 <div className="sm:w-1/2 mb-10 px-4 flex flex-col justify-center items-center">
                                     {/* <div className="rounded-lg h-[450px] overflow-hidden">
-                                        <img alt="content" className="object-cover object-center w-full" src={refImage} />
+                                            <img alt="content" className="object-cover object-center w-full" src={refImage} />
                                     </div> */}
+                                    <div className="relative rounded-lg w-476 h-[350px] overflow-hidden flex justify-center items-center bg-black bg-opacity-50">
+                                        <img
+                                                alt="content"
+                                                className="object-cover object-center w-3/4 "
+                                                src="https://cdn.pixabay.com/photo/2015/03/08/09/30/head-663997_1280.jpg"
+                                            /></div>
+                                    <div className="h-20"></div>
                                     <div className="relative mb-4 flex">
                                         <button
                                             onClick={takePhoto}
@@ -136,6 +150,7 @@ export default function Home() {
                                             얼굴 분석하기
                                         </button>
                                     </div>
+                                    <div className="h-20"></div>
                                     {/* <select onChange={chgRefName} name="model" id="lang" className="w-full h-[50px] bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
                                         {refModel.map((data, index) => (
                                             <option value={index} key={data.id}>{data.name}</option>
