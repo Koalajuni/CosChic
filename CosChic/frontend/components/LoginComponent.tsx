@@ -1,6 +1,7 @@
 "use client";
 import React, { useState } from 'react';
 import Image from "next/image";
+import { useRouter } from 'next/navigation';
 import accountalert from "@/public/assets/account-alert.png";
 import styles from "@/styles/LoginComponent.module.css";
 import axios from "axios"
@@ -10,11 +11,25 @@ const LoginComponent = () => {
     const [password, setPassword] = useState("");
     const [loginErrorMsg, setLoginErrorMsg] = useState("");
     const [mode, setMode] = useState("login");
+    const router = useRouter();
 
     const login = async () => {
         try {
-            const response = await axios.post('/api/login', { email, password });
-            // Handle successful login (e.g., store token, redirect, etc.)
+            console.log("this is the email:", email)
+            console.log("this is the password:", password)
+
+            const formData = new FormData();
+            formData.append('email', email);
+            formData.append('password', password);
+
+            const response = await axios.post(
+                'http://127.0.0.1:8000/api/v1/login',
+                formData,
+                { headers: { 'Content-Type': 'multipart/form-data' } }
+            );
+            const user = response.data.user;
+            localStorage.setItem('user', JSON.stringify(user));
+            router.push('/home');
         } catch (error) {
             setLoginErrorMsg('Login failed. Please check your credentials.');
         }
@@ -22,19 +37,25 @@ const LoginComponent = () => {
 
     const register = async () => {
         try {
-            const response = await axios.post('/api/register', { email, password });
-            // Handle successful registration (e.g., redirect, display message, etc.)
+            console.log("this is the email:", email)
+            console.log("this is the password:", password)
+            const formData = new FormData();
+            formData.append('email', email);
+            formData.append('password', password);
+
+            const response = await axios.post(
+                'http://127.0.0.1:8000/api/v1/register',
+                formData,
+                { headers: { 'Content-Type': 'multipart/form-data' } }
+            );
+            if (response.status === 201) {
+                console.log('Registration successful!');
+                router.push('/profile');
+            } else {
+                console.error('Registration failed:', response.data);
+            }
         } catch (error) {
             setLoginErrorMsg('Registration failed. Please check your details.');
-        }
-    };
-
-    const handleSubmit = async (event) => {
-        event.preventDefault();
-        if (mode === "login") {
-            await login();
-        } else if (mode === "register") {
-            await register();
         }
     };
 
@@ -54,10 +75,12 @@ const LoginComponent = () => {
                         className={styles.input}
                         placeholder="이메일"
                         type="email"
+                        value={email}
                         onChange={(e) => {
                             setEmail(e.target.value);
                             setLoginErrorMsg("");
                         }}
+                        required
                     />
                 </div>
             </div>
@@ -67,30 +90,35 @@ const LoginComponent = () => {
                         className={styles.input}
                         placeholder="비밀번호"
                         type="password"
+                        value={password}
                         onChange={(e) => {
                             setPassword(e.target.value);
                             setLoginErrorMsg("");
                         }}
+                        required
                     />
                 </div>
-                {/* <ValideMsg>{loginErrorMsg}</ValideMsg> */}
             </div>
+            {loginErrorMsg && <div className={styles.errorMsg}>{loginErrorMsg}</div>}
             <div className={styles.buttonContainer}>
                 <button
+                    type="button"
                     className={styles.accountBtn}
-                    onClick={() => setMode("login")}
+                    onClick={login}
                     style={{ background: '#805F89', color: '#fff', border: 'none', padding: '20px 40px', borderRadius: '10px', marginRight: '20px' }}
                 >
                     로그인
                 </button>
                 <button
+                    type="submit"
                     className={styles.accountBtn}
-                    onClick={() => { setMode("register"); handleSubmit(new Event('submit')); }}
+                    onClick={register}
                     style={{ background: '#fff', color: '#805F89', border: '1px solid #805F89', padding: '20px 40px', borderRadius: '10px' }}
                 >
                     회원가입
                 </button>
             </div>
+
         </section>
     );
 };
