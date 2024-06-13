@@ -50,6 +50,8 @@ const LoginComponent = () => {
             );
             if (response.status === 201) {
                 console.log('Registration successful!');
+                const user = response.data.UUID;
+                localStorage.setItem('UUID', JSON.stringify(user));
                 router.push('/profile');
             } else {
                 console.error('Registration failed:', response.data);
