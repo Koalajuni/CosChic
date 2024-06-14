@@ -69,9 +69,12 @@ def take_photo(request):
         
         cap.release()
         cv2.destroyAllWindows()
+<<<<<<< HEAD
         url = api_sendimage(nowString)
         
         return JsonResponse({'message': '사진이 정상적으로 저장되었습니다.', 'imagePath': imagePath, "url" : url})
+=======
+>>>>>>> 047e09328a5a851d1c49e1842dbdc852c9fafaab
 
     
 
@@ -91,6 +94,7 @@ def img_send(request):
 
             url = f'http://localhost:8000/media/org_img/{nowString}.jpg'
 
+<<<<<<< HEAD
             # db 에 사진 저장 
 
             # 미디어 파이프 처리 -> url2 
@@ -99,6 +103,9 @@ def img_send(request):
 
 
             return JsonResponse({"message": "Image uploaded successfully", "url": url}, status=201)
+=======
+            return JsonResponse({"message": "Image uploaded successfully", "file_path": file_path}, status=201)
+>>>>>>> 047e09328a5a851d1c49e1842dbdc852c9fafaab
         else:
             return JsonResponse({"error": "No image uploaded"}, status=400)
     

@@ -5,22 +5,11 @@ import ProductDetails from '@/components/productDetails';
 import SimilarModels from '@/components/similarModels';
 import Header from '@/components/inc_header';
 import Footer from '@/components/inc_footer';
+import useUserUID from "@/hooks/useUserUID";
 
 const TestProductPage = () => {
 
-    const [userUid, setUserUid] = useState("");
-
-    useEffect(() => {
-        // User UID 가져와서 저장
-        const storedUserUid = localStorage.getItem('UUID');
-        console.log(storedUserUid)
-        if (storedUserUid) {
-            setUserUid(storedUserUid);
-        }
-        console.log(storedUserUid)
-    }, []);
-
-    {/*        더미 모델 공간입니다             */ }
+    const userUID = useUserUID(); // USER UID 가져오는 변수  
 
     //주의: 
     //여기서 실제 DB안에 있는 유저 모델 정보를 입력해서 사용해주세요 
