@@ -10,22 +10,6 @@ import Pagination from '@/components/inc_pagination';
 const SearchPage = () => {
     const [userUid, setUserUid] = useState("");
 
-    useEffect(() => {
-        // User UID 가져와서 저장
-        const storedUserUid = localStorage.getItem('UUID');
-        console.log(storedUserUid)
-        if (storedUserUid) {
-            setUserUid(storedUserUid);
-        }
-        console.log(storedUserUid)
-    }, []);
-    {/*        더미 모델 공간입니다             */ }
-
-    //주의: 
-    //여기서 실제 DB안에 있는 유저 모델 정보를 입력해서 사용해주세요 
-    // String인지, number인지 확인하고 아래 기입해주세요
-
-
     const [searchTerm, setSearchTerm] = useState('');
     const [results, setResults] = useState([]);
     const handleSearchChange = (event) => {
