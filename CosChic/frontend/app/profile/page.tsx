@@ -81,7 +81,7 @@ export default function UserProfile() {
                             New York, NY - Los Angeles, CA
                         </span>
                         <span className="text-sm text-gray-400">
-                            나이, 성별
+                            {dummyUserData.age}, 성별
                         </span>
                         <span>
 
