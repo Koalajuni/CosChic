@@ -9,6 +9,7 @@ import CardSimilarModel from "@/components/card_similarModel"
 
 
 
+
 export default function Home() {
 
     const [userUid, setUserUid] = useState("");
@@ -28,10 +29,15 @@ export default function Home() {
     const [loading, setLoading] = useState(false);
     const [cameraOn, setCamera] = useState(false);
     const [cnt, setCnt] = useState(0);  // 상태를 바꾸기 위해 useState을 사용해야 한다. 
+    // const [refModel, setRefModel] = useState(null);
+    // const isFaceAnalysisButtonDisabled = !cameraOn;
+    const [faceAnalysisButtonState, setFaceAnalysisButtonState] = useState(false);
+    const [photoUrl, setPhotoUrl] = useState('');
+    const [photoUrlState, setPhotoUrlState] = useState(false);
     const [refModel, setRefModel] = useState(null);
     const isFaceAnalysisButtonDisabled = !cameraOn;
     // const [selfRef, setSelRef] = ("");
-    const [refImage, setRefImage] = useState(-1);
+    // const [refImage, setRefImage] = useState(-1);
     const [refId, setRefId] = useState(-1);
     const baseUrl = 'http://127.0.0.1:8000/api';
 
@@ -44,6 +50,10 @@ export default function Home() {
         // 나중에 DB되면 여기다 정보 가져올겁니다.
     ];
 
+    const faceanalysisButtonClick = () => {
+        setFaceAnalysisButtonState(prevState => !prevState);
+    };
+
     const cameraClick = () => {
         const newCameraOnState = !cameraOn; // 새로운 카메라 상태 계산
         const buttonText = newCameraOnState ? "카메라끄기" : "카메라 사용하기"; // 새로운 버튼 텍스트 계산
@@ -55,12 +65,10 @@ export default function Home() {
         else {
             setCamera(false);
         }
-
-
-        const isFaceAnalysisButtonDisabled = !cameraOn;
-        const buttonStyles = isFaceAnalysisButtonDisabled
-            ? "text-gray-500 bg-gray-200 cursor-not-allowed hover:bg-gray-200 focus:ring-0 focus:outline-none" // Disabled styles
-            : "text-gray-900 bg-white hover:bg-gray-100";
+        // const isFaceAnalysisButtonDisabled = !cameraOn;
+        // const buttonStyles = isFaceAnalysisButtonDisabled
+        //     ? "text-gray-500 bg-gray-200 cursor-not-allowed hover:bg-gray-200 focus:ring-0 focus:outline-none" // Disabled styles
+        //     : "text-gray-900 bg-white hover:bg-gray-100";
     }
 
     const takePhoto = async () => {
@@ -71,6 +79,8 @@ export default function Home() {
             if (response.status == 200) {
                 // setCamera(false);
                 setCamera(true);
+                setPhotoUrl(response.data.output_image_path);
+                setPhotoUrlState(prevState => !prevState);
                 console.log(response)
             }
         } catch (error) {
@@ -98,12 +108,20 @@ export default function Home() {
             {
                 headers: {
                 'Content-Type': 'multipart/form-data',
-            },
-            }
+                    },
+                }
             );
             console.log('File uploaded successfully:', response.data);
+            // 서버 응답 형식 점검
+            if (response.data && response.data.output_image_path) {
+                setPhotoUrl(response.data.output_image_path);
+                setPhotoUrlState(prevState => !prevState);
+            } else {
+                console.error('Output image path not found in response:', response.data);
+            }
         } catch (error) {
         console.error('Error uploading the file:', error);
+        
         }
     };
     return (
@@ -150,10 +168,18 @@ export default function Home() {
                                     </div>
                                     <h4 className="title-font text-2xl font-small text-gray-900 mt-6 mb-3">홍길동</h4>
                                     <div className="relative mb-4 flex">
+                                        <div className="flex w-1/2 pr-2">
                                         <button onClick={cameraClick} type="button" className="text-gray-900 bg-white hover:bg-gray-100 border border-gray-200 focus:ring-4 focus:outline-none focus:ring-gray-100 font-medium rounded-lg text-sm px-3.5 py-2.5 text-left inline-flex items-center w-full dark:focus:ring-gray-600 dark:bg-gray-800 dark:border-gray-700 dark:text-white dark:hover:bg-gray-700">
                                             <img src="./icons/camera.png" alt="Icon" className="w-10 h- me-4 -ms-1" />
                                             {buttonText}
                                         </button>
+                                        </div>
+                                        <div className="flex w-1/2 pl-2">
+                                        <button onClick={takePhoto} type="button" className="text-gray-900 bg-white hover:bg-gray-100 border border-gray-200 focus:ring-4 focus:outline-none focus:ring-gray-100 font-medium rounded-lg text-sm px-3.5 py-2.5 text-left inline-flex items-center w-full dark:focus:ring-gray-600 dark:bg-gray-800 dark:border-gray-700 dark:text-white dark:hover:bg-gray-700">
+                                            <img src="./icons/camera.png" alt="Icon" className="w-10 h- me-4 -ms-1" />
+                                            사진찍기
+                                        </button>
+                                        </div>
                                     </div>
                                     <div>
                                         <p className="mb-6 text-sm text-gray-500 dark:text-gray-300" id="file_input_help">또는</p>
@@ -174,18 +200,24 @@ export default function Home() {
                                             <img alt="content" className="object-cover object-center w-full" src={refImage} />
                                     </div> */}
                                     <div className="relative rounded-lg w-476 h-[350px] overflow-hidden flex justify-center items-center bg-black bg-opacity-50">
-                                        <img
+                                        {photoUrlState ?
+                                        (<img
                                             alt="content"
-                                            className="object-cover object-center w-3/4 "
+                                            className="object-cover object-center w-5/6 h-5/6 "
+                                            src={photoUrl}
+                                        />) : 
+                                        (<img
+                                            alt="content"
+                                            className="object-cover object-center w-5/6 h-5/6 "
                                             src="https://cdn.pixabay.com/photo/2015/03/08/09/30/head-663997_1280.jpg"
-                                        /></div>
+                                        />)}
+                                        </div>
                                     <div className="h-20"></div>
                                     <div className="relative mb-4 flex">
                                         <button
-                                            onClick={takePhoto}
                                             type="button"
                                             className="text-gray-900 bg-white hover:bg-gray-100 border border-gray-200 focus:ring-4 focus:outline-none focus:ring-gray-100 font-medium rounded-lg text-sm px-12 py-8 text-center inline-flex items-center dark:focus:ring-gray-600 dark:bg-gray-800 dark:border-gray-700 dark:text-white dark:hover:bg-gray-700"
-                                            disabled={isFaceAnalysisButtonDisabled}
+                                            disabled={!faceAnalysisButtonState}
                                         >
                                             <img src="./icons/facial-recognition.png" alt="Icon" className="w-10 h-8 me-2 -ms-1" />
                                             얼굴 분석하기

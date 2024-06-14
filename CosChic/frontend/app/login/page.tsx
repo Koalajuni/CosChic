@@ -3,7 +3,7 @@ import React from 'react';
 import Lottie from "lottie-react";
 import animationData from '@/public/assets/globeAnimation.json';
 import styles from '@/styles/Login.module.css';
-import LoginComponent from '@/components/LoginComponent';
+import LoginComponent from '@/components/loginComponent';
 
 const Login = () => {
     const brands = ["Brand A", "Brand B", "Brand C", "Brand D", "Brand E", "Brand F", "Brand G", "Brand H", "Brand I", "Brand J"];
