@@ -30,7 +30,7 @@ const SearchBar = ({ searchTerm, onChange, onSearch }) => {
                 {dropdownOpen && (
                     <div id="dropdown" className="z-10 bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700 absolute mt-10">
                         <ul className="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdown-button">
-                            {['브랜드', '모델', '상품'].map((item) => (
+                            {['모두', '브랜드', '모델', '상품'].map((item) => (
                                 <li key={item}>
                                     <button
                                         type="button"
@@ -49,7 +49,7 @@ const SearchBar = ({ searchTerm, onChange, onSearch }) => {
                         type="search"
                         id="search-dropdown"
                         className="block p-2.5 w-full z-20 text-sm text-gray-900 bg-gray-50 rounded-e-lg border-s-gray-50 border-s-2 border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-s-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:border-blue-500"
-                        placeholder="Search Mockups, Logos, Design Templates..."
+                        placeholder="브랜드, 모델, 상품을 검색해 보세요..."
                         value={searchTerm}
                         onChange={onChange}
                         required

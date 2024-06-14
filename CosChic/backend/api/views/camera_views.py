@@ -11,44 +11,44 @@ now = datetime.datetime.now()
 nowString = now.strftime('%Y-%m-%d %H_%M_%S')
 
 @csrf_exempt
-def api_sendimage(request):
-    origImg = ''
-    refImge = './media/ref'
-    print("someone Sent a post api")
-    if request.method != 'POST':
-        return HttpResponse(f"잘못된 정보입니다: {request.method}")
+def api_sendimage(fileName):
+    orgImg = fileName
+    # refImge = './media/ref'
+    print("send image")
+    # if request.method != 'GET':
+    #     return HttpResponse(f"잘못된 정보입니다: {request.method}")
 
-    refId = request.POST.get('refId', '')
+    # refId = request.POST.get('refId', '')
 
     fs = FileSystemStorage(
-        location=f'media/source',
-        base_url=f'media/source'
+        location=f'media/org_img',
+        base_url=f'media/org_img'
     )
 
     # 파일 받아오기
-    try:
-        myImage = request.FILES['myImage']
-        # print("파일이름:", myImage.name)
-        # 파일 저장
-        saveFile = fs.save(myImage.name, myImage)
-        # print(saveFile)
-        origImg = './media/source' + saveFile
-    except:
-        print("error")
+    # try:
+    #     myImage = request.FILES['myImage']
+    #     # print("파일이름:", myImage.name)
+    #     # 파일 저장
+    #     saveFile = fs.save(myImage.name, myImage)
+    #     # print(saveFile)
+    #     origImg = './media/source' + saveFile
+    # except:
+    #     print("error")
 
-    resultImage = makeup(origImg, refImge)
-    print("생성된 결과:", resultImage)
+    # resultImage = makeup(origImg, refImge)
+    # print("생성된 결과:", resultImage)
 
-    sendOrg = "http://localhost:8000" + \
-        origImg.split('.')[1] + "." + origImg.split('.')[2]
-    sendRef = "http://localhost:8000" + \
-        refImge.split('.')[1] + "." + refImge.split('.')[2]
-    sendResult = "http://localhost:8000" + \
-        resultImage.split('.')[1] + "." + resultImage.split('.')[2]
+    # sendOrg = "http://localhost:8000" + \
+    #     origImg.split('.')[1] + "." + origImg.split('.')[2]
+    # sendRef = "http://localhost:8000" + \
+    #     refImge.split('.')[1] + "." + refImge.split('.')[2]
+    # sendResult = "http://localhost:8000" + \
+    #     resultImage.split('.')[1] + "." + resultImage.split('.')[2]
 
-    url = f'http://localhost:11000/result?org={sendOrg}&ref{sendRef}&rst={sendResult}'
-
-    return redirect(url)
+    # url = f'http://localhost:11000/result?org={sendOrg}&ref{sendRef}&rst={sendResult}'
+    url = f'http://localhost:8000/media/org_img/' + orgImg + ".jpg"
+    return url
 
 
 def video_feed(request):
@@ -65,7 +65,7 @@ def stream():
     #     detectorPath="", predictorpath=predictorPath)
 
     cap = cv2.VideoCapture(0)
-
+    
     while True:
         ret, frame = cap.read()
         frame = cv2.flip(frame,1)
@@ -92,12 +92,36 @@ def take_photo(request):
         print("someone requested the take_photo")
         cap = cv2.VideoCapture(0)
         ret, frame = cap.read()
-        
+        frame = cv2.flip(frame, 1) # 좌우반전
         if not ret:
             return JsonResponse({'error' : '사진 찍는데 실패했습니다.'}, status = 500)
         imagePath = f'./media/org_img/{nowString}.jpg'
         cv2.imwrite(imagePath, frame) #카메라 영상 저장
+        
         cap.release()
         cv2.destroyAllWindows()
 
         return JsonResponse({'message': '사진이 정상적으로 저장되었습니다.', 'imagePath': imagePath})
+    
+
+@csrf_exempt
+def img_send(request):
+    if request.method == 'POST':
+        print('Request method:', request.method)
+        print('FILES:', request.FILES)
+        orgImage = request.FILES.get('orgImage')
+
+        if orgImage:
+            # Save the uploaded image to the media directory
+            file_path = f'./media/org_img/{nowString}.jpg'
+            with open(file_path, 'wb+') as destination:
+                for chunk in orgImage.chunks():
+                    destination.write(chunk)
+
+            url = f'http://localhost:8000/media/org_img/{nowString}.jpg'
+
+            return JsonResponse({"message": "Image uploaded successfully", "file_path": file_path}, status=201)
+        else:
+            return JsonResponse({"error": "No image uploaded"}, status=400)
+    
+    return JsonResponse({"error": "Invalid request method"}, status=405)
