@@ -92,7 +92,7 @@ export default function UserProfile() {
                         </div>
                     </div>
                     <div>
-                        <CardProfileInformation name={userData?.names} email={userData?.email} age={userData?.age} gender={userData?.gender} />
+                        <CardProfileInformation name={userData?.names} email={userData?.email} age={userData?.age} gender={userData?.gender} UUID={userUID} />
                     </div>
                 </section>
             )}
