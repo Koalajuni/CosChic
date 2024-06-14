@@ -28,6 +28,7 @@ export default function Home() {
     const [loading, setLoading] = useState(false);
     const [cameraOn, setCamera] = useState(false);
     const [cnt, setCnt] = useState(0);  // 상태를 바꾸기 위해 useState을 사용해야 한다. 
+    const [orgImage, setOrgImage] = useState<File | null>(null);
     const [refModel, setRefModel] = useState(null);
     const isFaceAnalysisButtonDisabled = !cameraOn;
     // const [selfRef, setSelRef] = ("");
@@ -79,7 +80,33 @@ export default function Home() {
         }
     }
 
+    const onFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
+        if (event.target.files) {
+            const file = event.target.files[0];
+          await onFileUpload(file); // 파일을 선택하자마자 업로드
+        }
+    };
 
+    const onFileUpload = async (file: File) => {
+    
+        const formData = new FormData();
+        formData.append('orgImage', file);
+    
+        try {
+            const response = await axios.post(
+                `${baseUrl}/v1/orgIMG/`,
+                formData,
+            {
+                headers: {
+                'Content-Type': 'multipart/form-data',
+            },
+            }
+            );
+            console.log('File uploaded successfully:', response.data);
+        } catch (error) {
+        console.error('Error uploading the file:', error);
+        }
+    };
     return (
         <>
             <Header />
@@ -135,7 +162,7 @@ export default function Home() {
                                     <div className="relative mb-0 flex">
                                         {/* <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white" for="file_input">사진 업로드</label> */}
                                         {/* <input type="file" accept="image/png, image/gif, image/jpeg" name="name" className="flex-1 bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out mr-2" /> */}
-                                        <input className="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400" aria-describedby="file_input_help" id="file_input" type="file" />
+                                        <input className="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400" aria-describedby="file_input_help" id="file_input" type="file" onChange={onFileChange}/>
                                     </div>
                                     <div>
                                         <p className="mb-6 text-sm text-gray-500 dark:text-gray-300" id="file_input_help"> SVG, PNG, JPG or GIF (MAX. 800x400px)</p>
