@@ -30,7 +30,7 @@ export default function Header() {
                     <a href="/home" className="text-sm font-semibold leading-6 text-gray-900">홈</a>
                     <a href="/search" className="text-sm font-semibold leading-6 text-gray-900">검색</a>
                     <a href="/profile" className="text-sm font-semibold leading-6 text-gray-900">내 프로필</a>
-                    <a href="/profile" className="text-sm font-semibold leading-6 text-gray-900">팀 소개</a>
+                    <a href="/team" className="text-sm font-semibold leading-6 text-gray-900">팀 소개</a>
                     <a href="/profile" className="text-sm font-semibold leading-6 text-gray-900">문의</a>
                 </div>
                 <div className="hidden lg:flex lg:flex-1 lg:justify-end">
