@@ -201,7 +201,7 @@ export default function Home() {
                                             alt="content"
                                             className="object-cover object-center w-5/6 h-5/6 "
                                             src="https://cdn.pixabay.com/photo/2015/03/08/09/30/head-663997_1280.jpg"
-                                        />)}}
+                                        />)}
                                         </div>
                                     <div className="h-20"></div>
                                     <div className="relative mb-4 flex">

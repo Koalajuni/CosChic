@@ -13,40 +13,13 @@ nowString = now.strftime('%Y-%m-%d %H_%M_%S')
 @csrf_exempt
 def api_sendimage(fileName):
     orgImg = fileName
-    # refImge = './media/ref'
-    print("send image")
-    # if request.method != 'GET':
-    #     return HttpResponse(f"잘못된 정보입니다: {request.method}")
 
-    # refId = request.POST.get('refId', '')
+    print("send image")
 
     fs = FileSystemStorage(
         location=f'media/org_img',
         base_url=f'media/org_img'
     )
-
-    # 파일 받아오기
-    # try:
-    #     myImage = request.FILES['myImage']
-    #     # print("파일이름:", myImage.name)
-    #     # 파일 저장
-    #     saveFile = fs.save(myImage.name, myImage)
-    #     # print(saveFile)
-    #     origImg = './media/source' + saveFile
-    # except:
-    #     print("error")
-
-    # resultImage = makeup(origImg, refImge)
-    # print("생성된 결과:", resultImage)
-
-    # sendOrg = "http://localhost:8000" + \
-    #     origImg.split('.')[1] + "." + origImg.split('.')[2]
-    # sendRef = "http://localhost:8000" + \
-    #     refImge.split('.')[1] + "." + refImge.split('.')[2]
-    # sendResult = "http://localhost:8000" + \
-    #     resultImage.split('.')[1] + "." + resultImage.split('.')[2]
-
-    # url = f'http://localhost:11000/result?org={sendOrg}&ref{sendRef}&rst={sendResult}'
     url = f'http://localhost:8000/media/org_img/' + orgImg + ".jpg"
     return url
 
@@ -59,10 +32,6 @@ def video_feed(request):
 
 
 def stream():
-    # predictorPath = "web/shape_predictor_68_face_landmarks.dat"
-
-    # faceDetect = FaceDetector(
-    #     detectorPath="", predictorpath=predictorPath)
 
     cap = cv2.VideoCapture(0)
     
@@ -100,13 +69,10 @@ def take_photo(request):
         
         cap.release()
         cv2.destroyAllWindows()
-<<<<<<< HEAD
         url = api_sendimage(nowString)
         
         return JsonResponse({'message': '사진이 정상적으로 저장되었습니다.', 'imagePath': imagePath, "url" : url})
-=======
 
-        return JsonResponse({'message': '사진이 정상적으로 저장되었습니다.', 'imagePath': imagePath})
     
 
 @csrf_exempt
@@ -123,9 +89,17 @@ def img_send(request):
                 for chunk in orgImage.chunks():
                     destination.write(chunk)
 
-            return JsonResponse({"message": "Image uploaded successfully", "file_path": file_path}, status=201)
+            url = f'http://localhost:8000/media/org_img/{nowString}.jpg'
+
+            # db 에 사진 저장 
+
+            # 미디어 파이프 처리 -> url2 
+
+            # 출력되는건 url2 로 출력 
+
+
+            return JsonResponse({"message": "Image uploaded successfully", "url": url}, status=201)
         else:
             return JsonResponse({"error": "No image uploaded"}, status=400)
     
     return JsonResponse({"error": "Invalid request method"}, status=405)
->>>>>>> bd7f192420bda4be43079e5f6023e6803c56e4a5

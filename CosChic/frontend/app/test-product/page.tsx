@@ -1,3 +1,4 @@
+"use client"
 import UserProfileImage from '@/components/userProfileImage';
 import React, { useState, useEffect } from 'react';
 import ProductDetails from '@/components/productDetails';
