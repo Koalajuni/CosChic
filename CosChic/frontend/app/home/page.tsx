@@ -10,54 +10,35 @@ import CardSimilarModel from "@/components/card_similarModel"
 
 
 export default function Home() {
-    {/*        더미 모델 공간입니다             */ }
 
-    //주의: 
-    //여기서 실제 DB안에 있는 유저 모델 정보를 입력해서 사용해주세요 
-    // String인지, number인지 확인하고 아래 기입해주세요
+    const [userUid, setUserUid] = useState("");
 
-    const dummyUserData = {
-        "model": "",
-        "pk": "",
-        "fields": {
-            "names": "",
-            "age": "",
-            "gender": "",
-            "email": "",
-            "createDate": "",
-            "password": "",
-            "IP": "",
-            "uploadDate": "",
-            "orgImage": "",
-            "UUID": ""
+    useEffect(() => {
+        // User UID 가져와서 저장
+        const storedUserUid = localStorage.getItem('UUID');
+        console.log(storedUserUid)
+        if (storedUserUid) {
+            setUserUid(storedUserUid);
         }
-    };
-    const dummyProductData = {
-        "model": "",
-        "pk": 1,
-        "fields": {
-            "productUrl": "",
-            "productName": "",
-            "brandName": "",
-            "price": "",
-            "productImage": "",
-            "modelImage": "",
-            "count": "",
-            "categoryId": "",
-            "category": ""
-        }
-    };
-    {/*        더미 모델 공간입니다             */ }
+        console.log(storedUserUid)
+    }, []);
+
 
 
     const [loading, setLoading] = useState(false);
     const [cameraOn, setCamera] = useState(false);
     const [cnt, setCnt] = useState(0);  // 상태를 바꾸기 위해 useState을 사용해야 한다. 
+<<<<<<< HEAD
     // const [refModel, setRefModel] = useState(null);
     // const isFaceAnalysisButtonDisabled = !cameraOn;
     const [faceAnalysisButtonState, setFaceAnalysisButtonState] = useState(false);
     const [photoUrl, setPhotoUrl] = useState('');
     const [photoUrlState, setPhotoUrlState] = useState(false);
+=======
+    const [orgImage, setOrgImage] = useState<File | null>(null);
+    const [refModel, setRefModel] = useState(null);
+    const isFaceAnalysisButtonDisabled = !cameraOn;
+>>>>>>> bd7f192420bda4be43079e5f6023e6803c56e4a5
     // const [selfRef, setSelRef] = ("");
     // const [refImage, setRefImage] = useState(-1);
     const [refId, setRefId] = useState(-1);
@@ -111,7 +92,33 @@ export default function Home() {
         }
     }
 
+    const onFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
+        if (event.target.files) {
+            const file = event.target.files[0];
+          await onFileUpload(file); // 파일을 선택하자마자 업로드
+        }
+    };
 
+    const onFileUpload = async (file: File) => {
+    
+        const formData = new FormData();
+        formData.append('orgImage', file);
+    
+        try {
+            const response = await axios.post(
+                `${baseUrl}/v1/orgIMG/`,
+                formData,
+            {
+                headers: {
+                'Content-Type': 'multipart/form-data',
+            },
+            }
+            );
+            console.log('File uploaded successfully:', response.data);
+        } catch (error) {
+        console.error('Error uploading the file:', error);
+        }
+    };
     return (
         <>
             <Header />
@@ -175,10 +182,10 @@ export default function Home() {
                                     <div className="relative mb-0 flex">
                                         {/* <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white" for="file_input">사진 업로드</label> */}
                                         {/* <input type="file" accept="image/png, image/gif, image/jpeg" name="name" className="flex-1 bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out mr-2" /> */}
-                                        <input className="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400" aria-describedby="file_input_help" id="file_input" type="file" />
+                                        <input className="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400" aria-describedby="file_input_help" id="file_input" type="file" onChange={onFileChange}/>
                                     </div>
                                     <div>
-                                        <p className="mb-6 text-sm text-gray-500 dark:text-gray-300" id="file_input_help">SVG, PNG, JPG or GIF (MAX. 800x400px)</p>
+                                        <p className="mb-6 text-sm text-gray-500 dark:text-gray-300" id="file_input_help"> SVG, PNG, JPG or GIF (MAX. 800x400px)</p>
                                     </div>
 
                                     {/* <button type="submit" href="image_result.html" className="flex mx-auto mt-6 text-white bg-indigo-500 border-0 py-2 px-5 focus:outline-none hover:bg-indigo-600 rounded">사진등록</button> */}

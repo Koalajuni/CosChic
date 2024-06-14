@@ -100,6 +100,32 @@ def take_photo(request):
         
         cap.release()
         cv2.destroyAllWindows()
+<<<<<<< HEAD
         url = api_sendimage(nowString)
         
         return JsonResponse({'message': '사진이 정상적으로 저장되었습니다.', 'imagePath': imagePath, "url" : url})
+=======
+
+        return JsonResponse({'message': '사진이 정상적으로 저장되었습니다.', 'imagePath': imagePath})
+    
+
+@csrf_exempt
+def img_send(request):
+    if request.method == 'POST':
+        print('Request method:', request.method)
+        print('FILES:', request.FILES)
+        orgImage = request.FILES.get('orgImage')
+
+        if orgImage:
+            # Save the uploaded image to the media directory
+            file_path = f'./media/org_img/{nowString}.jpg'
+            with open(file_path, 'wb+') as destination:
+                for chunk in orgImage.chunks():
+                    destination.write(chunk)
+
+            return JsonResponse({"message": "Image uploaded successfully", "file_path": file_path}, status=201)
+        else:
+            return JsonResponse({"error": "No image uploaded"}, status=400)
+    
+    return JsonResponse({"error": "Invalid request method"}, status=405)
+>>>>>>> bd7f192420bda4be43079e5f6023e6803c56e4a5
