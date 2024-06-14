@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 
 
 const CardTeamProfile = ({ name, job, emailUrl = "", githubUrl = "" }) => {
+
     return (
         <div className="h-auto  border min-w-xs  w-full hover:shadow-xl rounded-md bg-gray-100 dark:bg-gray-800 ">
             <section className="w-full h-72  flex flex-col items-center  pt-10 gap-1 ">
