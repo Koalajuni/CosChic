@@ -28,7 +28,6 @@ export default function Home() {
     const [loading, setLoading] = useState(false);
     const [cameraOn, setCamera] = useState(false);
     const [cnt, setCnt] = useState(0);  // 상태를 바꾸기 위해 useState을 사용해야 한다. 
-    const [orgImage, setOrgImage] = useState<File | null>(null);
     const [refModel, setRefModel] = useState(null);
     const isFaceAnalysisButtonDisabled = !cameraOn;
     // const [selfRef, setSelRef] = ("");
@@ -94,7 +93,7 @@ export default function Home() {
     
         try {
             const response = await axios.post(
-                `${baseUrl}/v1/orgIMG/`,
+                `${baseUrl}/v1/orgIMG`,
                 formData,
             {
                 headers: {
