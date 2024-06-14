@@ -28,17 +28,11 @@ export default function Home() {
     const [loading, setLoading] = useState(false);
     const [cameraOn, setCamera] = useState(false);
     const [cnt, setCnt] = useState(0);  // 상태를 바꾸기 위해 useState을 사용해야 한다. 
-<<<<<<< HEAD
     // const [refModel, setRefModel] = useState(null);
     // const isFaceAnalysisButtonDisabled = !cameraOn;
     const [faceAnalysisButtonState, setFaceAnalysisButtonState] = useState(false);
     const [photoUrl, setPhotoUrl] = useState('');
     const [photoUrlState, setPhotoUrlState] = useState(false);
-=======
-    const [orgImage, setOrgImage] = useState<File | null>(null);
-    const [refModel, setRefModel] = useState(null);
-    const isFaceAnalysisButtonDisabled = !cameraOn;
->>>>>>> bd7f192420bda4be43079e5f6023e6803c56e4a5
     // const [selfRef, setSelRef] = ("");
     // const [refImage, setRefImage] = useState(-1);
     const [refId, setRefId] = useState(-1);
@@ -106,7 +100,7 @@ export default function Home() {
     
         try {
             const response = await axios.post(
-                `${baseUrl}/v1/orgIMG/`,
+                `${baseUrl}/v1/orgIMG`,
                 formData,
             {
                 headers: {
@@ -115,6 +109,8 @@ export default function Home() {
             }
             );
             console.log('File uploaded successfully:', response.data);
+            setPhotoUrl(response.data.url);
+            setPhotoUrlState(prevState => !prevState);
         } catch (error) {
         console.error('Error uploading the file:', error);
         }
