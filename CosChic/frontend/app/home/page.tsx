@@ -169,12 +169,8 @@ export default function Home() {
                                             alt="content"
                                             className="object-cover object-center w-3/4 "
                                             src="https://cdn.pixabay.com/photo/2015/03/08/09/30/head-663997_1280.jpg"
-<<<<<<< HEAD
-                                        />)}
+                                        />
                                         </div>
-=======
-                                        /></div>
->>>>>>> 047e09328a5a851d1c49e1842dbdc852c9fafaab
                                     <div className="h-20"></div>
                                     <div className="relative mb-4 flex">
                                         <button
