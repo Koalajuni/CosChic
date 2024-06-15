@@ -6,6 +6,8 @@ from django.views.decorators.csrf import csrf_exempt
 from django.core.files.storage import FileSystemStorage  # 장고 파일 처리
 import cv2
 import datetime
+import os 
+from api.models import UserData, Product, Recommend
 
 now = datetime.datetime.now()
 nowString = now.strftime('%Y-%m-%d %H_%M_%S')
@@ -56,9 +58,14 @@ def stream():
     cv2.destroyAllWindows()
 
 @csrf_exempt
-def take_photo(request):
+def take_photo(request, UUID):
     if request.method == 'POST':
         print("someone requested the take_photo")
+        
+        # POST 요청으로부터 UUID 가져오기
+        uuid = UUID
+        print(f"uuid 받음 : {uuid}" )
+        
         cap = cv2.VideoCapture(0)
         ret, frame = cap.read()
         frame = cv2.flip(frame, 1) # 좌우반전
@@ -69,21 +76,31 @@ def take_photo(request):
         
         cap.release()
         cv2.destroyAllWindows()
-<<<<<<< HEAD
         url = api_sendimage(nowString)
         
+        # 이미지를 db에 저장
+        # 유저 객체 가져오기
+        try:
+            user = UserData.objects.get(UUID=uuid)
+        except UserData.DoesNotExist:
+            return JsonResponse({'error': '해당 UUID를 가진 유저가 없습니다.'}, status=404)
+        
+        # 유저 객체의 org_image 필드 업데이트
+        user.orgImage = imagePath  
+        user.save()
+        
         return JsonResponse({'message': '사진이 정상적으로 저장되었습니다.', 'imagePath': imagePath, "url" : url})
-=======
->>>>>>> 047e09328a5a851d1c49e1842dbdc852c9fafaab
 
     
 
 @csrf_exempt
-def img_send(request):
+def img_send(request, UUID):
     if request.method == 'POST':
         print('Request method:', request.method)
         print('FILES:', request.FILES)
         orgImage = request.FILES.get('orgImage')
+        uuid = UUID
+        print(f"uuid 받음 : {uuid}" )
 
         if orgImage:
             # Save the uploaded image to the media directory
@@ -94,18 +111,20 @@ def img_send(request):
 
             url = f'http://localhost:8000/media/org_img/{nowString}.jpg'
 
-<<<<<<< HEAD
-            # db 에 사진 저장 
+            # 이미지를 db에 저장
+            # 유저 객체 가져오기
+            try:
+                user = UserData.objects.get(UUID=uuid)
+            except UserData.DoesNotExist:
+                return JsonResponse({'error': '해당 UUID를 가진 유저가 없습니다.'}, status=404)
+            
+            # 유저 객체의 org_image 필드 업데이트
+            user.orgImage = file_path  
+            user.save()
 
-            # 미디어 파이프 처리 -> url2 
-
-            # 출력되는건 url2 로 출력 
 
 
             return JsonResponse({"message": "Image uploaded successfully", "url": url}, status=201)
-=======
-            return JsonResponse({"message": "Image uploaded successfully", "file_path": file_path}, status=201)
->>>>>>> 047e09328a5a851d1c49e1842dbdc852c9fafaab
         else:
             return JsonResponse({"error": "No image uploaded"}, status=400)
     

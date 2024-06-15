@@ -6,12 +6,16 @@ import { useEffect, useState } from "react"
 import axios from "axios"
 import LoadingProcess from "@/components/loadingProcess"
 import CardSimilarModel from "@/components/card_similarModel"
-
+import useUserUID from "@/hooks/useUserUID";
 
 
 export default function Home() {
 
     const [userUid, setUserUid] = useState("");
+    const userUID = useUserUID(); // USER UID 가져오는 변수  
+    const [userData, setUserData] = useState<any | null>(null);
+    const [loading, setLoading] = useState<boolean>(true);
+    const [error, setError] = useState<string | null>(null);
 
     useEffect(() => {
         // User UID 가져와서 저장
@@ -23,9 +27,35 @@ export default function Home() {
         console.log(storedUserUid)
     }, []);
 
+    useEffect(() => {
+        const fetchUserData = async () => {
+            // console.log("fetching UserData:", userUID)
+            if (userUID) {
+                try {
+                    const response = await axios.get(`http://127.0.0.1:8000/api/v1/userdata/${userUID}`);
+                    setUserData(response.data);
+                } catch (err) {
+                    setError('Failed to fetch user data.');
+                } finally {
+                    setLoading(false);
+                }
+            } else {
+                setLoading(false);
+            }
+        };
+
+        fetchUserData();
+    }, [userUID]);
+
+    useEffect(() => {
+        if (userData) {
+            console.log("This is the user response:", userData);
+        }
+    }, [userData]);
 
 
-    const [loading, setLoading] = useState(false);
+
+    // const [loading, setLoading] = useState(false);
     const [cameraOn, setCamera] = useState(false);
     const [cnt, setCnt] = useState(0);  // 상태를 바꾸기 위해 useState을 사용해야 한다. 
     // const [refModel, setRefModel] = useState(null);
@@ -70,7 +100,7 @@ export default function Home() {
 
     const takePhoto = async () => {
         try {
-            const response = await axios.post(`${baseUrl}/v1/camera_take_photo`, {
+            const response = await axios.post(`${baseUrl}/v1/camera_take_photo/${userUID}`, {
                 timeout: 30000,
             });
             if (response.status == 200) {
@@ -100,7 +130,7 @@ export default function Home() {
     
         try {
             const response = await axios.post(
-                `${baseUrl}/v1/orgIMG`,
+                `${baseUrl}/v1/orgIMG/${userUID}`,
                 formData,
             {
                 headers: {
@@ -157,7 +187,7 @@ export default function Home() {
                                         )
                                         }
                                     </div>
-                                    <h4 className="title-font text-2xl font-small text-gray-900 mt-6 mb-3">홍길동</h4>
+                                    <h4 className="title-font text-2xl font-small text-gray-900 mt-6 mb-3">{userData ? userData.names : 'Loading...'}</h4>
                                     <div className="relative mb-4 flex">
                                         <div className="flex w-1/2 pr-2">
                                         <button onClick={cameraClick} type="button" className="text-gray-900 bg-white hover:bg-gray-100 border border-gray-200 focus:ring-4 focus:outline-none focus:ring-gray-100 font-medium rounded-lg text-sm px-3.5 py-2.5 text-left inline-flex items-center w-full dark:focus:ring-gray-600 dark:bg-gray-800 dark:border-gray-700 dark:text-white dark:hover:bg-gray-700">
@@ -201,7 +231,7 @@ export default function Home() {
                                             alt="content"
                                             className="object-cover object-center w-5/6 h-5/6 "
                                             src="https://cdn.pixabay.com/photo/2015/03/08/09/30/head-663997_1280.jpg"
-                                        />)}}
+                                        />)}
                                         </div>
                                     <div className="h-20"></div>
                                     <div className="relative mb-4 flex">
@@ -232,6 +262,7 @@ export default function Home() {
                     </form>
                 </section>
             }
+            
 
             <Footer />
             <script src="../path/to/flowbite/dist/flowbite.min.js"></script>

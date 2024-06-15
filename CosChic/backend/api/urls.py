@@ -14,9 +14,9 @@ urlpatterns = [
 
     # 카메라  views/camera_views 파일에 있는 함수 
     path('v1/camera_video_feed', camera_views.video_feed, name='camera_video_feed'),
-    path('v1/camera_take_photo', camera_views.take_photo, name='camera_take_photo'),
+    path('v1/camera_take_photo/<str:UUID>', camera_views.take_photo, name='camera_take_photo'),
     # 원본이미지 저장 
-    path('v1/orgIMG', camera_views.img_send, name='img_send'),
+    path('v1/orgIMG/<str:UUID>', camera_views.img_send, name='img_send'),
 
     #프로필뷰 
     path('v1/userdata/<str:UUID>', profile_veiws.handle_userdata, name='handle_userData'),
