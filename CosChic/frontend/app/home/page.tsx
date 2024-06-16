@@ -10,6 +10,7 @@ import useUserUID from "@/hooks/useUserUID"
 
 
 
+
 export default function Home() {
 
     const userUID = useUserUID(); // USER UID 가져오는 변수  
@@ -18,7 +19,11 @@ export default function Home() {
     const [loading, setLoading] = useState(false);
     const [cameraOn, setCamera] = useState(false);
     const [cnt, setCnt] = useState(0);  // 상태를 바꾸기 위해 useState을 사용해야 한다. 
-    const [orgImage, setOrgImage] = useState<File | null>(null);
+    // const [refModel, setRefModel] = useState(null);
+    // const isFaceAnalysisButtonDisabled = !cameraOn;
+    const [faceAnalysisButtonState, setFaceAnalysisButtonState] = useState(false);
+    const [photoUrl, setPhotoUrl] = useState('');
+    const [photoUrlState, setPhotoUrlState] = useState(false);
     const [refModel, setRefModel] = useState(null);
     const isFaceAnalysisButtonDisabled = !cameraOn;
     // const [selfRef, setSelRef] = ("");
@@ -62,6 +67,8 @@ export default function Home() {
             if (response.status == 200) {
                 // setCamera(false);
                 setCamera(true);
+                setPhotoUrl(response.data.output_image_path);
+                setPhotoUrlState(prevState => !prevState);
                 console.log(response)
             }
         } catch (error) {
@@ -86,15 +93,23 @@ export default function Home() {
             const response = await axios.post(
                 `${baseUrl}/v1/orgIMG/`,
                 formData,
-                {
-                    headers: {
-                        'Content-Type': 'multipart/form-data',
+            {
+                headers: {
+                'Content-Type': 'multipart/form-data',
                     },
                 }
             );
             console.log('File uploaded successfully:', response.data);
+            // 서버 응답 형식 점검
+            if (response.data && response.data.output_image_path) {
+                setPhotoUrl(response.data.output_image_path);
+                setPhotoUrlState(prevState => !prevState);
+            } else {
+                console.error('Output image path not found in response:', response.data);
+            }
         } catch (error) {
-            console.error('Error uploading the file:', error);
+        console.error('Error uploading the file:', error);
+        
         }
     };
     return (
@@ -169,7 +184,8 @@ export default function Home() {
                                             alt="content"
                                             className="object-cover object-center w-3/4 "
                                             src="https://cdn.pixabay.com/photo/2015/03/08/09/30/head-663997_1280.jpg"
-                                        /></div>
+                                        />)}
+                                        </div>
                                     <div className="h-20"></div>
                                     <div className="relative mb-4 flex">
                                         <button
