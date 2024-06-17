@@ -74,12 +74,6 @@ export default function Home() {
 
     const [buttonText, setButtonText] = useState("카메라 사용하기");
 
-    const models = [
-        { name: "브랜드 모델 A", lips: 28, eyes: 48, contour: 78, similarity: 78, product: "A" },
-        { name: "브랜드 모델 B", lips: 30, eyes: 50, contour: 80, similarity: 75, product: "B" },
-        { name: "브랜드 모델 C", lips: 32, eyes: 52, contour: 82, similarity: 70, product: "C" },
-        // 나중에 DB되면 여기다 정보 가져올겁니다.
-    ];
 
     const faceanalysisButtonClick = () => {
         setFaceAnalysisButtonState(prevState => !prevState);
@@ -161,32 +155,44 @@ export default function Home() {
         }
     };
 
-    // 분석하기 버튼
-    const faceanalysisButton = async () =>{
-        try {
-            const response = await axios.get(`${baseUrl}/v1/face_analysis/${userUID}`, {
-            });
-            if (response.status == 200) {
-                Swal.fire("success", `분석에 성공했습니다.`, "success"); // 사용자에게 오류 메시지 표시
-            }
-        } catch (error) {
-            console.error("face analysis error:", error); // 콘솔에 상세 오류 메시지 출력
-            Swal.fire("Error", `분석에 실패했습니다.`, "error"); // 사용자에게 오류 메시지 표시
-        }
-    }
-
     // 모델카드 출력 
-    const [showCard, setShowCard] = useState(false);
-
     const showcardSign = () => {
         setShowCard(true);
     }
+    
 
-    useEffect(() => {
-        // 여기에 신호를 받는 로직을 추가하세요.
-        // 예: 웹소켓, API 호출, 이벤트 리스너 등.
-        // 신호를 받으면 handleSignal을 호출합니다.
-    }, []);
+    const [showCard, setShowCard] = useState(false);
+    const [similarModel, setFaissModels] = useState<any[]>([]); 
+    const [models, setModels] = useState<any[] | null>(null);
+    // 분석하기 버튼
+    const faceanalysisButton = async () => {
+        try {
+            const response = await axios.get(`${baseUrl}/v1/face_analysis/${userUID}`);
+            if (response.status === 202) {
+                const data = response.data;
+                const similarModelArray: any[] = Object.values(data);
+                setFaissModels(similarModelArray);
+                setModels(similarModelArray)
+                setShowCard(true);
+
+                Swal.fire("success", `분석에 성공했습니다.`, "success");
+            }
+        } catch (error) {
+            console.error("face analysis error:", error);
+            Swal.fire("Error", `분석에 실패했습니다.`, "error");
+        }
+    }
+    
+
+    //const models = [
+        // { name: "브랜드 모델 A", lips: 28, eyes: 48, contour: 78, similarity: 78, product: "A" },
+        // { name: "브랜드 모델 B", lips: 30, eyes: 50, contour: 80, similarity: 75, product: "B" },
+        // { name: "브랜드 모델 C", lips: 32, eyes: 52, contour: 82, similarity: 70, product: "C" },
+        // 나중에 DB되면 여기다 정보 가져올겁니다.
+    //];
+
+    
+
 
 
     return (
@@ -302,7 +308,6 @@ export default function Home() {
                             </div>
                         </div>
                         <div>
-                            // <CardSimilarModel models={models} />
                             {showCard && <CardSimilarModel models={models} />}
                         </div>
                     </form>

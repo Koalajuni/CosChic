@@ -172,10 +172,30 @@ def faiss_analysis(request, UUID):
         faceList = list(faceList)
         print(faceList)
 
-        jsonData = {"message": "Image processed successfully"}
-        jsonData["model_num"] = len(faceList)
+        jsonData = {}
+        # jsonData["model_num"] = len(faceList)
         for i in range(len(faceList)):
-            jsonData[i+1] = faceList[i]
+            # 파일이 들어있는 폴더 경로
+            modelFolderPath = f'./media/dataset/{faceList[i]}'
+
+            # 모델의 첫번째 사진
+            images = os.listdir(modelFolderPath)
+            firstImage = images[0]
+            # print(firstImage)
+            modelPhotoUrl = f'http://localhost:8000/media/dataset/{faceList[i]}/{firstImage}' 
+            
+
+            # 아래 유사도 수치 mediapipe로 계산해서 수정하면 됩니다.
+            data = {
+                "modelName" : faceList[i],
+                "lips" : 30,
+                "eyes" : 40,
+                "contour" : 50,
+                "similarity" : 60,
+                "product" : "product",
+                "photoUrl" : modelPhotoUrl
+            }
+            jsonData[f"model_{i+1}"] = data
         print(jsonData)
 
 
