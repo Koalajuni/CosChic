@@ -1,15 +1,23 @@
 "use client";
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import styles from '@/styles/CardProfileInformation.module.css';
 
-const CardProfileInformation = ({ }) => {
+const CardProfileInformation = ({ name, email, age, gender, UUID }) => {
     const [formData, setFormData] = useState({
-        firstName: '',
-        email: '',
-        age: '',
-        gender: '',
+        names: name || "홍길동",
+        email: email || "coschic@gmail.com",
+        age: age || "20",
+        gender: gender || "female",
     });
+    useEffect(() => {
+        setFormData({
+            names: name || "",
+            email: email || "",
+            age: age || "",
+            gender: gender || "",
+        });
+    }, [name, email, age, gender]);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -22,36 +30,36 @@ const CardProfileInformation = ({ }) => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const response = await axios.put('http://127.0.0.1:8000/api/v1/user_profile/:user_id', formData);
+            const response = await axios.put(`http://127.0.0.1:8000/api/v1/userdata/${UUID}`, formData);
             console.log('Data submitted successfully:', response.data);
+            window.location.reload();
         } catch (error) {
             console.error('Error submitting data:', error);
         }
     };
 
     return (
-        <div className="flex justify-start mt-2 px-8">
+        <div className="w-full flex justify-start mt-2 px-8">
             <form className="max-w-2xl" onSubmit={handleSubmit}>
                 <div className="flex flex-wrap border shadow rounded-lg p-3 dark:bg-gray-600">
-                    <h2 className="text-xl text-gray-600 dark:text-gray-300 pb-2">Account settings:</h2>
+                    <h2 className="text-xl text-gray-600 dark:text-gray-300 pb-2">나의 계정:</h2>
 
                     <div className="flex flex-col gap-2 w-full border-gray-400">
 
                         <div>
-                            <label className="text-gray-600 dark:text-gray-400">User
-                                name
+                            <label className="text-gray-600 dark:text-gray-400">이름
                             </label>
                             <input
                                 className="w-full py-3 border border-slate-200 rounded-lg px-3 focus:outline-none focus:border-slate-500 hover:shadow dark:bg-gray-600 dark:text-gray-100"
                                 type="text"
-                                name="firstName"
+                                name="names"
                                 placeholder="이름"
-                                value={formData.firstName}
+                                value={formData.names}
                                 onChange={handleChange} />
                         </div>
 
                         <div>
-                            <label className="text-gray-600 dark:text-gray-400">Email</label>
+                            <label className="text-gray-600 dark:text-gray-400">이메일</label>
                             <input
                                 className="w-full py-3 border border-slate-200 rounded-lg px-3 focus:outline-none focus:border-slate-500 hover:shadow dark:bg-gray-600 dark:text-gray-100"
                                 type="text"
@@ -61,7 +69,7 @@ const CardProfileInformation = ({ }) => {
                                 onChange={handleChange} />
                         </div>
                         <div>
-                            <label className="text-gray-600 dark:text-gray-400">Age</label>
+                            <label className="text-gray-600 dark:text-gray-400">나이</label>
                             <input
                                 className="w-full py-3 border border-slate-200 rounded-lg px-3 focus:outline-none focus:border-slate-500 hover:shadow dark:bg-gray-600 dark:text-gray-100"
                                 type="text"
@@ -72,7 +80,7 @@ const CardProfileInformation = ({ }) => {
                         </div>
 
                         <div>
-                            <label className="text-gray-600 dark:text-gray-400">Gender</label>
+                            <label className="text-gray-600 dark:text-gray-400">성별</label>
                             <input
                                 className="w-full py-3 border border-slate-200 rounded-lg px-3 focus:outline-none focus:border-slate-500 hover:shadow dark:bg-gray-600 dark:text-gray-100"
                                 name="gender"
@@ -84,7 +92,7 @@ const CardProfileInformation = ({ }) => {
                         <div className="flex justify-end">
                             <button
                                 className="py-1.5 px-3 m-1 text-center bg-violet-700 border rounded-md text-white  hover:bg-violet-500 hover:text-gray-100 dark:text-gray-200 dark:bg-violet-700"
-                                type="submit">Save changes</button>
+                                type="submit">저장하기</button>
                         </div>
                     </div>
                 </div>
