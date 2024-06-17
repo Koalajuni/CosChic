@@ -1,50 +1,46 @@
-
+"use client"
 import Header from "@/components/inc_header"
 import Footer from "@/components/inc_footer"
 import CardProfileInformation from "@/components/card_profileInfo";
 import SimilarModels from "@/components/similarModels";
+import useUserUID from "@/hooks/useUserUID";
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
+
 
 export default function UserProfile() {
 
-    {/*        더미 모델 공간입니다             */ }
+    const userUID = useUserUID(); // USER UID 가져오는 변수  
+    const [userData, setUserData] = useState<any | null>(null);
+    const [loading, setLoading] = useState<boolean>(true);
+    const [error, setError] = useState<string | null>(null);
 
-    //주의: 
-    //여기서 실제 DB안에 있는 유저 모델 정보를 입력해서 사용해주세요 
-    // String인지, number인지 확인하고 아래 기입해주세요
 
-    const dummyUserData = {
-        "model": "",
-        "pk": "",
-        "fields": {
-            "names": "",
-            "age": "",
-            "gender": "",
-            "email": "",
-            "createDate": "",
-            "password": "",
-            "IP": "",
-            "uploadDate": "",
-            "orgImage": "",
-            "UUID": ""
+    useEffect(() => {
+        const fetchUserData = async () => {
+            // console.log("fetching UserData:", userUID)
+            if (userUID) {
+                try {
+                    const response = await axios.get(`http://127.0.0.1:8000/api/v1/userdata/${userUID}`);
+                    setUserData(response.data);
+                } catch (err) {
+                    setError('Failed to fetch user data.');
+                } finally {
+                    setLoading(false);
+                }
+            } else {
+                setLoading(false);
+            }
+        };
+
+        fetchUserData();
+    }, [userUID]);
+
+    useEffect(() => {
+        if (userData) {
+            console.log("This is the user response:", userData);
         }
-    };
-    const dummyProductData = {
-        "model": "",
-        "pk": 1,
-        "fields": {
-            "productUrl": "",
-            "productName": "",
-            "brandName": "",
-            "price": "",
-            "productImage": "",
-            "modelImage": "",
-            "count": "",
-            "categoryId": "",
-            "category": ""
-        }
-    };
-    {/*        더미 모델 공간입니다             */ }
-
+    }, [userData]);
 
 
     const profileImageStyle = {
@@ -68,32 +64,40 @@ export default function UserProfile() {
     return (
         <>
             <Header />
-            <section className="h-full flex justify-center">
-                <div className="px-3 py-2">
-                    <div className="flex flex-wrap border shadow rounded-lg p-3 dark:bg-gray-600 items-center flex-col">
-                        <a
-                            className="block mx-auto"
-                            href=""
-                            style={profileImageStyle}
-                        ></a>
-                        <p className="font-serif font-semibold">코스칙</p>
-                        <span className="text-sm text-gray-400">
-                            New York, NY - Los Angeles, CA
-                        </span>
-                        <span className="text-sm text-gray-400">
-                            {dummyUserData.age}, 성별
-                        </span>
-                        <span>
-
-                        </span>
+            {loading ? (
+                <div>Loading...</div>
+            ) : error ? (
+                <div>Error: {error}</div>
+            ) : (
+                <section className="h-full flex justify-center">
+                    <div className="px-3 py-2">
+                        <div className="flex flex-wrap border shadow rounded-lg p-3 dark:bg-gray-600 items-center flex-col">
+                            <a
+                                className="block mx-auto"
+                                href=""
+                                style={profileImageStyle}
+                            ></a>
+                            {userData && (
+                                <>
+                                    <p className="font-serif font-semibold p-4">{userData.names}</p>
+                                    <span className="text-sm text-gray-400">
+                                        {userData.email}
+                                    </span>
+                                    <span className="text-sm text-gray-400">
+                                        {userData.gender}
+                                    </span>
+                                    <span></span>
+                                </>
+                            )}
+                        </div>
                     </div>
-                </div>
-                <div>
-                    <CardProfileInformation />
-                </div>
-            </section>
+                    <div>
+                        <CardProfileInformation name={userData?.names} email={userData?.email} age={userData?.age} gender={userData?.gender} UUID={userUID} />
+                    </div>
+                </section>
+            )}
             <div>
-                <h2 className="text-xl font-semibold mt-4 mb-2">나와 비슷한 모델</h2>
+                <h2 className="text-xl font-semibold mt-4 mb-2 p-6">나와 비슷한 모델</h2>
                 <SimilarModels models={userResembleModels} />
             </div>
             <Footer />
