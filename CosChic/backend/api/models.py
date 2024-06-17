@@ -2,15 +2,16 @@ from django.db import models
 # Create your models here.
 
 class UserData(models.Model):
-    names = models.CharField(max_length=100)
-    age = models.CharField(max_length=10)
-    gender = models.CharField(max_length=10)
+    names = models.CharField(max_length=100,default="홍길동", blank=True)
+    age = models.CharField(max_length=10,default="12", blank=True)
+    gender = models.CharField(max_length=10,default="", blank=True)
     email = models.CharField(max_length=100)
     createDate = models.CharField(max_length=50)
     password = models.CharField(max_length=100)
     IP = models.CharField(max_length=20)
-    uploadDate = models.CharField(max_length=50)
-    orgImage = models.CharField(max_length=255)
+    uploadDate = models.CharField(max_length=50,default="", blank=True)
+    orgImage = models.CharField(max_length=255,default="", blank=True)
+    UUID = models.CharField(max_length=255)
     def __str__(self):
         return self.names
 

@@ -5,51 +5,27 @@ from django.shortcuts import render, redirect
 from django.views.decorators.csrf import csrf_exempt
 from django.core.files.storage import FileSystemStorage  # 장고 파일 처리
 import cv2
+import datetime
+import os 
+from api.models import UserData, Product, Recommend
+from .mediapipe import FaceMeshDetector
+from .faiss_class import CosChicFaiss
 
-
-def api_index(request):
-    return HttpResponse("ChicBytes API v1.0")
-
+now = datetime.datetime.now()
+nowString = now.strftime('%Y-%m-%d %H_%M_%S')
 
 @csrf_exempt
-def api_sendimage(request):
-    origImg = ''
-    refImge = './media/ref'
-    print("someone Sent a post api")
-    if request.method != 'POST':
-        return HttpResponse(f"잘못된 정보입니다: {request.method}")
+def api_sendimage(fileName):
+    orgImg = fileName
 
-    refId = request.POST.get('refId', '')
+    print("send image")
 
     fs = FileSystemStorage(
-        location=f'media/source',
-        base_url=f'media/source'
+        location=f'media/org_img',
+        base_url=f'media/org_img'
     )
-
-    # 파일 받아오기
-    try:
-        myImage = request.FILES['myImage']
-        # print("파일이름:", myImage.name)
-        # 파일 저장
-        saveFile = fs.save(myImage.name, myImage)
-        # print(saveFile)
-        origImg = './media/source' + saveFile
-    except:
-        print("error")
-
-    resultImage = makeup(origImg, refImge)
-    print("생성된 결과:", resultImage)
-
-    sendOrg = "http://localhost:8000" + \
-        origImg.split('.')[1] + "." + origImg.split('.')[2]
-    sendRef = "http://localhost:8000" + \
-        refImge.split('.')[1] + "." + refImge.split('.')[2]
-    sendResult = "http://localhost:8000" + \
-        resultImage.split('.')[1] + "." + resultImage.split('.')[2]
-
-    url = f'http://localhost:11000/result?org={sendOrg}&ref{sendRef}&rst={sendResult}'
-
-    return redirect(url)
+    url = f'http://localhost:8000/media/org_img/' + orgImg + ".jpg"
+    return url
 
 
 def video_feed(request):
@@ -60,13 +36,9 @@ def video_feed(request):
 
 
 def stream():
-    # predictorPath = "web/shape_predictor_68_face_landmarks.dat"
-
-    # faceDetect = FaceDetector(
-    #     detectorPath="", predictorpath=predictorPath)
 
     cap = cv2.VideoCapture(0)
-
+    
     while True:
         ret, frame = cap.read()
         frame = cv2.flip(frame,1)
@@ -86,3 +58,146 @@ def stream():
 
     cap.release()
     cv2.destroyAllWindows()
+
+@csrf_exempt
+def take_photo(request, UUID):
+    if request.method == 'POST':
+        print("someone requested the take_photo")
+        # POST 요청으로부터 UUID 가져오기
+        uuid = UUID
+        print(f"uuid 받음 : {uuid}" )
+        
+        cap = cv2.VideoCapture(0)
+        ret, frame = cap.read()
+        frame = cv2.flip(frame, 1) # 좌우반전
+        if not ret:
+            return JsonResponse({'error' : '사진 찍는데 실패했습니다.'}, status = 500)
+        imagePath = f'./media/org_img/{nowString}.jpg'
+        cv2.imwrite(imagePath, frame) #카메라 영상 저장
+        cap.release()
+        cv2.destroyAllWindows()
+        url = api_sendimage(nowString)
+        # 이미지를 db에 저장
+        # 유저 객체 가져오기
+        try:
+            user = UserData.objects.get(UUID=uuid)
+        except UserData.DoesNotExist:
+            return JsonResponse({'error': '해당 UUID를 가진 유저가 없습니다.'}, status=404)
+        
+        # 유저 객체의 org_image 필드 업데이트
+        user.orgImage = imagePath  
+        user.save()
+        output_image = f'./media/mediapipe/output_{nowString}.jpg' 
+        # FaceMeshDetector로 이미지 처리
+        detector = FaceMeshDetector(imagePath, output_image)
+        detector.process_image()
+        output_image_path = f'http://localhost:8000/media/mediapipe/output_{nowString}.jpg' 
+        # JSON 응답에 output_image_path 포함
+        return JsonResponse({"message": "Image processed successfully", 'imagePath': imagePath, "output_image_path": output_image_path}, status=200)
+        
+    
+
+        
+
+
+@csrf_exempt
+def img_send(request, UUID):
+    try:
+        if request.method == 'POST':
+            print('Request method:', request.method)
+            print('FILES:', request.FILES)
+            orgImage = request.FILES.get('orgImage')
+            uuid = UUID
+            print(f"uuid 받음 : {uuid}" )
+            if orgImage:
+                # Save the uploaded image to the media directory
+                url = f'./media/org_img/{nowString}.jpg'
+                with open(url, 'wb+') as destination:
+                    for chunk in orgImage.chunks():
+                        destination.write(chunk)
+
+                # 이미지를 db에 저장
+                # 유저 객체 가져오기
+                try:
+                    user = UserData.objects.get(UUID=uuid)
+                except UserData.DoesNotExist:
+                    return JsonResponse({'error': '해당 UUID를 가진 유저가 없습니다.'}, status=404)
+                
+                # 유저 객체의 org_image 필드 업데이트
+                user.orgImage = url  
+                user.save()
+
+                output_image = f'./media/mediapipe/output_{nowString}.jpg' 
+            
+                # FaceMeshDetector로 이미지 처리
+                detector = FaceMeshDetector(url, output_image)
+                detector.process_image()
+                output_image_path = f'http://localhost:8000/media/mediapipe/output_{nowString}.jpg' 
+                # JSON 응답에 output_image_path 포함
+                return JsonResponse({"message": "Image processed successfully", "output_image_path": output_image_path}, status=201)
+            else:
+                return JsonResponse({"error": "No image uploaded"}, status=400)
+        
+        return JsonResponse({"error": "Invalid request method"}, status=405)
+        
+    except Exception as e:
+        print(f"Error processing request: {e}")
+    return JsonResponse({"error": str(e)}, status=500)
+
+
+@csrf_exempt
+def faiss_analysis(request, UUID):
+    if request.method == 'GET':
+        print("request faiss analysis")
+        uuid = UUID
+        print(f"uuid 받음 : {uuid}" )
+
+        # 유저 사진 가져오기
+        # 유저 객체 가져오기
+        try:
+            user = UserData.objects.get(UUID=uuid)
+        except UserData.DoesNotExist:
+            return JsonResponse({'error': '해당 UUID를 가진 유저가 없습니다.'}, status=404)
+        
+        userImage = user.orgImage
+        print(userImage)
+        
+        # faiss 분석
+        model = CosChicFaiss()
+        faceList = model.detect_faces(userImage,
+                        r'C:\Users\LeeSangWhui\Desktop\CosChic\CosChic\backend\pretrained\CosChic_labels.npy',  # pre-train 모델경로 맞게 수정 
+                        r'C:\Users\LeeSangWhui\Desktop\CosChic\CosChic\backend\pretrained\CosChic_model.bin')
+        # 중복제거 
+        faceList = set(faceList)
+        faceList = list(faceList)
+        print(faceList)
+
+        jsonData = {}
+        # jsonData["model_num"] = len(faceList)
+        for i in range(len(faceList)):
+            # 파일이 들어있는 폴더 경로
+            modelFolderPath = f'./media/dataset/{faceList[i]}'
+
+            # 모델의 첫번째 사진
+            images = os.listdir(modelFolderPath)
+            firstImage = images[0]
+            # print(firstImage)
+            modelPhotoUrl = f'http://localhost:8000/media/dataset/{faceList[i]}/{firstImage}' 
+            
+
+            # 아래 유사도 수치 mediapipe로 계산해서 수정하면 됩니다.
+            data = {
+                "modelName" : faceList[i],
+                "lips" : 30,
+                "eyes" : 40,
+                "contour" : 50,
+                "similarity" : 60,
+                "product" : "product",
+                "photoUrl" : modelPhotoUrl
+            }
+            jsonData[f"model_{i+1}"] = data
+        print(jsonData)
+
+
+        return JsonResponse(jsonData, status=202)
+        

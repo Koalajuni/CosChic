@@ -1,139 +1,126 @@
-import React from 'react';
+"use client";
+import React, { useState } from 'react';
+import Image from "next/image";
+import { useRouter } from 'next/navigation';
+import accountalert from "@/public/assets/account-alert.png";
+import styles from "@/styles/LoginComponent.module.css";
+import axios from "axios"
 
 const LoginComponent = () => {
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
+    const [loginErrorMsg, setLoginErrorMsg] = useState("");
+    const [mode, setMode] = useState("login");
+    const router = useRouter();
+
+    const login = async () => {
+        try {
+            console.log("this is the email:", email)
+            console.log("this is the password:", password)
+
+            const formData = new FormData();
+            formData.append('email', email);
+            formData.append('password', password);
+
+            const response = await axios.post(
+                'http://127.0.0.1:8000/api/v1/login',
+                formData,
+                { headers: { 'Content-Type': 'multipart/form-data' } }
+            );
+            const user = response.data.UUID;
+            localStorage.setItem('UUID', JSON.stringify(user));
+            router.push('/home');
+        } catch (error) {
+            setLoginErrorMsg('Login failed. Please check your credentials.');
+        }
+    };
+
+    const register = async () => {
+        try {
+            console.log("this is the email:", email)
+            console.log("this is the password:", password)
+            const formData = new FormData();
+            formData.append('email', email);
+            formData.append('password', password);
+
+            const response = await axios.post(
+                'http://127.0.0.1:8000/api/v1/register',
+                formData,
+                { headers: { 'Content-Type': 'multipart/form-data' } }
+            );
+            if (response.status === 201) {
+                console.log('Registration successful!');
+                const user = response.data.UUID;
+                localStorage.setItem('UUID', JSON.stringify(user));
+                router.push('/profile');
+            } else {
+                console.error('Registration failed:', response.data);
+            }
+        } catch (error) {
+            setLoginErrorMsg('Registration failed. Please check your details.');
+        }
+    };
+
     return (
-        <section className="absolute w-full h-full">
-            <div className="absolute top-0 w-full h-full bg-gray-600">
-                {/* Uncomment if background image is required */}
-                {/* <div
-                    style={{
-                        backgroundImage: "url('/assets/img/register_bg_2.png')",
-                        backgroundSize: "100%",
-                        backgroundRepeat: "no-repeat"
-                    }}
-                ></div> */}
-            </div>
-            <div className="container mx-auto px-4 h-full">
-                <div className="flex content-center items-center justify-center h-full">
-                    <div className="w-full lg:w-4/12 px-4">
-                        <div className="relative flex flex-col min-w-0 break-words w-full mb-6 shadow-lg rounded-lg bg-gray-300 border-0">
-                            <div className="rounded-t mb-0 px-6 py-6">
-                                <div className="text-center mb-3">
-                                    <h6 className="text-gray-600 text-sm font-bold">
-                                        다음으로 로그인
-                                    </h6>
-                                </div>
-                                <div className="btn-wrapper text-center">
-                                    <button
-                                        className="bg-white active:bg-gray-100 text-gray-800 font-normal px-4 py-2 rounded outline-none focus:outline-none mr-2 mb-1 uppercase shadow hover:shadow-md inline-flex items-center font-bold text-xs"
-                                        type="button"
-                                        style={{ transition: "all .15s ease" }}
-                                    >
-                                        <img
-                                            alt="..."
-                                            className="w-5 mr-1"
-                                            src="/assets/github.svg"
-                                        />
-                                        깃허브
-                                    </button>
-                                    <button
-                                        className="bg-white active:bg-gray-100 text-gray-800 font-normal px-4 py-2 rounded outline-none focus:outline-none mr-1 mb-1 uppercase shadow hover:shadow-md inline-flex items-center font-bold text-xs"
-                                        type="button"
-                                        style={{ transition: "all .15s ease" }}
-                                    >
-                                        <img
-                                            alt="..."
-                                            className="w-5 mr-1"
-                                            src="/assets/google.svg"
-                                        />
-                                        구글
-                                    </button>
-                                </div>
-                                <hr className="mt-6 border-b-1 border-gray-400" />
-                            </div>
-                            <div className="flex-auto px-4 lg:px-10 py-10 pt-0">
-                                <div className="text-gray-500 text-center mb-3 font-bold">
-                                    <small>계정으로 로그인</small>
-                                </div>
-                                <form>
-                                    <div className="relative w-full mb-3">
-                                        <label
-                                            className="block uppercase text-gray-700 text-xs font-bold mb-2"
-                                            htmlFor="grid-password"
-                                        >
-                                            이메일
-                                        </label>
-                                        <input
-                                            type="email"
-                                            className="border-0 px-3 py-3 placeholder-gray-400 text-gray-700 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full"
-                                            placeholder="Email"
-                                            style={{ transition: "all .15s ease" }}
-                                        />
-                                    </div>
-
-                                    <div className="relative w-full mb-3">
-                                        <label
-                                            className="block uppercase text-gray-700 text-xs font-bold mb-2"
-                                            htmlFor="grid-password"
-                                        >
-                                            비밀번호
-                                        </label>
-                                        <input
-                                            type="password"
-                                            className="border-0 px-3 py-3 placeholder-gray-400 text-gray-700 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full"
-                                            placeholder="Password"
-                                            style={{ transition: "all .15s ease" }}
-                                        />
-                                    </div>
-                                    <div>
-                                        <label className="inline-flex items-center cursor-pointer">
-                                            <input
-                                                id="customCheckLogin"
-                                                type="checkbox"
-                                                className="form-checkbox border-0 rounded text-gray-800 ml-1 w-5 h-5"
-                                                style={{ transition: "all .15s ease" }}
-                                            />
-                                            <span className="ml-2 text-sm font-semibold text-gray-700">
-                                                다음에도 기억하기
-                                            </span>
-                                        </label>
-                                    </div>
-
-                                    <div className="text-center mt-6">
-                                        <button
-                                            className="bg-gray-900 text-white active:bg-gray-700 text-sm font-bold uppercase px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 w-full"
-                                            type="button"
-                                            style={{ transition: "all .15s ease" }}
-                                        >
-                                            로그인
-                                        </button>
-                                    </div>
-                                </form>
-                            </div>
-                        </div>
-                        {/* <div className="flex flex-wrap mt-6">
-                            <div className="w-1/2">
-                                <a
-                                    href="#pablo"
-                                    onClick={e => e.preventDefault()}
-                                    className="text-gray-300"
-                                >
-                                    <small>비밀번호를 잊었나요?</small>
-                                </a>
-                            </div>
-                            <div className="w-1/2 text-right">
-                                <a
-                                    href="#pablo"
-                                    onClick={e => e.preventDefault()}
-                                    className="text-gray-300"
-                                >
-                                    <small>계정 생성</small>
-                                </a>
-                            </div>
-                        </div> */}
-                    </div>
+        <section className={styles.accountLayout}>
+            <div className={styles.accountAlert}>
+                <div className={styles.iconContainer}>
+                    <Image src={accountalert} width="16" alt="alert" />
+                </div>
+                <div className={styles.textContainer}>
+                    실제 사용하는 이메일 주소를 입력해 주세요
                 </div>
             </div>
+            <div className={styles.inputBox}>
+                <div className={styles.inputWrap}>
+                    <input
+                        className={styles.input}
+                        placeholder="이메일"
+                        type="email"
+                        value={email}
+                        onChange={(e) => {
+                            setEmail(e.target.value);
+                            setLoginErrorMsg("");
+                        }}
+                        required
+                    />
+                </div>
+            </div>
+            <div className={styles.inputBox}>
+                <div className={styles.inputWrap}>
+                    <input
+                        className={styles.input}
+                        placeholder="비밀번호"
+                        type="password"
+                        value={password}
+                        onChange={(e) => {
+                            setPassword(e.target.value);
+                            setLoginErrorMsg("");
+                        }}
+                        required
+                    />
+                </div>
+            </div>
+            {loginErrorMsg && <div className={styles.errorMsg}>{loginErrorMsg}</div>}
+            <div className={styles.buttonContainer}>
+                <button
+                    type="button"
+                    className={styles.accountBtn}
+                    onClick={login}
+                    style={{ background: '#805F89', color: '#fff', border: 'none', padding: '20px 40px', borderRadius: '10px', marginRight: '20px' }}
+                >
+                    로그인
+                </button>
+                <button
+                    type="submit"
+                    className={styles.accountBtn}
+                    onClick={register}
+                    style={{ background: '#fff', color: '#805F89', border: '1px solid #805F89', padding: '20px 40px', borderRadius: '10px' }}
+                >
+                    회원가입
+                </button>
+            </div>
+
         </section>
     );
 };

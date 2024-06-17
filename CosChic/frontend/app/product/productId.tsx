@@ -1,6 +1,53 @@
 import { useRouter } from 'next/router';
+import { useEffect, useState } from "react"
+import useUserUID from "@/hooks/useUserUID";
 
 const ProductPage = () => {
+    const [userUid, setUserUid] = useState("");
+    const userUID = useUserUID(); // USER UID 가져오는 변수  
+
+
+
+
+    {/*        더미 모델 공간입니다             */ }
+
+    //주의: 
+    //여기서 실제 DB안에 있는 유저 모델 정보를 입력해서 사용해주세요 
+    // String인지, number인지 확인하고 아래 기입해주세요
+
+    const dummyUserData = {
+        "model": "",
+        "pk": "",
+        "fields": {
+            "names": "",
+            "age": "",
+            "gender": "",
+            "email": "",
+            "createDate": "",
+            "password": "",
+            "IP": "",
+            "uploadDate": "",
+            "orgImage": "",
+            "UUID": ""
+        }
+    };
+    const dummyProductData = {
+        "model": "",
+        "pk": 1,
+        "fields": {
+            "productUrl": "",
+            "productName": "",
+            "brandName": "",
+            "price": "",
+            "productImage": "",
+            "modelImage": "",
+            "count": "",
+            "categoryId": "",
+            "category": ""
+        }
+    };
+    {/*        더미 모델 공간입니다             */ }
+
     const router = useRouter();
     const { productId } = router.query;
 
