@@ -8,6 +8,8 @@ import cv2
 import datetime
 import os 
 from api.models import UserData, Product, Recommend
+from .mediapipe import FaceMeshDetector
+from .faiss_class import CosChicFaiss
 
 now = datetime.datetime.now()
 nowString = now.strftime('%Y-%m-%d %H_%M_%S')
@@ -61,7 +63,6 @@ def stream():
 def take_photo(request, UUID):
     if request.method == 'POST':
         print("someone requested the take_photo")
-        
         # POST 요청으로부터 UUID 가져오기
         uuid = UUID
         print(f"uuid 받음 : {uuid}" )
@@ -73,11 +74,9 @@ def take_photo(request, UUID):
             return JsonResponse({'error' : '사진 찍는데 실패했습니다.'}, status = 500)
         imagePath = f'./media/org_img/{nowString}.jpg'
         cv2.imwrite(imagePath, frame) #카메라 영상 저장
-        
         cap.release()
         cv2.destroyAllWindows()
         url = api_sendimage(nowString)
-        
         # 이미지를 db에 저장
         # 유저 객체 가져오기
         try:
@@ -88,44 +87,97 @@ def take_photo(request, UUID):
         # 유저 객체의 org_image 필드 업데이트
         user.orgImage = imagePath  
         user.save()
+        output_image = f'./media/mediapipe/output_{nowString}.jpg' 
+        # FaceMeshDetector로 이미지 처리
+        detector = FaceMeshDetector(imagePath, output_image)
+        detector.process_image()
+        output_image_path = f'http://localhost:8000/media/mediapipe/output_{nowString}.jpg' 
+        # JSON 응답에 output_image_path 포함
+        return JsonResponse({"message": "Image processed successfully", 'imagePath': imagePath, "output_image_path": output_image_path}, status=200)
         
-        return JsonResponse({'message': '사진이 정상적으로 저장되었습니다.', 'imagePath': imagePath, "url" : url})
-
     
+
+        
+
 
 @csrf_exempt
 def img_send(request, UUID):
-    if request.method == 'POST':
-        print('Request method:', request.method)
-        print('FILES:', request.FILES)
-        orgImage = request.FILES.get('orgImage')
+    try:
+        if request.method == 'POST':
+            print('Request method:', request.method)
+            print('FILES:', request.FILES)
+            orgImage = request.FILES.get('orgImage')
+            uuid = UUID
+            print(f"uuid 받음 : {uuid}" )
+            if orgImage:
+                # Save the uploaded image to the media directory
+                url = f'./media/org_img/{nowString}.jpg'
+                with open(url, 'wb+') as destination:
+                    for chunk in orgImage.chunks():
+                        destination.write(chunk)
+
+                # 이미지를 db에 저장
+                # 유저 객체 가져오기
+                try:
+                    user = UserData.objects.get(UUID=uuid)
+                except UserData.DoesNotExist:
+                    return JsonResponse({'error': '해당 UUID를 가진 유저가 없습니다.'}, status=404)
+                
+                # 유저 객체의 org_image 필드 업데이트
+                user.orgImage = url  
+                user.save()
+
+                output_image = f'./media/mediapipe/output_{nowString}.jpg' 
+            
+                # FaceMeshDetector로 이미지 처리
+                detector = FaceMeshDetector(url, output_image)
+                detector.process_image()
+                output_image_path = f'http://localhost:8000/media/mediapipe/output_{nowString}.jpg' 
+                # JSON 응답에 output_image_path 포함
+                return JsonResponse({"message": "Image processed successfully", "output_image_path": output_image_path}, status=201)
+            else:
+                return JsonResponse({"error": "No image uploaded"}, status=400)
+        
+        return JsonResponse({"error": "Invalid request method"}, status=405)
+        
+    except Exception as e:
+        print(f"Error processing request: {e}")
+    return JsonResponse({"error": str(e)}, status=500)
+
+
+@csrf_exempt
+def faiss_analysis(request, UUID):
+    if request.method == 'GET':
+        print("request faiss analysis")
         uuid = UUID
         print(f"uuid 받음 : {uuid}" )
 
-        if orgImage:
-            # Save the uploaded image to the media directory
-            file_path = f'./media/org_img/{nowString}.jpg'
-            with open(file_path, 'wb+') as destination:
-                for chunk in orgImage.chunks():
-                    destination.write(chunk)
+        # 유저 사진 가져오기
+        # 유저 객체 가져오기
+        try:
+            user = UserData.objects.get(UUID=uuid)
+        except UserData.DoesNotExist:
+            return JsonResponse({'error': '해당 UUID를 가진 유저가 없습니다.'}, status=404)
+        
+        userImage = user.orgImage
+        print(userImage)
+        
+        # faiss 분석
+        model = CosChicFaiss()
+        faceList = model.detect_faces(userImage,
+                        r'C:\Users\LeeSangWhui\Desktop\CosChic\CosChic\backend\pretrained\CosChic_labels.npy',  # pre-train 모델경로 맞게 수정 
+                        r'C:\Users\LeeSangWhui\Desktop\CosChic\CosChic\backend\pretrained\CosChic_model.bin')
+        # 중복제거 
+        faceList = set(faceList)
+        faceList = list(faceList)
+        print(faceList)
 
-            url = f'http://localhost:8000/media/org_img/{nowString}.jpg'
-
-            # 이미지를 db에 저장
-            # 유저 객체 가져오기
-            try:
-                user = UserData.objects.get(UUID=uuid)
-            except UserData.DoesNotExist:
-                return JsonResponse({'error': '해당 UUID를 가진 유저가 없습니다.'}, status=404)
-            
-            # 유저 객체의 org_image 필드 업데이트
-            user.orgImage = file_path  
-            user.save()
+        jsonData = {"message": "Image processed successfully"}
+        jsonData["model_num"] = len(faceList)
+        for i in range(len(faceList)):
+            jsonData[i+1] = faceList[i]
+        print(jsonData)
 
 
-
-            return JsonResponse({"message": "Image uploaded successfully", "url": url}, status=201)
-        else:
-            return JsonResponse({"error": "No image uploaded"}, status=400)
-    
-    return JsonResponse({"error": "Invalid request method"}, status=405)
+        return JsonResponse(jsonData, status=202)
+        

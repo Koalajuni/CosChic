@@ -9,6 +9,7 @@ import CardSimilarModel from "@/components/card_similarModel"
 import useUserUID from "@/hooks/useUserUID";
 
 
+
 export default function Home() {
 
     const [userUid, setUserUid] = useState("");
@@ -27,6 +28,7 @@ export default function Home() {
         console.log(storedUserUid)
     }, []);
 
+    // uuid 로 유저정보 처리
     useEffect(() => {
         const fetchUserData = async () => {
             // console.log("fetching UserData:", userUID)
@@ -63,6 +65,8 @@ export default function Home() {
     const [faceAnalysisButtonState, setFaceAnalysisButtonState] = useState(false);
     const [photoUrl, setPhotoUrl] = useState('');
     const [photoUrlState, setPhotoUrlState] = useState(false);
+    const [refModel, setRefModel] = useState(null);
+    const isFaceAnalysisButtonDisabled = !cameraOn;
     // const [selfRef, setSelRef] = ("");
     // const [refImage, setRefImage] = useState(-1);
     const [refId, setRefId] = useState(-1);
@@ -81,6 +85,7 @@ export default function Home() {
         setFaceAnalysisButtonState(prevState => !prevState);
     };
 
+    // 카메라켜기
     const cameraClick = () => {
         const newCameraOnState = !cameraOn; // 새로운 카메라 상태 계산
         const buttonText = newCameraOnState ? "카메라끄기" : "카메라 사용하기"; // 새로운 버튼 텍스트 계산
@@ -98,6 +103,7 @@ export default function Home() {
         //     : "text-gray-900 bg-white hover:bg-gray-100";
     }
 
+    // 사진찍기
     const takePhoto = async () => {
         try {
             const response = await axios.post(`${baseUrl}/v1/camera_take_photo/${userUID}`, {
@@ -106,9 +112,10 @@ export default function Home() {
             if (response.status == 200) {
                 // setCamera(false);
                 setCamera(true);
-                setPhotoUrl(response.data.url);
+                setPhotoUrl(response.data.output_image_path);
                 setPhotoUrlState(prevState => !prevState);
                 console.log(response)
+                setFaceAnalysisButtonState(prevState => !prevState);
             }
         } catch (error) {
             console.error("Error taking photo:", error); // 콘솔에 상세 오류 메시지 출력
@@ -116,6 +123,7 @@ export default function Home() {
         }
     }
 
+    // 파일 업로드
     const onFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
         if (event.target.files) {
             const file = event.target.files[0];
@@ -135,16 +143,52 @@ export default function Home() {
             {
                 headers: {
                 'Content-Type': 'multipart/form-data',
-            },
-            }
+                    },
+                }
             );
             console.log('File uploaded successfully:', response.data);
-            setPhotoUrl(response.data.url);
-            setPhotoUrlState(prevState => !prevState);
+            // 서버 응답 형식 점검
+            if (response.data && response.data.output_image_path) {
+                setPhotoUrl(response.data.output_image_path);
+                setPhotoUrlState(prevState => !prevState);
+                setFaceAnalysisButtonState(prevState => !prevState);
+            } else {
+                console.error('Output image path not found in response:', response.data);
+            }
         } catch (error) {
         console.error('Error uploading the file:', error);
+        
         }
     };
+
+    // 분석하기 버튼
+    const faceanalysisButton = async () =>{
+        try {
+            const response = await axios.get(`${baseUrl}/v1/face_analysis/${userUID}`, {
+            });
+            if (response.status == 200) {
+                Swal.fire("success", `분석에 성공했습니다.`, "success"); // 사용자에게 오류 메시지 표시
+            }
+        } catch (error) {
+            console.error("face analysis error:", error); // 콘솔에 상세 오류 메시지 출력
+            Swal.fire("Error", `분석에 실패했습니다.`, "error"); // 사용자에게 오류 메시지 표시
+        }
+    }
+
+    // 모델카드 출력 
+    const [showCard, setShowCard] = useState(false);
+
+    const showcardSign = () => {
+        setShowCard(true);
+    }
+
+    useEffect(() => {
+        // 여기에 신호를 받는 로직을 추가하세요.
+        // 예: 웹소켓, API 호출, 이벤트 리스너 등.
+        // 신호를 받으면 handleSignal을 호출합니다.
+    }, []);
+
+
     return (
         <>
             <Header />
@@ -236,6 +280,7 @@ export default function Home() {
                                     <div className="h-20"></div>
                                     <div className="relative mb-4 flex">
                                         <button
+                                            onClick={faceanalysisButton}
                                             type="button"
                                             className="text-gray-900 bg-white hover:bg-gray-100 border border-gray-200 focus:ring-4 focus:outline-none focus:ring-gray-100 font-medium rounded-lg text-sm px-12 py-8 text-center inline-flex items-center dark:focus:ring-gray-600 dark:bg-gray-800 dark:border-gray-700 dark:text-white dark:hover:bg-gray-700"
                                             disabled={!faceAnalysisButtonState}
@@ -257,7 +302,8 @@ export default function Home() {
                             </div>
                         </div>
                         <div>
-                            <CardSimilarModel models={models} />
+                            // <CardSimilarModel models={models} />
+                            {showCard && <CardSimilarModel models={models} />}
                         </div>
                     </form>
                 </section>
