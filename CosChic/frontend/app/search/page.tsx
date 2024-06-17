@@ -6,6 +6,7 @@ import CardSearchResult from '@/components/card_searchResult';
 import Header from '@/components/inc_header';
 import Footer from '@/components/inc_footer';
 import Pagination from '@/components/inc_pagination';
+import CardSearchProduct from '@/components/card_searchProduct';
 
 const SearchPage = () => {
     const [userUid, setUserUid] = useState("");
@@ -54,7 +55,7 @@ const SearchPage = () => {
             <Header />
             <div style={{ padding: '20px' }}>
                 <SearchBar searchTerm={searchTerm} onChange={handleSearchChange} onSearch={handleSearch} />
-                <div style={{ marginTop: '20px' }}>
+                {/* <div style={{ marginTop: '20px' }}>
                     {dataToDisplay.map((result, index) => (
                         <CardSearchResult
                             key={index}
@@ -63,7 +64,11 @@ const SearchPage = () => {
                             description={result.description} // replace with actual description field
                         />
                     ))}
-                </div>
+                </div> */}
+                <CardSearchProduct />
+                <CardSearchProduct />
+                <CardSearchProduct />
+                <CardSearchProduct />
             </div>
             <Pagination />
             <Footer />
