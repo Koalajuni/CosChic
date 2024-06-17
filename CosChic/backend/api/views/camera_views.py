@@ -6,6 +6,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.core.files.storage import FileSystemStorage  # 장고 파일 처리
 import cv2
 import datetime
+from .mediapipe import FaceMeshDetector
 
 now = datetime.datetime.now()
 nowString = now.strftime('%Y-%m-%d %H_%M_%S')
@@ -101,27 +102,45 @@ def take_photo(request):
         cap.release()
         cv2.destroyAllWindows()
 
-        return JsonResponse({'message': '사진이 정상적으로 저장되었습니다.', 'imagePath': imagePath})
+        output_image = f'./media/mediapipe/output_{nowString}.jpg' 
+            
+        # FaceMeshDetector로 이미지 처리
+        detector = FaceMeshDetector(imagePath, output_image)
+        detector.process_image()
+        output_image_path = f'http://localhost:8000/media/mediapipe/output_{nowString}.jpg' 
+        return JsonResponse({'message': '사진이 정상적으로 저장되었습니다.', 'imagePath': imagePath, "output_image_path" : output_image_path})
     
 
 @csrf_exempt
 def img_send(request):
-    if request.method == 'POST':
-        print('Request method:', request.method)
-        print('FILES:', request.FILES)
-        orgImage = request.FILES.get('orgImage')
+    try:
+        if request.method == 'POST':
+            print('Request method:', request.method)
+            print('FILES:', request.FILES)
+            orgImage = request.FILES.get('orgImage')
 
-        if orgImage:
-            # Save the uploaded image to the media directory
-            file_path = f'./media/org_img/{nowString}.jpg'
-            with open(file_path, 'wb+') as destination:
-                for chunk in orgImage.chunks():
-                    destination.write(chunk)
+            if orgImage:
+                # Save the uploaded image to the media directory
+                url = f'./media/org_img/{nowString}.jpg'
+                with open(url, 'wb+') as destination:
+                    for chunk in orgImage.chunks():
+                        destination.write(chunk)
 
-            url = f'http://localhost:8000/media/org_img/{nowString}.jpg'
+                output_image = f'./media/mediapipe/output_{nowString}.jpg' 
+            
+                # FaceMeshDetector로 이미지 처리
+                detector = FaceMeshDetector(url, output_image)
+                detector.process_image()
+                output_image_path = f'http://localhost:8000/media/mediapipe/output_{nowString}.jpg' 
+                # JSON 응답에 output_image_path 포함
+                return JsonResponse({"message": "Image processed successfully", "output_image_path": output_image_path}, status=201)
 
-            return JsonResponse({"message": "Image uploaded successfully", "file_path": file_path}, status=201)
-        else:
-            return JsonResponse({"error": "No image uploaded"}, status=400)
-    
-    return JsonResponse({"error": "Invalid request method"}, status=405)
+            
+            else:
+                return JsonResponse({"error": "No image uploaded"}, status=400)
+        
+        return JsonResponse({"error": "Invalid request method"}, status=405)
+
+    except Exception as e:
+        print(f"Error processing request: {e}")
+        return JsonResponse({"error": str(e)}, status=500)
