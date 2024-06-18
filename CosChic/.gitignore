@@ -1,5 +1,7 @@
 .DS_Store
 backend/model/
+backend/media/
+backend/pretrained/
 backend/.DS_Store
 .env
 backend/media

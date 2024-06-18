@@ -11,6 +11,15 @@ from api.models import UserData, Product, Recommend
 from .mediapipe import FaceMeshDetector
 from .faiss_class import CosChicFaiss
 
+global eye_ratio
+global nose_ratio
+global face_ratio
+global lip_ratio
+eye_ratio = 0
+nose_ratio = 0
+face_ratio = 0
+lip_ratio = 0
+
 now = datetime.datetime.now()
 nowString = now.strftime('%Y-%m-%d %H_%M_%S')
 
@@ -61,6 +70,7 @@ def stream():
 
 @csrf_exempt
 def take_photo(request, UUID):
+    global eye_ratio, nose_ratio, face_ratio, lip_ratio  # 전역 변수 선언
     if request.method == 'POST':
         print("someone requested the take_photo")
         # POST 요청으로부터 UUID 가져오기
@@ -90,7 +100,8 @@ def take_photo(request, UUID):
         output_image = f'./media/mediapipe/output_{nowString}.jpg' 
         # FaceMeshDetector로 이미지 처리
         detector = FaceMeshDetector(imagePath, output_image)
-        detector.process_image()
+        eye_ratio, nose_ratio, face_ratio, lip_ratio = detector.process_image()
+        print("얼굴분석정보(eye_ratio, nose_ratio, face_ratio, lip_ratio):", eye_ratio, nose_ratio, face_ratio, lip_ratio)
         output_image_path = f'http://localhost:8000/media/mediapipe/output_{nowString}.jpg' 
         # JSON 응답에 output_image_path 포함
         return JsonResponse({"message": "Image processed successfully", 'imagePath': imagePath, "output_image_path": output_image_path}, status=200)
@@ -102,6 +113,7 @@ def take_photo(request, UUID):
 
 @csrf_exempt
 def img_send(request, UUID):
+    global eye_ratio, nose_ratio, face_ratio, lip_ratio  # 전역 변수 선언
     try:
         if request.method == 'POST':
             print('Request method:', request.method)
@@ -131,7 +143,8 @@ def img_send(request, UUID):
             
                 # FaceMeshDetector로 이미지 처리
                 detector = FaceMeshDetector(url, output_image)
-                detector.process_image()
+                eye_ratio, nose_ratio, face_ratio, lip_ratio = detector.process_image()
+                print("얼굴분석정보(eye_ratio, nose_ratio, face_ratio, lip_ratio):", eye_ratio, nose_ratio, face_ratio, lip_ratio)
                 output_image_path = f'http://localhost:8000/media/mediapipe/output_{nowString}.jpg' 
                 # JSON 응답에 output_image_path 포함
                 return JsonResponse({"message": "Image processed successfully", "output_image_path": output_image_path}, status=201)
@@ -147,6 +160,7 @@ def img_send(request, UUID):
 
 @csrf_exempt
 def faiss_analysis(request, UUID):
+    global eye_ratio, nose_ratio, face_ratio, lip_ratio  # 전역 변수 선언
     if request.method == 'GET':
         print("request faiss analysis")
         uuid = UUID
@@ -172,10 +186,41 @@ def faiss_analysis(request, UUID):
         faceList = list(faceList)
         print(faceList)
 
-        jsonData = {"message": "Image processed successfully"}
-        jsonData["model_num"] = len(faceList)
+        jsonData = {}
+        # jsonData["model_num"] = len(faceList)
         for i in range(len(faceList)):
-            jsonData[i+1] = faceList[i]
+            # 파일이 들어있는 폴더 경로
+            modelFolderPath = f'./media/dataset/{faceList[i]}'
+
+            # 모델의 첫번째 사진
+            images = os.listdir(modelFolderPath)
+            firstImage = images[0]
+            # print(firstImage)
+            modelPhotoUrl = f'http://localhost:8000/media/dataset/{faceList[i]}/{firstImage}' 
+
+            print(modelFolderPath +"/"+ firstImage)
+            # 모델사진 FaceMeshDetector로 이미지 처리
+            output_image = f'./media/mediapipe/output_{nowString}.jpg' 
+            detector = FaceMeshDetector(modelFolderPath +"/"+ firstImage, output_image)
+            model_eye_ratio, model_nose_ratio, model_face_ratio, model_lip_ratio = detector.process_image()
+            print("모델의얼굴분석정보(eye_ratio, nose_ratio, face_ratio, lip_ratio):", model_eye_ratio, model_nose_ratio, model_face_ratio, model_lip_ratio)
+            
+
+            lipsSimilarity = abs(100 - (abs(lip_ratio - model_lip_ratio)* 5))
+            eyeSimilarity = abs(100 - (abs(eye_ratio - model_eye_ratio) * 20))
+            contourSimilarity = abs(100 - (abs(face_ratio - model_face_ratio)))
+            final_similarity = (lipsSimilarity + eyeSimilarity + contourSimilarity) / 3
+            # 아래 유사도 수치 mediapipe로 계산해서 수정하면 됩니다.
+            data = {
+                "modelName" : faceList[i],
+                "lips" : round(lipsSimilarity, 1),
+                "eyes" : round(eyeSimilarity, 1),
+                "contour" : round(contourSimilarity, 1),
+                "similarity" : round(final_similarity, 1),
+                "product" : "product",
+                "photoUrl" : modelPhotoUrl
+            }
+            jsonData[f"model_{i+1}"] = data
         print(jsonData)
 
 
