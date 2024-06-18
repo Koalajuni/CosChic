@@ -2,3 +2,4 @@
 backend/model/
 backend/.DS_Store
 .env
+backend/media

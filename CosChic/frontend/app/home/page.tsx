@@ -158,7 +158,7 @@ export default function Home() {
         } catch (error) {
         console.error('Error uploading the file:', error);
         
-        }
+        } 
     };
 
     // 분석하기 버튼
