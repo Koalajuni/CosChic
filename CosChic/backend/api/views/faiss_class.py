@@ -82,11 +82,8 @@ class CosChicFaiss:
         face_rst = most_frequent(labels)
         print(face_rst)
         print(face_rst[0])
-<<<<<<< HEAD
-        return face_rst[0]
-=======
+        # return face_rst[0]
         return labels
->>>>>>> a80ab2208a20395006615d0b8a103fb93ca05592
 
 
 # 많이 나온 단어 확인
@@ -108,11 +105,7 @@ def most_frequent(data):
 
 
 
-<<<<<<< HEAD
 # model = CosChicFaiss(img_path,label_path,model_path)
-=======
-# model = CosChicFaiss()
->>>>>>> a80ab2208a20395006615d0b8a103fb93ca05592
 # model.detect_faces('C:/Users/ok/Desktop/BT/beautygan_web/media/src/source.jpg',
 #                 'C:/Users/ok/Desktop/BT/beautygan_web/train/CosChic_labels.npy',
 #                 'C:/Users/ok/Desktop/BT/beautygan_web/train/CosChic_model.bin')
