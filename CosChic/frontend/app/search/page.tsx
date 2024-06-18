@@ -13,6 +13,8 @@ const SearchPage = () => {
 
     const [searchTerm, setSearchTerm] = useState('');
     const [results, setResults] = useState([]);
+    const [category, setCategory] = useState('모두');
+
     const handleSearchChange = (event) => {
         setSearchTerm(event.target.value);
     };
@@ -22,7 +24,14 @@ const SearchPage = () => {
         // Make API call to search endpoint
         // Replace with your API URL
         try {
-            const response = await axios.get(`http://127.0.0.1:8000/api/v1/search?query=${searchTerm}`);
+            console.log("searched:{category}")
+            const response = await axios.get(`http://127.0.0.1:8000/api/v1/search`,
+                {
+                    params: {
+                        query: searchTerm,
+                        category: category
+                    }
+                });
             setResults(response.data);
         } catch (error) {
             console.error("Error fetching search results:", error);
@@ -30,31 +39,17 @@ const SearchPage = () => {
         }
     };
 
-    const dummyData = [
-        {
-            image: 'https://via.placeholder.com/50',
-            title: 'Dummy Title 1',
-            description: 'This is a description for dummy data 1.',
-        },
-        {
-            image: 'https://via.placeholder.com/50',
-            title: 'Dummy Title 2',
-            description: 'This is a description for dummy data 2.',
-        },
-        {
-            image: 'https://via.placeholder.com/50',
-            title: 'Dummy Title 3',
-            description: 'This is a description for dummy data 3.',
-        },
-    ];
-
-    const dataToDisplay = results.length > 0 ? results : dummyData;
-
     return (
         <>
             <Header />
             <div style={{ padding: '20px' }}>
-                <SearchBar searchTerm={searchTerm} onChange={handleSearchChange} onSearch={handleSearch} />
+                <SearchBar
+                    searchTerm={searchTerm}
+                    onChange={handleSearchChange}
+                    onSearch={handleSearch}
+                    category={category}
+                    setCategory={setCategory}
+                />
                 {/* <div style={{ marginTop: '20px' }}>
                     {dataToDisplay.map((result, index) => (
                         <CardSearchResult

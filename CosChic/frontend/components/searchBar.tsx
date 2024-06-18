@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-const SearchBar = ({ searchTerm, onChange, onSearch }) => {
+const SearchBar = ({ searchTerm, onChange, onSearch, category, setCategory }) => {
     const [dropdownOpen, setDropdownOpen] = useState(false);
     const [category, setCategory] = useState('모두');
 
