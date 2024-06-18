@@ -144,7 +144,7 @@ def img_send(request, UUID):
                 # FaceMeshDetector로 이미지 처리
                 detector = FaceMeshDetector(url, output_image)
                 eye_ratio, nose_ratio, face_ratio, lip_ratio = detector.process_image()
-                print("얼굴분석정보(eye_ratio, nose_ratio, face_ratio, lip_ratio):", eye_ratio, nose_ratio, face_ratio, lip_ratio)
+                # print("얼굴분석정보(eye_ratio, nose_ratio, face_ratio, lip_ratio):", eye_ratio, nose_ratio, face_ratio, lip_ratio)
                 output_image_path = f'http://localhost:8000/media/mediapipe/output_{nowString}.jpg' 
                 # JSON 응답에 output_image_path 포함
                 return JsonResponse({"message": "Image processed successfully", "output_image_path": output_image_path}, status=201)
@@ -184,7 +184,10 @@ def faiss_analysis(request, UUID):
         # 중복제거 
         faceList = set(faceList)
         faceList = list(faceList)
-        print(faceList)
+        # print(faceList)
+        modelNum = len(faceList)
+        allmodelNames = ','.join(f'{element}' for element in faceList)
+        print("allmodelNames: ", allmodelNames)
 
         jsonData = {}
         # jsonData["model_num"] = len(faceList)
@@ -198,15 +201,15 @@ def faiss_analysis(request, UUID):
             # print(firstImage)
             modelPhotoUrl = f'http://localhost:8000/media/dataset/{faceList[i]}/{firstImage}' 
 
-            print(modelFolderPath +"/"+ firstImage)
+            # print(modelFolderPath +"/"+ firstImage)
             # 모델사진 FaceMeshDetector로 이미지 처리
             output_image = f'./media/mediapipe/output_{nowString}.jpg' 
             detector = FaceMeshDetector(modelFolderPath +"/"+ firstImage, output_image)
             model_eye_ratio, model_nose_ratio, model_face_ratio, model_lip_ratio = detector.process_image()
-            print("모델의얼굴분석정보(eye_ratio, nose_ratio, face_ratio, lip_ratio):", model_eye_ratio, model_nose_ratio, model_face_ratio, model_lip_ratio)
+            # print("모델의얼굴분석정보(eye_ratio, nose_ratio, face_ratio, lip_ratio):", model_eye_ratio, model_nose_ratio, model_face_ratio, model_lip_ratio)
             
 
-            lipsSimilarity = abs(100 - (abs(lip_ratio - model_lip_ratio)*10))
+            lipsSimilarity = abs(100 - (abs(lip_ratio - model_lip_ratio)* 5))
             eyeSimilarity = abs(100 - (abs(eye_ratio - model_eye_ratio) * 20))
             contourSimilarity = abs(100 - (abs(face_ratio - model_face_ratio)))
             final_similarity = (lipsSimilarity + eyeSimilarity + contourSimilarity) / 3
@@ -218,7 +221,9 @@ def faiss_analysis(request, UUID):
                 "contour" : round(contourSimilarity, 1),
                 "similarity" : round(final_similarity, 1),
                 "product" : "product",
-                "photoUrl" : modelPhotoUrl
+                "photoUrl" : modelPhotoUrl,
+                "modelNum" : modelNum,
+                "allModelNames" : allmodelNames
             }
             jsonData[f"model_{i+1}"] = data
         print(jsonData)
