@@ -1,24 +1,21 @@
+// CardSearchProduct.js
 "use client";
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import React from 'react';
 
-const CardSearchProduct = ({ }) => {
-
+const CardSearchProduct = ({ image, title, description, price, count, category }) => {
     return (
-
         <section className="w-screen">
-
             <div className="m-4 mx-auto max-w-screen-lg rounded-md border border-gray-100 text-gray-600">
                 <div className="relative flex ml-4 h-full flex-col text-gray-600 md:flex-row">
                     <div className="relative p-4 md:w-4/6">
                         <div className="flex flex-col md:flex-row">
-                            <h2 className="mb-1 text-2xl font-black">제품 이름</h2>
-                            <span className="ml-2 text-xs uppercase">카테고리</span>
+                            <h2 className="mb-1 text-2xl font-black">{title}</h2>
+                            <span className="ml-2 text-xs uppercase">{category}</span>
                         </div>
-                        <p className="mt-3 font-sans text-base tracking-normal">Lorem ipsum dolor sit amet consectetur adipisicing elit. Quos voluptate vero soluta voluptatum error non.</p>
+                        <p className="mt-3 font-sans text-base tracking-normal">{description}</p>
                         <div className="flex flex-col md:flex-row md:items-end">
-                            <p className="mt-6 text-2xl font-black">₩15000<sup className="align-sub text-sm">원</sup></p>
-                            <span className="ml-2 text-xs uppercase">조회수 254</span>
+                            <p className="mt-6 text-2xl font-black">{price}<sup className="align-sub text-sm">원</sup></p>
+                            <span className="ml-2 text-xs uppercase">조회수 {count}</span>
                         </div>
                         <div className="mt-6 flex flex-col sm:flex-row">
                             <button className="mr-2 mb-2 flex cursor-pointer items-center justify-center rounded-md bg-emerald-400 py-2 px-8 text-center text-white transition duration-150 ease-in-out hover:translate-y-1 hover:bg-emerald-500">
@@ -27,18 +24,15 @@ const CardSearchProduct = ({ }) => {
                                 </svg>
                                 구매하기
                             </button>
-                            <button className="mr-2 mb-4 flex cursor-pointer items-center justify-center rounded-md border py-2 px-8 text-center text-gray-500 transition duration-150 ease-in-out hover:translate-y-1 hover:bg-rose-500 hover:text-white">웹사이트 보기</button>
+                            <button className="mr-2 mb-2 flex cursor-pointer items-center justify-center rounded-md border py-2 px-8 text-center text-gray-500 transition duration-150 ease-in-out hover:translate-y-1 hover:bg-rose-500 hover:text-white">상세정보 보기</button>
                         </div>
                     </div>
                     <div className="mx-auto flex items-center px-5 pt-1 md:p-8">
-                        <img className="block h-auto max-w-full rounded-md shadow-lg" src="/images/4PQXlbagb4MqcadNmeo0D.png" alt="Shop image" />
+                        <img className="block h-auto max-w-full rounded-md shadow-lg" src={image} alt="Shop image" />
                     </div>
                 </div>
             </div>
-
         </section>
-
-
     );
 };
 

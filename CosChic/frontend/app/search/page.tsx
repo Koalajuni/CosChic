@@ -14,6 +14,8 @@ const SearchPage = () => {
     const [searchTerm, setSearchTerm] = useState('');
     const [results, setResults] = useState([]);
     const [category, setCategory] = useState('모두');
+    const [currentPage, setCurrentPage] = useState(1);
+    const resultsPerPage = 4;
 
     const handleSearchChange = (event) => {
         setSearchTerm(event.target.value);
@@ -21,10 +23,8 @@ const SearchPage = () => {
 
     const handleSearch = async (event) => {
         event.preventDefault();
-        // Make API call to search endpoint
-        // Replace with your API URL
         try {
-            console.log("searched:{category}")
+            console.log("searched:", category)
             const response = await axios.get(`http://127.0.0.1:8000/api/v1/search`,
                 {
                     params: {
@@ -33,11 +33,21 @@ const SearchPage = () => {
                     }
                 });
             setResults(response.data);
+            setCurrentPage(1);
         } catch (error) {
             console.error("Error fetching search results:", error);
             // Handle error appropriately
         }
     };
+
+    const handlePageChange = (page) => {
+        setCurrentPage(page);
+    };
+
+    const indexOfLastResult = currentPage * resultsPerPage;
+    const indexOfFirstResult = indexOfLastResult - resultsPerPage;
+    const currentResults = results.slice(indexOfFirstResult, indexOfLastResult);
+
 
     return (
         <>
@@ -50,22 +60,26 @@ const SearchPage = () => {
                     category={category}
                     setCategory={setCategory}
                 />
-                {/* <div style={{ marginTop: '20px' }}>
-                    {dataToDisplay.map((result, index) => (
-                        <CardSearchResult
+                <div style={{ marginTop: '20px' }}>
+                    {currentResults.map((result, index) => (
+                        <CardSearchProduct
                             key={index}
                             image={result.image} // replace with actual image field
-                            title={result.title} // replace with actual title field
-                            description={result.description} // replace with actual description field
+                            title={result.productName} // replace with actual title field
+                            description={result.brandName} // replace with actual description field
+                            price={result.price} // replace with actual price field
+                            count={result.count} // replace with actual count field
+                            category={result.category} // replace with actual category field
                         />
                     ))}
-                </div> */}
-                <CardSearchProduct />
-                <CardSearchProduct />
-                <CardSearchProduct />
-                <CardSearchProduct />
+                </div>
+                <Pagination
+                    totalResults={results.length}
+                    resultsPerPage={resultsPerPage}
+                    currentPage={currentPage}
+                    onPageChange={handlePageChange}
+                />
             </div>
-            <Pagination />
             <Footer />
         </>
     );
