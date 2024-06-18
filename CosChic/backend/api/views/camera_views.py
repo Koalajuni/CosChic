@@ -206,7 +206,7 @@ def faiss_analysis(request, UUID):
             print("모델의얼굴분석정보(eye_ratio, nose_ratio, face_ratio, lip_ratio):", model_eye_ratio, model_nose_ratio, model_face_ratio, model_lip_ratio)
             
 
-            lipsSimilarity = abs(100 - (abs(lip_ratio - model_lip_ratio)*10))
+            lipsSimilarity = abs(100 - (abs(lip_ratio - model_lip_ratio)* 5))
             eyeSimilarity = abs(100 - (abs(eye_ratio - model_eye_ratio) * 20))
             contourSimilarity = abs(100 - (abs(face_ratio - model_face_ratio)))
             final_similarity = (lipsSimilarity + eyeSimilarity + contourSimilarity) / 3
