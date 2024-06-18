@@ -6,11 +6,26 @@ import SimilarModels from '@/components/similarModels';
 import Header from '@/components/inc_header';
 import Footer from '@/components/inc_footer';
 import useUserUID from "@/hooks/useUserUID";
+import { useSearchParams } from "next/navigation";
+
 
 const TestProductPage = () => {
 
     const userUID = useUserUID(); // USER UID 가져오는 변수  
-
+    const params = useSearchParams();
+    const name = params.get("name");
+    const url = params.get("url");
+    const modelNum = params.get("modelNum");
+    // const allModelNames = params.get("allModelNames");
+    // 모델들을 담을 배열
+    const models = [];
+    let i = 1;
+    while (true) {
+        const modelName = params.get(`model${i}`);
+        if (!modelName) break;
+        models.push({ name: modelName });
+        i++;
+    }
     //주의: 
     //여기서 실제 DB안에 있는 유저 모델 정보를 입력해서 사용해주세요 
     // String인지, number인지 확인하고 아래 기입해주세요
@@ -81,6 +96,15 @@ const TestProductPage = () => {
                 <h2 className="text-xl font-semibold mb-2">GPT 설명</h2>
                 <div className="p-4 bg-gray-200 rounded-md">
                     GPT가 설명하는 칸입니다. 여기서는 화장품 또는 위에 GAN이 설명할 칸이라고 생각해주시면 되겠습니다.
+                    <p>name: {name}</p>
+                    <p>url: {url}</p>
+                    <p>modelNum: {modelNum}</p>
+                    <p>allModelNames: </p>
+                    <ul>
+                        {models.map((model, index) => (
+                            <li key={index}>{model.name}</li>
+                        ))}
+                    </ul>
                 </div>
                 <h2 className="text-xl font-semibold mt-4 mb-2">추가로 비슷한 모델</h2>
                 <SimilarModels models={userResembleModels} />
