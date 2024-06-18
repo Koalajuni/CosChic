@@ -27,8 +27,8 @@ const CardSearchProduct = ({ image, title, description, price, count, category }
                             <button className="mr-2 mb-2 flex cursor-pointer items-center justify-center rounded-md border py-2 px-8 text-center text-gray-500 transition duration-150 ease-in-out hover:translate-y-1 hover:bg-rose-500 hover:text-white">상세정보 보기</button>
                         </div>
                     </div>
-                    <div className="mx-auto flex items-center px-5 pt-1 md:p-8">
-                        <img className="block h-auto max-w-full rounded-md shadow-lg" src={image} alt="Shop image" />
+                    <div className="mx-auto flex items-center px-5 pt-1">
+                        <img className="block h-44 rounded-m shadow" src={image} alt="Shop image" />
                     </div>
                 </div>
             </div>

@@ -15,40 +15,49 @@ const SearchPage = () => {
     const [results, setResults] = useState([]);
     const [category, setCategory] = useState('모두');
     const [currentPage, setCurrentPage] = useState(1);
+    const [totalResults, setTotalResults] = useState(0);
+    const [totalPages, setTotalPages] = useState(0);
     const resultsPerPage = 4;
 
     const handleSearchChange = (event) => {
         setSearchTerm(event.target.value);
     };
 
-    const handleSearch = async (event) => {
-        event.preventDefault();
+    const fetchResults = async (page = 1) => {
         try {
-            console.log("searched:", category)
-            const response = await axios.get(`http://127.0.0.1:8000/api/v1/search`,
-                {
-                    params: {
-                        query: searchTerm,
-                        category: category
-                    }
-                });
-            setResults(response.data);
-            setCurrentPage(1);
+            const response = await axios.get(`http://127.0.0.1:8000/api/v1/search`, {
+                params: {
+                    query: searchTerm,
+                    category: category,
+                    page: page,
+                    results_per_page: resultsPerPage
+                }
+            });
+            console.log("API RESULT:", response)
+            const { results, total_results, total_pages, current_page } = response.data;
+            setResults(results);
+            setTotalResults(total_results);
+            setTotalPages(total_pages);
+            setCurrentPage(current_page);
+            console.log("jus the data:", results)
+            console.log("jus the total resulst:", total_results)
+            console.log("jus the total_pages:", total_pages)
+            console.log("jus the current_page:", current_page)
         } catch (error) {
             console.error("Error fetching search results:", error);
             // Handle error appropriately
         }
     };
 
-    const handlePageChange = (page) => {
-        setCurrentPage(page);
+    const handleSearch = (event) => {
+        event.preventDefault();
+        fetchResults(1);
     };
 
-    const indexOfLastResult = currentPage * resultsPerPage;
-    const indexOfFirstResult = indexOfLastResult - resultsPerPage;
-    const currentResults = results.slice(indexOfFirstResult, indexOfLastResult);
-
-
+    const handlePageChange = (page) => {
+        setCurrentPage(page);
+        fetchResults(page);
+    };
     return (
         <>
             <Header />
@@ -61,20 +70,32 @@ const SearchPage = () => {
                     setCategory={setCategory}
                 />
                 <div style={{ marginTop: '20px' }}>
-                    {currentResults.map((result, index) => (
+                    {Array.isArray(results) && results.length > 0 ? (
+                        results.map((result, index) => (
+                            <CardSearchProduct
+                                key={index}
+                                image={result.image} // replace with actual image field
+                                title={result.productName} // replace with actual title field
+                                description={result.brandName} // replace with actual description field
+                                price={result.price} // replace with actual price field
+                                count={result.count} // replace with actual count field
+                                category={result.category} // replace with actual category field
+                            />
+                        ))
+                    ) : (
                         <CardSearchProduct
-                            key={index}
-                            image={result.image} // replace with actual image field
-                            title={result.productName} // replace with actual title field
-                            description={result.brandName} // replace with actual description field
-                            price={result.price} // replace with actual price field
-                            count={result.count} // replace with actual count field
-                            category={result.category} // replace with actual category field
+                            key={0}
+                            image={"assets/deafult_search.png"} // replace with actual image field
+                            title={"검색한 내용이 없습니다"} // replace with actual title field
+                            description={"검색한 브랜드가 없습니다"} // replace with actual description field
+                            price={"0"} // replace with actual price field
+                            count={"--"} // replace with actual count field
+                            category={"카테고리"} // replace with actual category field
                         />
-                    ))}
+                    )}
                 </div>
                 <Pagination
-                    totalResults={results.length}
+                    totalResults={totalResults}
                     resultsPerPage={resultsPerPage}
                     currentPage={currentPage}
                     onPageChange={handlePageChange}

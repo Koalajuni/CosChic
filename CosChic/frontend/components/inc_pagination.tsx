@@ -1,8 +1,24 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 export default function Pagination({ totalResults, resultsPerPage, currentPage, onPageChange }) {
-    const totalPages = Math.ceil(totalResults / resultsPerPage);
-    const [visiblePages, setVisiblePages] = useState([...Array(totalPages > 10 ? 10 : totalPages).keys()].map(i => i + 1));
+    const totalPages = Math.max(1, Math.ceil(totalResults / resultsPerPage));
+    const [visiblePages, setVisiblePages] = useState([]);
+
+    useEffect(() => {
+        if (totalPages <= 10) {
+            setVisiblePages([...Array(totalPages).keys()].map(i => i + 1));
+        } else if (currentPage <= 6) {
+            setVisiblePages([...Array(10).keys()].map(i => i + 1));
+        } else {
+            let startPage = currentPage - 5;
+            let endPage = currentPage + 4;
+            if (endPage > totalPages) {
+                endPage = totalPages;
+                startPage = endPage - 9;
+            }
+            setVisiblePages([...Array(endPage - startPage + 1).keys()].map(i => i + startPage));
+        }
+    }, [totalPages, currentPage]);
 
     const handleClick = (page) => {
         onPageChange(page);
