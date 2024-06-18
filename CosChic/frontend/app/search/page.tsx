@@ -1,5 +1,6 @@
 "use client";
 import React, { useState, useEffect } from 'react';
+import { useSearchParams, useRouter } from "next/navigation";
 import axios from 'axios';
 import SearchBar from '@/components/searchBar';
 import CardSearchResult from '@/components/card_searchResult';
@@ -8,15 +9,14 @@ import Footer from '@/components/inc_footer';
 import Pagination from '@/components/inc_pagination';
 import CardSearchProduct from '@/components/card_searchProduct';
 
+
 const SearchPage = () => {
     const [userUid, setUserUid] = useState("");
-
     const [searchTerm, setSearchTerm] = useState('');
     const [results, setResults] = useState([]);
     const [category, setCategory] = useState('모두');
     const [currentPage, setCurrentPage] = useState(1);
     const [totalResults, setTotalResults] = useState(0);
-    const [totalPages, setTotalPages] = useState(0);
     const resultsPerPage = 4;
 
     const handleSearchChange = (event) => {
@@ -33,16 +33,10 @@ const SearchPage = () => {
                     results_per_page: resultsPerPage
                 }
             });
-            console.log("API RESULT:", response)
             const { results, total_results, total_pages, current_page } = response.data;
             setResults(results);
             setTotalResults(total_results);
-            setTotalPages(total_pages);
             setCurrentPage(current_page);
-            console.log("jus the data:", results)
-            console.log("jus the total resulst:", total_results)
-            console.log("jus the total_pages:", total_pages)
-            console.log("jus the current_page:", current_page)
         } catch (error) {
             console.error("Error fetching search results:", error);
             // Handle error appropriately
@@ -58,6 +52,8 @@ const SearchPage = () => {
         setCurrentPage(page);
         fetchResults(page);
     };
+
+
     return (
         <>
             <Header />
@@ -74,23 +70,25 @@ const SearchPage = () => {
                         results.map((result, index) => (
                             <CardSearchProduct
                                 key={index}
-                                image={result.image} // replace with actual image field
-                                title={result.productName} // replace with actual title field
-                                description={result.brandName} // replace with actual description field
-                                price={result.price} // replace with actual price field
-                                count={result.count} // replace with actual count field
-                                category={result.category} // replace with actual category field
+                                image={result.image}
+                                title={result.productName}
+                                description={result.brandName}
+                                price={result.price}
+                                count={result.count}
+                                category={result.category}
+                                productUrl={result.productUrl}
                             />
                         ))
                     ) : (
                         <CardSearchProduct
                             key={0}
-                            image={"assets/deafult_search.png"} // replace with actual image field
-                            title={"검색한 내용이 없습니다"} // replace with actual title field
-                            description={"검색한 브랜드가 없습니다"} // replace with actual description field
-                            price={"0"} // replace with actual price field
-                            count={"--"} // replace with actual count field
-                            category={"카테고리"} // replace with actual category field
+                            image={"assets/deafult_search.png"}
+                            title={"검색한 내용이 없습니다"}
+                            description={"검색한 브랜드가 없습니다"}
+                            price={"0"}
+                            count={"--"}
+                            category={"카테고리"}
+                            productUrl={" "}
                         />
                     )}
                 </div>

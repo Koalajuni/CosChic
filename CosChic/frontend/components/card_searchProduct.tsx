@@ -2,7 +2,7 @@
 "use client";
 import React from 'react';
 
-const CardSearchProduct = ({ image, title, description, price, count, category }) => {
+const CardSearchProduct = ({ image, title, description, price, count, category, productUrl }) => {
     return (
         <section className="w-screen">
             <div className="m-4 mx-auto max-w-screen-lg rounded-md border border-gray-100 text-gray-600">
@@ -22,7 +22,7 @@ const CardSearchProduct = ({ image, title, description, price, count, category }
                                 <svg xmlns="http://www.w3.org/2000/svg" className="mr-2 h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
                                     <path strokeLinecap="round" strokeLinejoin="round" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
                                 </svg>
-                                구매하기
+                                <a href={productUrl}>구매하기</a>
                             </button>
                             <button className="mr-2 mb-2 flex cursor-pointer items-center justify-center rounded-md border py-2 px-8 text-center text-gray-500 transition duration-150 ease-in-out hover:translate-y-1 hover:bg-rose-500 hover:text-white">상세정보 보기</button>
                         </div>
