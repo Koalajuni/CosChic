@@ -11,11 +11,11 @@ class BeautyGAN:
     def __init__(self):
         # 학습된 모델 불러오기
         self.detector = dlib.get_frontal_face_detector()
-        self.sp = dlib.shape_predictor('C:/Users/ok/Desktop/BT/beautygan_web/train/shape_predictor_5_face_landmarks.dat')
+        self.sp = dlib.shape_predictor('C:/Users/ok/Desktop/CosChic/CosChic/backend/pretrained/shape_predictor_5_face_landmarks.dat')
         self.sess = tf.Session()
         self.sess.run(tf.global_variables_initializer())
-        self.saver = tf.train.import_meta_graph('C:/Users/ok/Desktop/BT/beautygan_web/model/model.meta')
-        self.saver.restore(self.sess, tf.train.latest_checkpoint('C:/Users/ok/Desktop/BT/beautygan_web/model'))
+        self.saver = tf.train.import_meta_graph('C:/Users/ok/Desktop/CosChic/CosChic/backend/pretrained/model.meta')
+        self.saver.restore(self.sess, tf.train.latest_checkpoint('C:/Users/ok/Desktop/CosChic/CosChic/backend/pretrained'))
         self.graph = tf.get_default_graph()
 
         # BeautyGAN X, Y, Xs 설정
@@ -81,8 +81,8 @@ class BeautyGAN:
         
         # 현재 저장경로 설정에 문제가 있습니다.
         save_path = save_path.replace('\\', '/')
-        saveImg.save(f'{save_path}/{today}/1_rst.jpg')
-        return f'{save_path}/{today}/1_rst.jpg'
+        saveImg.save(f'{save_path}/{today}_rst.jpg')
+        return f'{save_path}/{today}_rst.jpg'
 
 # 테스트
 # bg = BeautyGAN()

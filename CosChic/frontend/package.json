@@ -9,13 +9,10 @@
     "lint": "next lint"
   },
   "dependencies": {
-<<<<<<< HEAD
     "@lottiefiles/react-lottie-player": "^3.5.4",
     "@types/electron": "^1.6.10",
-=======
->>>>>>> 9787ac012b8e13d80887a2075b06ff4d7ab6ab31
     "axios": "^1.7.2",
-    "@types/electron": "^1.6.10",
+    
     
     "electron": "^30.1.0",
     "flowbite": "^2.3.0",
