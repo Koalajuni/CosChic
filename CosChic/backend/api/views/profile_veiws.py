@@ -12,7 +12,6 @@ from api.models import UserData, Product, Recommend
 # userdata api
 ##########################################################
 @csrf_exempt
-<<<<<<< HEAD
 def api_userdata(request):
     # UserData 모델에서 모든 데이터를 가져옵니다.
     datas = UserData.objects.all()
@@ -44,7 +43,6 @@ def api_userdata(request):
                         safe=False,
                         json_dumps_params={"ensure_ascii" : False},
                         status=200)
-=======
 def handle_userdata(request, UUID):
     print("someone requestsed the get_userData, UID:",UUID)
 
@@ -67,7 +65,6 @@ def handle_userdata(request, UUID):
                             status=200)
         except UserData.DoesNotExist:
             return JsonResponse({'error': 'User not found'}, status=404)
->>>>>>> 047e09328a5a851d1c49e1842dbdc852c9fafaab
 
     elif request.method == 'PUT':
         try:

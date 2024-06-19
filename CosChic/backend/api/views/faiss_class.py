@@ -5,9 +5,7 @@ import faiss
 import face_recognition
 
 class CosChicFaiss:
-    def __init__(self, dataset_path):
-        self.dataset_path = dataset_path
-        self.dataset_imgs = self.read_file(dataset_path)
+    def __init__(self):
         self.faceEncode = []
         self.img_paths = []
     
@@ -19,7 +17,8 @@ class CosChicFaiss:
                 img_path.append(os.path.join(paths, name))
         return img_path
 
-    def preprocess_images(self):
+    def preprocess_images(self,dataset_path):
+        dataset_imgs = self.read_file(dataset_path)
         for path_img in self.dataset_imgs:
             img = face_recognition.load_image_file(path_img)
             img_faces = face_recognition.face_locations(img)
@@ -58,7 +57,8 @@ class CosChicFaiss:
         print("인덱스 학습이 완료되었습니다.")
     
     # test
-    def detect_faces(self, img_path):
+    def detect_faces(self, img_path,label_path,model_path):
+        img_path = img_path.replace('\\', '/')
         img = face_recognition.load_image_file(img_path)
         test_face = face_recognition.face_locations(img)
         top, right, bottom, left = test_face[0]
@@ -68,14 +68,21 @@ class CosChicFaiss:
         left = left - 20
         face_cut = img[top:bottom, left:right]
         pil_img = Image.fromarray(face_cut)
-        pil_img.save('./test.jpg')
-        img = face_recognition.load_image_file('./test.jpg')
+        
+        #pil_img.save('./test.jpg')
+        #img = face_recognition.load_image_file('./test.jpg')
+
         test_en = face_recognition.face_encodings(img)[0]
         test_en = np.array(test_en, dtype=np.float32).reshape(-1, 128)
+        face_index = faiss.read_index(model_path)
         distance, result = face_index.search(test_en, k=5)
-        label = [train_labels[i] for i in result[0]]
-        face_rst = most_frequent(label)
-        return face_rst[0]
+        labels = np.load(label_path)
+        labels = [labels[i] for i in result[0]]
+        print(labels)
+        face_rst = most_frequent(labels)
+        print(face_rst)
+        print(face_rst[0])
+        return labels
 
 
 # 많이 나온 단어 확인
@@ -91,16 +98,14 @@ def most_frequent(data):
 
 
 
-# 예시 사용법
+# 예시 사용법 입니다.
 
-# 학습결과
-#face_index = faiss.read_index('./pretrained/CosChic_model.bin')
+# from faiss_class import *
 
-# 학습결과 정답 (y_train)
-# train_labels = np.load('./pretrained/CosChic_labels.npy')
 
-# preprocessor = CosChicPreprocessing('/content/drive/MyDrive/datasets/CosChic_data/dataset')
-# preprocessor.preprocess_images()
-# preprocessor.encode_faces()
-# preprocessor.train_index()
-# preprocessor.detect_faces('/content/drive/MyDrive/datasets/beautygan_web/media/src/source.jpg')
+
+# model = CosChicFaiss()
+# model.detect_faces('C:/Users/ok/Desktop/BT/beautygan_web/media/src/source.jpg',
+#                 'C:/Users/ok/Desktop/BT/beautygan_web/train/CosChic_labels.npy',
+#                 'C:/Users/ok/Desktop/BT/beautygan_web/train/CosChic_model.bin')
+
