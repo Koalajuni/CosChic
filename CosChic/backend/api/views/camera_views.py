@@ -185,6 +185,7 @@ def faiss_analysis(request, UUID):
         faceList = set(faceList)
         faceList = list(faceList)
         # print(faceList)
+        
         modelNum = len(faceList)
         allmodelNames = ','.join(f'{element}' for element in faceList)
         print("allmodelNames: ", allmodelNames)
