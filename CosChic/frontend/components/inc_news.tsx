@@ -7,8 +7,6 @@ export default function IncNews() {
                     <div className="lg:col-span-2">
                         <h1 className="md:text-4xl sm:text-3xl text-2xl font-bold py-2">메일주소를 남겨주세요.</h1>
                         <p style={{ color: '#000000' }}>좀 더 다양한 정보를 원하시면 메일주소를 남겨주세요.</p>
-
-
                     </div>
                     <div className="my-4">
                         <div className="flex flex-col sm:flex-row items-center justify-between w-full">
