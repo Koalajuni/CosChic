@@ -1,6 +1,6 @@
 
 from django.urls import path,include
-from .views import index_views, camera_views, profile_veiws,auth_views
+from .views import index_views, camera_views, profile_veiws,auth_views, product_views
 
 urlpatterns = [
 
@@ -27,6 +27,10 @@ urlpatterns = [
     path('v1/userdata/<str:UUID>', profile_veiws.handle_userdata, name='handle_userData'),
     path('v1/product', profile_veiws.api_product, name='api_product'),
     path('v1/recommend', profile_veiws.api_recommend, name='api_recommend'),
+
+
+    #검색
+    path('v1/search', product_views.search, name='search_query'),
 
 ]
 

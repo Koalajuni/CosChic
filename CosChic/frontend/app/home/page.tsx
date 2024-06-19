@@ -7,7 +7,8 @@ import axios from "axios"
 import LoadingProcess from "@/components/loadingProcess"
 import CardSimilarModel from "@/components/card_similarModel"
 import useUserUID from "@/hooks/useUserUID";
-
+import './loading.css';
+import './loading2.css';
 
 
 export default function Home() {
@@ -17,6 +18,8 @@ export default function Home() {
     const [userData, setUserData] = useState<any | null>(null);
     const [loading, setLoading] = useState<boolean>(true);
     const [error, setError] = useState<string | null>(null);
+    const [cameraLoading, setCameraLoading] = useState(false); // 카메라 로딩 상태 추가
+    const [cameraLoading2, setCameraLoading2] = useState(false); // 카메라 로딩 상태 추가
 
     useEffect(() => {
         // User UID 가져와서 저장
@@ -80,17 +83,22 @@ export default function Home() {
     };
 
     // 카메라켜기
-    const cameraClick = () => {
+    const cameraClick = async () => {
+        setCameraLoading(true); // 카메라 로딩 시작
         const newCameraOnState = !cameraOn; // 새로운 카메라 상태 계산
         const buttonText = newCameraOnState ? "카메라끄기" : "카메라 사용하기"; // 새로운 버튼 텍스트 계산
         setButtonText(buttonText);
         setCamera(newCameraOnState); // cameraOn 상태를 토글합니다.
         if (!cameraOn) {
             setCamera(true);
+            setTimeout(() => setCameraLoading(false), 2000); // 예시로 2초 후에 로딩 상태를 false로 설정
+
         }
         else {
             setCamera(false);
+            setCameraLoading(false); // 카메라 끌 때 로딩 상태를 false로 설정
         }
+        
         // const isFaceAnalysisButtonDisabled = !cameraOn;
         // const buttonStyles = isFaceAnalysisButtonDisabled
         //     ? "text-gray-500 bg-gray-200 cursor-not-allowed hover:bg-gray-200 focus:ring-0 focus:outline-none" // Disabled styles
@@ -100,6 +108,11 @@ export default function Home() {
     // 사진찍기
     const takePhoto = async () => {
         try {
+            console.log('photoUrlState 값:', photoUrlState);
+            console.log('cameraLoading2 값:', cameraLoading2);
+            setCameraLoading2(true); // 카메라 로딩 시작
+            console.log('photoUrlState 값:', photoUrlState);
+            console.log('cameraLoading2 값:', cameraLoading2);
             const response = await axios.post(`${baseUrl}/v1/camera_take_photo/${userUID}`, {
                 timeout: 30000,
             });
@@ -108,12 +121,18 @@ export default function Home() {
                 setCamera(true);
                 setPhotoUrl(response.data.output_image_path);
                 setPhotoUrlState(prevState => !prevState);
+                console.log('photoUrlState 값:', photoUrlState);
+                console.log('cameraLoading2 값:', cameraLoading2);
                 console.log(response)
                 setFaceAnalysisButtonState(prevState => !prevState);
+                console.log('photoUrlState 값:', photoUrlState);
+                console.log('cameraLoading2 값:', cameraLoading2);
             }
         } catch (error) {
             console.error("Error taking photo:", error); // 콘솔에 상세 오류 메시지 출력
             Swal.fire("Error", `사진 찍는데 실패했습니다.`, "error"); // 사용자에게 오류 메시지 표시
+        } finally {
+            setCameraLoading2(false); // 두 번째 카메라 로딩 종료
         }
     }
 
@@ -213,8 +232,12 @@ export default function Home() {
                             <div className="flex flex-wrap -mx-4 -mb-10 text-center">
                                 <div className="sm:w-1/2 mb-10 px-4">
                                     <div className="relative rounded-lg h-[350px] overflow-hidden flex justify-center items-center bg-black bg-opacity-50">
-                                        {cameraOn ?
-                                            (<img className="object-cover object-center rounded" alt="hero" src={`${baseUrl}/v1/camera_video_feed`} />)
+                                        {cameraOn ? (
+                                            cameraLoading ? (
+                                                <div className="loader"></div> // 로딩화면
+                                            ) : (<img className="object-cover object-center rounded" alt="hero" src={`${baseUrl}/v1/camera_video_feed`} />)
+                                        )
+                                            
                                             :
                                             (<img
                                                 alt="content"
@@ -271,12 +294,15 @@ export default function Home() {
                                             <img alt="content" className="object-cover object-center w-full" src={refImage} />
                                     </div> */}
                                     <div className="relative rounded-lg w-476 h-[350px] overflow-hidden flex justify-center items-center bg-black bg-opacity-50">
-                                        {photoUrlState ?
+                                        {photoUrlState ? (
+                                                cameraLoading2 ? (
+                                                    <div className="loader2"></div> // 로딩화면
+                                                ) :
                                         (<img
                                             alt="content"
                                             className="object-cover object-center w-5/6 h-5/6 "
                                             src={photoUrl}
-                                        />) : 
+                                        />)) : 
                                         (<img
                                             alt="content"
                                             className="object-cover object-center w-5/6 h-5/6 "
