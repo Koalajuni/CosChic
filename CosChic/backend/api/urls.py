@@ -4,8 +4,6 @@ from .views import index_views, camera_views, profile_veiws,auth_views,test_prod
 from django.conf import settings
 from django.conf.urls.static import static
 from django.urls import path
-
-
 urlpatterns = [
 
     #계정 로그인/회원가입 
@@ -38,6 +36,9 @@ urlpatterns = [
     path('v1/get_all_users', test_product_views.get_all_users, name='get_all_users'),
     path('v1/other_models', test_product_views.other_models, name='other_models'),
     path('v1/asso_product', test_product_views.asso_product, name='asso_product')
+
+    #검색
+    path('v1/search', product_views.search, name='search_query'),
 
 ]
 
