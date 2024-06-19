@@ -42,6 +42,7 @@ const SearchPage = () => {
             setTotalResults(total_results);
             setTotalPages(total_pages);
             setCurrentPage(current_page);
+            console.log("data", results)
         } catch (error) {
             console.error("Error fetching search results:", error);
         } finally {

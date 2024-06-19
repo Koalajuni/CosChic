@@ -1,18 +1,18 @@
 
-import IncNavbar from "@/components/IncNavbar";
-import IncHero from "@/components/IncHero";
-import IncAnaly from "@/components/IncAnaly";
-import IncNews from "@/components/IncNews";
-import IncCard from "@/components/IncCard";
+import IncNavbar from "@/components/inc_navbar";
+import IncHero from "@/components/inc_landingHero";
+import IncAnaly from "@/components/inc_landingText";
+import IncNews from "@/components/inc_news";
+import IncCard from "@/components/inc_landingHero";
 
 export default function Main() {
-    return(
+    return (
         <>
-        <IncNavbar />
-        <IncAnaly />
-        <IncHero />
-        <IncNews />
-        {/*IncCard*/}
+            <IncNavbar />
+            <IncAnaly />
+            <IncHero />
+            <IncNews />
+            {/*IncCard*/}
         </>
     )
 }
