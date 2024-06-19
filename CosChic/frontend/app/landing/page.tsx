@@ -9,8 +9,15 @@ export default function Main() {
     return(
         <>
         <IncNavbar />
+        {/* <div className="flex min-h-screen flex-col max-w-2xl mx-auto">
+        <div className="min-h-[30vh]"></div> */}
+        <hr className='border-black-400' />
+        {/* <div className="min-h-[30vh]"></div> */}
+        {/* </div> */}
         <IncAnaly />
+        <hr className='border-black-400' />
         <IncHero />
+        <hr className='border-black-400' />
         <IncNews />
         {/*IncCard*/}
         </>

@@ -5,7 +5,7 @@ export default function IncHero() {
     return(
         <div className="HERO text-white">
             <div className="py-10 max-w-[800px] mt-[40px] w-full mx-auto text-center flex flex-col justify-center">
-            <p className="text-text-white font-bold p-2" style={{ color: '#FFFFFF' }}>인공지능을 통해 고객의 얼굴 유형에 완벽하게 맞는 맞춤형 !!!</p>
+            <p className="text-text-white font-bold p-2" style={{ color: '#000000' }}>인공지능을 통해 고객의 얼굴 유형에 완벽하게 맞는 맞춤형 !!!</p>
             <h1 className="md:text-6xl sm:text-5xl text-3xl font-bold md:py-6" style={{ color: '#F9F871' }}>Your AI Stylist</h1>
                 <div>
                     <p className="md:text-4xl sm:text-3xl text-xl font-bold">
