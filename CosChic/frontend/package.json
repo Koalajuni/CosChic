@@ -12,6 +12,8 @@
     "@lottiefiles/react-lottie-player": "^3.5.4",
     "@types/electron": "^1.6.10",
     "axios": "^1.7.2",
+    
+    
     "electron": "^30.1.0",
     "flowbite": "^2.3.0",
     "flowbite-react": "^0.9.0",
