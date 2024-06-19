@@ -1,0 +1,4 @@
+# Ignore a_class.py file
+faiss_class.py
+beautygan_py
+camera_views.py

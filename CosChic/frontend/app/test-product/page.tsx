@@ -7,61 +7,142 @@ import Header from '@/components/inc_header';
 import Footer from '@/components/inc_footer';
 import useUserUID from "@/hooks/useUserUID";
 import { useSearchParams } from "next/navigation";
-
+import axios from 'axios';
 
 const TestProductPage = () => {
-
+    
+    const [userUid, setUserUid] = useState("");
+    const [responseData, setResponseData] = useState(null);
+    const [responseData2, setResponseData2] = useState(null);
     const userUID = useUserUID(); // USER UID 가져오는 변수  
     const params = useSearchParams();
     const name = params.get("name");
     const url = params.get("url");
     const modelNum = params.get("modelNum");
+    const models = [];
+    params.forEach((value, key) => {
+        if (/^model\d+$/.test(key)) {models.push(value);}});
     // const allModelNames = params.get("allModelNames");
     // 모델들을 담을 배열
-    const models = [];
-    let i = 1;
-    while (true) {
-        const modelName = params.get(`model${i}`);
-        if (!modelName) break;
-        models.push({ name: modelName });
-        i++;
+    // const models = [];
+    // let i = 1;
+    // while (true) {
+    //     const modelName = params.get(`model${i}`);
+    //     if (!modelName) break;
+    //     models.push({ "name": modelName });
+    //     i++;
+    // }
+    
+// uid 받아오는 함수
+useEffect(() => {
+    // User UID 가져와서 저장
+    const storedUserUid = localStorage.getItem('UUID');
+    // console.log(storedUserUid)
+    if (storedUserUid) {
+        setUserUid(storedUserUid);
     }
-    //주의: 
-    //여기서 실제 DB안에 있는 유저 모델 정보를 입력해서 사용해주세요 
-    // String인지, number인지 확인하고 아래 기입해주세요
+    // console.log(storedUserUid)
+}, []);
 
-    const dummyUserData = {
-        "model": "",
-        "pk": "",
-        "fields": {
-            "names": "",
-            "age": "",
-            "gender": "",
-            "email": "",
-            "createDate": "",
-            "password": "",
-            "IP": "",
-            "uploadDate": "",
-            "orgImage": "",
-            "UUID": ""
-        }
-    };
-    const dummyProductData = {
-        "model": "",
-        "pk": 1,
-        "fields": {
-            "productUrl": "",
-            "productName": "",
-            "brandName": "",
-            "price": "",
-            "productImage": "",
-            "modelImage": "",
-            "count": "",
-            "categoryId": "",
-            "category": ""
-        }
-    };
-    {/*        더미 모델 공간입니다             */ }
+// beautygan org 추가하기
+useEffect(() => {
+    if (userUid) {
+        console.log("Sending UUID to server:", userUid); // UUID가 제대로 출력되는지 확인
+        const formData = new FormData();
+        formData.append('user_uid', userUid);
+        // UUID 가 django에서 조회가 되지 않아 특정 이메일을 직접 문자열로 넣어줍니다.
+        formData.append('user_email', "mc@test.com");
+
+        axios.post('http://127.0.0.1:8000/api/v1/BG_result', formData)
+            .then(response => {
+                console.log('Success:', response.data);
+                setResponseData(response.data); // 서버 응답 데이터 저장
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+    }
+}, [userUid]);
+
+// 사용한 제품 (하나의 모델만 받는다면 그모델만) name 변수
+useEffect(() => {
+    if (name)  {
+        console.log("Sending used_model_name to server:", name);
+        const formData = new FormData();
+        // UUID 가 django에서 조회가 되지 않아 특정 이메일을 직접 문자열로 넣어줍니다.
+        formData.append('used_model_name', name);
+        formData.append('user_email', "mc@test.com");
+        console.log("checking used_model_name_formData to server:", name);
+        
+        axios.post('http://127.0.0.1:8000/api/v1/used_product', formData)
+            .then(response => {
+                console.log('Success:', response.data);
+                setResponseData2(response.data);
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+    }
+}, [name]);
+
+// 다른 모델 정보
+useEffect(() => {
+    if (models) {
+        console.log("Sending models to server:", models);
+
+        const formData = new FormData();
+        // models.forEach((item, index) => {
+        //     formData.append(`models[${index}]`, item);
+        // });
+        formData.append('models', [models]);
+        // UUID 가 django에서 조회가 되지 않아 특정 이메일을 직접 문자열로 넣어줍니다.
+        formData.append('user_email', "mc@test.com");
+
+        console.log("Checking models formData to server:", formData);
+        axios.post('http://127.0.0.1:8000/api/v1/other_models', formData)
+            .then(response => {
+                console.log('Success:', response.data);
+                setResponseData2(response.data);
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+    }
+}, []);
+
+// 관련 상품 (이 함수 또한 name 변수)
+useEffect( () => {
+    if (name) {
+        console.log("sending Specific Brand Data",name)
+        const formData =new FormData()
+        formData.append('used_model_name',name)
+
+        axios.post('http://127.0.0.1:8000/api/v1/asso_product',formData)
+            .then(response => {
+                console.log('Success:', response.data);
+                setResponseData(response.data); // 서버 응답 데이터 저장
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+    }
+},[name])
+
+// GPT 코드 칸
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     const userProfileImage = 'https://via.placeholder.com/150';
     const userResembleModels = [
@@ -88,7 +169,9 @@ const TestProductPage = () => {
                 <div className="flex justify-center mb-20">
                     <UserProfileImage src={userProfileImage} />
                     <div>
-                        <img src={productData.image} alt="화장 후 사진" className="w-60 h-60 rounded-md" />
+                            {responseData && responseData.result_img_path &&(
+                        <img src ={responseData.result_img_path} alt="화장 후 사진" className="w-60 h-60 rounded-md" />
+                        )}
                         <p>화장 후 사진</p>
                     </div>
                 </div>

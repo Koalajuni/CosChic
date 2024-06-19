@@ -9,6 +9,7 @@ __pycache__/
 #ai model
 model/
 pretrained/
+media/
 
 # Distribution / packaging
 .Python

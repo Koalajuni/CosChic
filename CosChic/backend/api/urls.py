@@ -1,7 +1,9 @@
 
 from django.urls import path,include
-from .views import index_views, camera_views, profile_veiws,auth_views, product_views
-
+from .views import index_views, camera_views, profile_veiws,auth_views,test_product_views
+from django.conf import settings
+from django.conf.urls.static import static
+from django.urls import path
 urlpatterns = [
 
     #계정 로그인/회원가입 
@@ -28,9 +30,17 @@ urlpatterns = [
     path('v1/product', profile_veiws.api_product, name='api_product'),
     path('v1/recommend', profile_veiws.api_recommend, name='api_recommend'),
 
+    #test_product
+    path('v1/used_product',test_product_views.used_product,name='used_product'),
+    path('v1/BG_result',test_product_views.BG_result,name='BG_result'),
+    path('v1/get_all_users', test_product_views.get_all_users, name='get_all_users'),
+    path('v1/other_models', test_product_views.other_models, name='other_models'),
+    path('v1/asso_product', test_product_views.asso_product, name='asso_product')
 
     #검색
     path('v1/search', product_views.search, name='search_query'),
 
 ]
 
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
