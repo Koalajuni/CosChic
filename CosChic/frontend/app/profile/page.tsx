@@ -97,6 +97,7 @@ export default function UserProfile() {
         boxShadow: "0px 0px 5px rgba(0, 0, 0, 0.2)",
 
     };
+
     const userResembleModels = [
         { name: '모델 A', similarity: 87, image: 'https://via.placeholder.com/100' },
         { name: '모델 B', similarity: 63, image: 'https://via.placeholder.com/100' },
@@ -120,6 +121,7 @@ export default function UserProfile() {
                         <div className="flex flex-wrap border shadow rounded-lg p-3 dark:bg-gray-600 items-center flex-col">
                             <div style={profileImageStyle} onClick={() => fileInput.current?.click()} />
                                 <input type="file"style={{display : "none"}} ref={fileInput} onChange={onFileChange} accept="image/*"/>
+                                
                                 {userData && (
                                 <>
                                     <p className="font-serif font-semibold p-4">{userData.names}</p>
