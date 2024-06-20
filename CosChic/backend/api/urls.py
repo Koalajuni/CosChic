@@ -25,6 +25,7 @@ urlpatterns = [
 
     #프로필뷰 
     path('v1/userdata/<str:UUID>', profile_veiws.handle_userdata, name='handle_userData'),
+    path('v1/userdata/upload/<str:UUID>', profile_veiws.upload_image, name='upload_image'),
     path('v1/product', profile_veiws.api_product, name='api_product'),
     path('v1/recommend', profile_veiws.api_recommend, name='api_recommend'),
 

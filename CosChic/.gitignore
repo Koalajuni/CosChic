@@ -4,4 +4,4 @@ backend/media/
 backend/pretrained/
 backend/.DS_Store
 .env
-backend/media
+backend/api/migrations

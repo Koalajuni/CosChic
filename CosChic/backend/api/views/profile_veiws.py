@@ -7,6 +7,7 @@ import json
 
 from api.models import UserData, Product, Recommend
 
+
 ##########################################################
 # userdata api
 ##########################################################
@@ -27,6 +28,7 @@ def handle_userdata(request, UUID):
                 # 'IP': user.IP,
                 # 'uploadDate': user.uploadDate,
                 'orgImage': user.orgImage,
+                'profileImage':f'http://127.0.0.1:8000/{user.profileImage}' if user.profileImage else None,
             }
             return JsonResponse(user_data, safe=False,
                             json_dumps_params={"ensure_ascii" : False},
@@ -55,6 +57,42 @@ def handle_userdata(request, UUID):
             return JsonResponse({'error': str(e)}, status=400)
     else:
         return JsonResponse({'error': '잘못된 정보입니다: {request.method}'},status = 404)
+    
+
+
+@csrf_exempt
+def upload_image(request, UUID):
+    try:
+        if request.method == 'POST':
+            profileimage = request.FILES.get('profileImage')
+            UUID=UUID
+            print(f"uuid 받음 : {UUID}" )
+            if profileimage:
+                nowString = datetime.now().strftime('%Y%m%d%H%M%S')
+                # Save the uploaded image to the media directory
+                url = f'media/profile_img/{nowString}.jpg'
+                with open(url, 'wb+') as destination: 
+                    for chunk in profileimage.chunks():
+                        destination.write(chunk)
+
+                # 이미지를 db에 저장
+                # 유저 객체 가져오기
+                try:
+                    user = UserData.objects.get(UUID=UUID)
+                except UserData.DoesNotExist:
+                    return JsonResponse({'error': '해당 UUID를 가진 유저가 없습니다.'}, status=404)
+                
+                # 유저 객체의 profile_img 필드 업데이트
+                user.profileImage = url  
+                user.save()
+
+                output_image_url = f'http://127.0.0.1:8000/{user.profileImage}'
+                return JsonResponse({ 'imagepath':user.profileImage, "output_image_path": output_image_url}, status=200)
+        return JsonResponse({'error': "Invalid request method"}, status=405)
+
+    except Exception as e:
+        print(f"Error processing request: {e}")
+        return JsonResponse({'error': '서버 오류가 발생했습니다.'}, status=500)
 
 
 ##########################################################
@@ -88,9 +126,6 @@ def api_product(request):
                         safe=False,
                         json_dumps_params={"ensure_ascii" : False},
                         status=200)
-
-
-
 
 
 ##########################################################

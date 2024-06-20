@@ -102,7 +102,7 @@ def take_photo(request, UUID):
         detector = FaceMeshDetector(imagePath, output_image)
         eye_ratio, nose_ratio, face_ratio, lip_ratio = detector.process_image()
         print("얼굴분석정보(eye_ratio, nose_ratio, face_ratio, lip_ratio):", eye_ratio, nose_ratio, face_ratio, lip_ratio)
-        output_image_path = f'http://localhost:8000/media/mediapipe/output_{nowString}.jpg' 
+        output_image_path = f'http://127.0.0.1:8000/media/mediapipe/output_{nowString}.jpg' 
         # JSON 응답에 output_image_path 포함
         return JsonResponse({"message": "Image processed successfully", 'imagePath': imagePath, "output_image_path": output_image_path}, status=200)
         
@@ -145,7 +145,7 @@ def img_send(request, UUID):
                 detector = FaceMeshDetector(url, output_image)
                 eye_ratio, nose_ratio, face_ratio, lip_ratio = detector.process_image()
                 print("얼굴분석정보(eye_ratio, nose_ratio, face_ratio, lip_ratio):", eye_ratio, nose_ratio, face_ratio, lip_ratio)
-                output_image_path = f'http://localhost:8000/media/mediapipe/output_{nowString}.jpg' 
+                output_image_path = f'http://127.0.0.1:8000/media/mediapipe/output_{nowString}.jpg' 
                 # JSON 응답에 output_image_path 포함
                 return JsonResponse({"message": "Image processed successfully", "output_image_path": output_image_path}, status=201)
             else:
@@ -179,8 +179,8 @@ def faiss_analysis(request, UUID):
         # faiss 분석
         model = CosChicFaiss()
         faceList = model.detect_faces(userImage,
-                        r'C:\Users\LeeSangWhui\Desktop\CosChic\CosChic\backend\pretrained\CosChic_labels.npy',  # pre-train 모델경로 맞게 수정 
-                        r'C:\Users\LeeSangWhui\Desktop\CosChic\CosChic\backend\pretrained\CosChic_model.bin')
+                        r'C:\Users\hi\Desktop\pretrained\CosChic_labels.npy',  # pre-train 모델경로 맞게 수정 
+                        r'C:\Users\hi\Desktop\pretrained\CosChic_model.bin')
         # 중복제거 
         faceList = set(faceList)
         faceList = list(faceList)
@@ -190,13 +190,13 @@ def faiss_analysis(request, UUID):
         # jsonData["model_num"] = len(faceList)
         for i in range(len(faceList)):
             # 파일이 들어있는 폴더 경로
-            modelFolderPath = f'./media/dataset/{faceList[i]}'
+            modelFolderPath = f'./media/model_img/{faceList[i]}'
 
             # 모델의 첫번째 사진
             images = os.listdir(modelFolderPath)
             firstImage = images[0]
             # print(firstImage)
-            modelPhotoUrl = f'http://localhost:8000/media/dataset/{faceList[i]}/{firstImage}' 
+            modelPhotoUrl = f'http://localhost:8000/media/model_img/{faceList[i]}/{firstImage}' 
 
             print(modelFolderPath +"/"+ firstImage)
             # 모델사진 FaceMeshDetector로 이미지 처리
