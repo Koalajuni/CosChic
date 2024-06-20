@@ -22,6 +22,30 @@ const TestProductPage = () => {
     const models = [];
     params.forEach((value, key) => {
         if (/^model\d+$/.test(key)) {models.push(value);}});
+    const lipSimilarity = params.get("lips");
+    const eyeSimilarity = params.get("eyes");
+    const eyebrowSimilarity = params.get("eyebrow");
+    const noseSimilarity = params.get("nose");
+    const contourSimilarity = params.get("contour");
+    const allSimilarity = params.get("sim");
+
+    const userFullEyesizeRatio = params.get("ufeye")
+    const userFullTailEyeRatio = params.get("uteye")
+    const userTopLipRatio = params.get("utlip")
+    const userBottomLipRatio = params.get("ublip")
+    const userRightSymmetryRatio = params.get("ursym")
+    const userLeftSymmertyRatio = params.get("ulsym")
+    const userFaceNoseHeightRatio = params.get("ufnh")
+    const userFaceNoseWidthRatio = params.get("ufnw")
+
+    const modelFullEyesizeRatio = params.get("mfeye")
+    const modelFullTailEyeRatio = params.get("mteye")
+    const modelTopLipRatio = params.get("mtlip")
+    const modelBottomLipRatio = params.get("mblip")
+    const modelRightSymmetryRatio = params.get("mrsym")
+    const modelLeftSymmertyRatio = params.get("mlsym")
+    const modelFaceNoseHeightRatio = params.get("mfnh")
+    const modelFaceNoseWidthRatio = params.get("mfnw")
     // const allModelNames = params.get("allModelNames");
     // 모델들을 담을 배열
     // const models = [];
@@ -188,6 +212,31 @@ useEffect( () => {
                             <li key={index}>{model.name}</li>
                         ))}
                     </ul>
+                    <p>lipSimilarity: {lipSimilarity}</p>
+                    <p>eyeSimilarity: {eyeSimilarity}</p>
+                    <p>eyebrowSimilarity: {eyebrowSimilarity}</p>
+                    <p>noseSimilarity: {noseSimilarity}</p>
+                    <p>contourSimilarity: {contourSimilarity}</p>
+                    <p>allSimilarity: {allSimilarity}</p>
+
+                    <p>userFullEyesizeRatio: {userFullEyesizeRatio}</p>
+                    <p>userFullTailEyeRatio: {userFullTailEyeRatio}</p>
+                    <p>userTopLipRatio: {userTopLipRatio}</p>
+                    <p>userBottomLipRatio: {userBottomLipRatio}</p>
+                    <p>userRightSymmetryRatio: {userRightSymmetryRatio}</p>
+                    <p>userLeftSymmertyRatio: {userLeftSymmertyRatio}</p>
+                    <p>userFaceNoseHeightRatio: {userFaceNoseHeightRatio}</p>
+                    <p>userFaceNoseWidthRatio: {userFaceNoseWidthRatio}</p>
+
+                    <p>modelFullEyesizeRatio: {modelFullEyesizeRatio}</p>
+                    <p>modelFullTailEyeRatio: {modelFullTailEyeRatio}</p>
+                    <p>modelTopLipRatio: {modelTopLipRatio}</p>
+                    <p>modelBottomLipRatio: {modelBottomLipRatio}</p>
+                    <p>modelRightSymmetryRatio: {modelRightSymmetryRatio}</p>
+                    <p>modelLeftSymmertyRatio: {modelLeftSymmertyRatio}</p>
+                    <p>modelFaceNoseHeightRatio: {modelFaceNoseHeightRatio}</p>
+                    <p>modelFaceNoseWidthRatio: {modelFaceNoseWidthRatio}</p>
+
                 </div>
                 <h2 className="text-xl font-semibold mt-4 mb-2">추가로 비슷한 모델</h2>
                 <SimilarModels models={userResembleModels} />
