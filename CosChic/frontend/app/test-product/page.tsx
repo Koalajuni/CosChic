@@ -7,10 +7,15 @@ import Header from '@/components/inc_header';
 import Footer from '@/components/inc_footer';
 import useUserUID from "@/hooks/useUserUID";
 import { useSearchParams } from "next/navigation";
-import axios from 'axios';
+import CardBarChart from '@/components/card_barChart';
+import CardRadalChart from '@/components/card_radalChart';
+import CardRelatedProduct from '@/components/card_relatedProduct';
+import styles from '@/styles//CardRelatedProduct.module.css';
+import axios from "axios";
+
 
 const TestProductPage = () => {
-    
+
     const [userUid, setUserUid] = useState("");
     const [responseData, setResponseData] = useState(null);
     const [responseData2, setResponseData2] = useState(null);
@@ -56,103 +61,103 @@ const TestProductPage = () => {
     //     models.push({ "name": modelName });
     //     i++;
     // }
-    
-// uid 받아오는 함수
-useEffect(() => {
-    // User UID 가져와서 저장
-    const storedUserUid = localStorage.getItem('UUID');
-    // console.log(storedUserUid)
-    if (storedUserUid) {
-        setUserUid(storedUserUid);
-    }
-    // console.log(storedUserUid)
-}, []);
 
-// beautygan org 추가하기
-useEffect(() => {
-    if (userUid) {
-        console.log("Sending UUID to server:", userUid); // UUID가 제대로 출력되는지 확인
-        const formData = new FormData();
-        formData.append('user_uid', userUid);
-        // UUID 가 django에서 조회가 되지 않아 특정 이메일을 직접 문자열로 넣어줍니다.
-        formData.append('user_email', "mc@test.com");
+    // uid 받아오는 함수
+    useEffect(() => {
+        // User UID 가져와서 저장
+        const storedUserUid = localStorage.getItem('UUID');
+        // console.log(storedUserUid)
+        if (storedUserUid) {
+            setUserUid(storedUserUid);
+        }
+        // console.log(storedUserUid)
+    }, []);
 
-        axios.post('http://127.0.0.1:8000/api/v1/BG_result', formData)
-            .then(response => {
-                console.log('Success:', response.data);
-                setResponseData(response.data); // 서버 응답 데이터 저장
-            })
-            .catch(error => {
-                console.error('Error:', error);
-            });
-    }
-}, [userUid]);
+    // beautygan org 추가하기
+    useEffect(() => {
+        if (userUid) {
+            console.log("Sending UUID to server:", userUid); // UUID가 제대로 출력되는지 확인
+            const formData = new FormData();
+            formData.append('user_uid', userUid);
+            // UUID 가 django에서 조회가 되지 않아 특정 이메일을 직접 문자열로 넣어줍니다.
+            formData.append('user_email', "mc@test.com");
 
-// 사용한 제품 (하나의 모델만 받는다면 그모델만) name 변수
-useEffect(() => {
-    if (name)  {
-        console.log("Sending used_model_name to server:", name);
-        const formData = new FormData();
-        // UUID 가 django에서 조회가 되지 않아 특정 이메일을 직접 문자열로 넣어줍니다.
-        formData.append('used_model_name', name);
-        formData.append('user_email', "mc@test.com");
-        console.log("checking used_model_name_formData to server:", name);
-        
-        axios.post('http://127.0.0.1:8000/api/v1/used_product', formData)
-            .then(response => {
-                console.log('Success:', response.data);
-                setResponseData2(response.data);
-            })
-            .catch(error => {
-                console.error('Error:', error);
-            });
-    }
-}, [name]);
+            axios.post('http://127.0.0.1:8000/api/v1/BG_result', formData)
+                .then(response => {
+                    console.log('Success:', response.data);
+                    setResponseData(response.data); // 서버 응답 데이터 저장
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+        }
+    }, [userUid]);
 
-// 다른 모델 정보
-useEffect(() => {
-    if (models) {
-        console.log("Sending models to server:", models);
+    // 사용한 제품 (하나의 모델만 받는다면 그모델만) name 변수
+    useEffect(() => {
+        if (name) {
+            console.log("Sending used_model_name to server:", name);
+            const formData = new FormData();
+            // UUID 가 django에서 조회가 되지 않아 특정 이메일을 직접 문자열로 넣어줍니다.
+            formData.append('used_model_name', name);
+            formData.append('user_email', "mc@test.com");
+            console.log("checking used_model_name_formData to server:", name);
 
-        const formData = new FormData();
-        // models.forEach((item, index) => {
-        //     formData.append(`models[${index}]`, item);
-        // });
-        formData.append('models', [models]);
-        // UUID 가 django에서 조회가 되지 않아 특정 이메일을 직접 문자열로 넣어줍니다.
-        formData.append('user_email', "mc@test.com");
+            axios.post('http://127.0.0.1:8000/api/v1/used_product', formData)
+                .then(response => {
+                    console.log('Success:', response.data);
+                    setResponseData2(response.data);
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+        }
+    }, [name]);
 
-        console.log("Checking models formData to server:", formData);
-        axios.post('http://127.0.0.1:8000/api/v1/other_models', formData)
-            .then(response => {
-                console.log('Success:', response.data);
-                setResponseData2(response.data);
-            })
-            .catch(error => {
-                console.error('Error:', error);
-            });
-    }
-}, []);
+    // 다른 모델 정보
+    useEffect(() => {
+        if (models) {
+            console.log("Sending models to server:", models);
 
-// 관련 상품 (이 함수 또한 name 변수)
-useEffect( () => {
-    if (name) {
-        console.log("sending Specific Brand Data",name)
-        const formData =new FormData()
-        formData.append('used_model_name',name)
+            const formData = new FormData();
+            // models.forEach((item, index) => {
+            //     formData.append(`models[${index}]`, item);
+            // });
+            formData.append('models', [models]);
+            // UUID 가 django에서 조회가 되지 않아 특정 이메일을 직접 문자열로 넣어줍니다.
+            formData.append('user_email', "mc@test.com");
 
-        axios.post('http://127.0.0.1:8000/api/v1/asso_product',formData)
-            .then(response => {
-                console.log('Success:', response.data);
-                setResponseData(response.data); // 서버 응답 데이터 저장
-            })
-            .catch(error => {
-                console.error('Error:', error);
-            });
-    }
-},[name])
+            console.log("Checking models formData to server:", formData);
+            axios.post('http://127.0.0.1:8000/api/v1/other_models', formData)
+                .then(response => {
+                    console.log('Success:', response.data);
+                    setResponseData2(response.data);
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+        }
+    }, []);
 
-// GPT 코드 칸
+    // 관련 상품 (이 함수 또한 name 변수)
+    useEffect(() => {
+        if (name) {
+            console.log("sending Specific Brand Data", name)
+            const formData = new FormData()
+            formData.append('used_model_name', name)
+
+            axios.post('http://127.0.0.1:8000/api/v1/asso_product', formData)
+                .then(response => {
+                    console.log('Success:', response.data);
+                    setResponseData(response.data); // 서버 응답 데이터 저장
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+        }
+    }, [name])
+
+    // GPT 코드 칸
 
 
 
@@ -193,8 +198,8 @@ useEffect( () => {
                 <div className="flex justify-center mb-20">
                     <UserProfileImage src={userProfileImage} />
                     <div>
-                            {responseData && responseData.result_img_path &&(
-                        <img src ={responseData.result_img_path} alt="화장 후 사진" className="w-60 h-60 rounded-md" />
+                        {responseData && responseData.result_img_path && (
+                            <img src={responseData.result_img_path} alt="화장 후 사진" className="w-60 h-60 rounded-md" />
                         )}
                         <p>화장 후 사진</p>
                     </div>
@@ -238,23 +243,23 @@ useEffect( () => {
                     <p>modelFaceNoseWidthRatio: {modelFaceNoseWidthRatio}</p>
 
                 </div>
-                <h2 className="text-xl font-semibold mt-4 mb-2">추가로 비슷한 모델</h2>
+                <h2 className="text-xl font-semibold mt-4 mb-4">추가로 비슷한 모델</h2>
                 <SimilarModels models={userResembleModels} />
-                <h2 className="text-xl font-semibold mt-4 mb-2">관련 브랜드 상품</h2>
-                <div className="flex justify-around">
-                    {/* Add related brand products here */}
-                    <div className="w-1/4 p-2">
-                        <div className="bg-gray-300 p-4 rounded-md">관련 상품 A</div>
+                <h2 className="text-xl font-semibold mt-6 mb-4">관련 브랜드 상품</h2>
+                <div className={`flex overflow-x-scroll py-3 ${styles['hide-scroll-bar']}`}>
+                    <div className="flex flex-nowrap lg:ml-40 md:ml-20 ml-10">
+                        {models.map((model, index) => (
+                            <div key={index} className="hover:shadow-xl inline-block px-3">
+                                <CardRelatedProduct />
+                            </div>
+                        ))}
                     </div>
-                    <div className="w-1/4 p-2">
-                        <div className="bg-gray-300 p-4 rounded-md">관련 상품 B</div>
-                    </div>
-                    <div className="w-1/4 p-2">
-                        <div className="bg-gray-300 p-4 rounded-md">관련 상품 C</div>
-                    </div>
-                    <div className="w-1/4 p-2">
-                        <div className="bg-gray-300 p-4 rounded-md">관련 상품 D</div>
-                    </div>
+                </div>
+                <div className="flex gap-4 content-between py-4">
+                    <CardBarChart />
+                    <CardRadalChart />
+                </div>
+                <div>
                 </div>
             </div>
             <Footer />
