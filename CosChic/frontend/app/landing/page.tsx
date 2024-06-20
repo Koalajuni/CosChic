@@ -3,6 +3,7 @@ import IncNavbar from "@/components/inc_navbar";
 import IncHero from "@/components/inc_landingHero";
 import IncAnaly from "@/components/inc_landingText";
 import IncNews from "@/components/inc_news";
+import IncTestText from "@/components/test_landingText";
 
 export default function Main() {
     return (
@@ -14,6 +15,7 @@ export default function Main() {
             {/* <div className="min-h-[30vh]"></div> */}
             {/* </div> */}
             <IncAnaly />
+            {/* <IncTestText /> */}
             <hr className='border-black-400' />
             <IncHero />
             <hr className='border-black-400' />
