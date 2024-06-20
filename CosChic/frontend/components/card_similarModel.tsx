@@ -10,7 +10,33 @@ const CardSimilarModel = ({ models }) => {
         console.log('Model:', model);  // 모델 전체 데이터 로그
         const modelNamesArray = model.allModelNames.split(','); // 모델 이름을 배열로 분할
         const modelNamesParams = modelNamesArray.map((name, index) => `model${index + 1}=${name}`).join('&'); // 매개변수 형식으로 변환
-        const url = `/test-product?name=${model.modelName}&url=${model.photoUrl}&modelNum=${model.modelNum}&${modelNamesParams}`;
+        const url = `/test-product?name=${model.modelName}
+        &url=${model.photoUrl}
+        &modelNum=${model.modelNum}&${modelNamesParams}
+        &lips=${model.lips}
+        &eyes=${model.eyes}
+        &eyebrow=${model.eyebrow}
+        &nose=${model.nose}
+        &contour=${model.contour}
+        &sim=${model.similarity}
+        &ufeye=${model.userFullEyesizeRatio}
+        &uteye=${model.userFullTailEyeRatio}
+        &utlip=${model.userTopLipRatio}
+        &ublip=${model.userBottomLipRatio}
+        &ursym=${model.userRightSymmetryRatio}
+        &ulsym=${model.userLeftSymmertyRatio}
+        &ufnh=${model.userFaceNoseHeightRatio}
+        &ufnw=${model.userFaceNoseWidthRatio}
+        &mfeye=${model.modelFullEyesizeRatio}
+        &mteye=${model.modelFullTailEyeRatio}
+        &mtlip=${model.modelTopLipRatio}
+        &mblip=${model.modelBottomLipRatio}
+        &mrsym=${model.modelRightSymmetryRatio}
+        &mlsym=${model.modelLeftSymmertyRatio}
+        &mfnh=${model.modelFaceNoseHeightRatio}
+        &mfnw=${model.modelFaceNoseWidthRatio}
+        
+        `;
         // const url = `/test-product?name=${model.modelName}&url=${model.photoUrl}&modelNum=${model.modelNum}&allModelNames=${model.allModelNames}`;
         router.push(url);
 
