@@ -8,12 +8,14 @@ import Footer from '@/components/inc_footer';
 import useUserUID from "@/hooks/useUserUID";
 import { useSearchParams } from "next/navigation";
 import axios from 'axios';
-
+// 0620 11:11 backup
 const TestProductPage = () => {
     
     const [userUid, setUserUid] = useState("");
     const [responseData, setResponseData] = useState(null);
     const [responseData2, setResponseData2] = useState(null);
+    const [responseData3, setResponseData3] = useState(null);
+    const [responseData4, setResponseData4] = useState(null);
     const userUID = useUserUID(); // USER UID 가져오는 변수  
     const params = useSearchParams();
     const name = params.get("name");
@@ -52,7 +54,7 @@ useEffect(() => {
         formData.append('user_uid', userUid);
         // UUID 가 django에서 조회가 되지 않아 특정 이메일을 직접 문자열로 넣어줍니다.
         formData.append('user_email', "mc@test.com");
-
+        formData.append('used_model_name',name)
         axios.post('http://127.0.0.1:8000/api/v1/BG_result', formData)
             .then(response => {
                 console.log('Success:', response.data);
@@ -76,7 +78,7 @@ useEffect(() => {
         
         axios.post('http://127.0.0.1:8000/api/v1/used_product', formData)
             .then(response => {
-                console.log('Success:', response.data);
+                console.log('used_product_Success:', response.data);
                 setResponseData2(response.data);
             })
             .catch(error => {
@@ -101,8 +103,8 @@ useEffect(() => {
         console.log("Checking models formData to server:", formData);
         axios.post('http://127.0.0.1:8000/api/v1/other_models', formData)
             .then(response => {
-                console.log('Success:', response.data);
-                setResponseData2(response.data);
+                console.log('other_models_Success:', response.data);
+                setResponseData3(response.data);
             })
             .catch(error => {
                 console.error('Error:', error);
@@ -119,8 +121,8 @@ useEffect( () => {
 
         axios.post('http://127.0.0.1:8000/api/v1/asso_product',formData)
             .then(response => {
-                console.log('Success:', response.data);
-                setResponseData(response.data); // 서버 응답 데이터 저장
+                console.log('asso_product_Success:', response.data);
+                setResponseData4(response.data); // 서버 응답 데이터 저장
             })
             .catch(error => {
                 console.error('Error:', error);
@@ -128,20 +130,30 @@ useEffect( () => {
     }
 },[name])
 
-// GPT 코드 칸
+// GPT 코드 칸 
 
 
 
 
+// 테스트용 코드
+// if (responseData3 && Array.isArray(responseData3)) {
+//     responseData3.forEach((item, index) => {
+//         if (item.modelPhotoUrl) {
+//             console.log(`modelPhotoUrl at index ${index}:`, item.modelPhotoUrl);
+//         } else {
+//             console.log(`No modelPhotoUrl found at index ${index}`);
+//         }
+//     });
+// } else {
+//     console.log('responseData3 is not an array or is undefined');
+// }
+// if (responseData3 && responseData3.modelPhotoUrl) {
+//     console.log('modelPhotoUrl:', responseData3.modelPhotoUrl);
+// } else {
+//     console.log('No modelPhotoUrl found in responseData3');
+// }
 
-
-
-
-
-
-
-
-
+    
 
 
     const userProfileImage = 'https://via.placeholder.com/150';
@@ -153,7 +165,7 @@ useEffect( () => {
         { name: '모델 E', similarity: 23, image: 'https://via.placeholder.com/100' }
     ];
 
-    const productData = {
+    const productData = { 
         name: '에뛰드',
         price: 15000,
         url: 'https://example.com',
@@ -175,22 +187,32 @@ useEffect( () => {
                         <p>화장 후 사진</p>
                     </div>
                 </div>
-                <ProductDetails product={productData} />
+
+                <ProductDetails product={responseData2} />
+                
                 <h2 className="text-xl font-semibold mb-2">GPT 설명</h2>
                 <div className="p-4 bg-gray-200 rounded-md">
                     GPT가 설명하는 칸입니다. 여기서는 화장품 또는 위에 GAN이 설명할 칸이라고 생각해주시면 되겠습니다.
-                    <p>name: {name}</p>
+                    {/* <p>name: {name}</p>
                     <p>url: {url}</p>
                     <p>modelNum: {modelNum}</p>
-                    <p>allModelNames: </p>
+                    <p>allModelNames: </p> */}
                     <ul>
-                        {models.map((model, index) => (
+                        {/* {models.map((model, index) => (
                             <li key={index}>{model.name}</li>
-                        ))}
+                        ))} */}
                     </ul>
                 </div>
                 <h2 className="text-xl font-semibold mt-4 mb-2">추가로 비슷한 모델</h2>
-                <SimilarModels models={userResembleModels} />
+
+                <div>
+                    {responseData3 && Array.isArray(responseData3) ? (
+                        <SimilarModels models={responseData3} />
+                    ) : (
+                        <p>Loading...</p>
+                    )}
+                </div>
+
                 <h2 className="text-xl font-semibold mt-4 mb-2">관련 브랜드 상품</h2>
                 <div className="flex justify-around">
                     {/* Add related brand products here */}
