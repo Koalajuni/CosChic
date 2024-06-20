@@ -6,3 +6,4 @@ backend/venv
 frontend/venv
 backend/.DS_Store
 .env
+backend/api/migrations

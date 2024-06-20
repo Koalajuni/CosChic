@@ -211,8 +211,8 @@ def faiss_analysis(request, UUID):
         # faiss 분석
         model = CosChicFaiss()
         faceList = model.detect_faces(userImage,
-                        r'./pretrained/CosChic_labels.npy',  # pre-train 모델경로 맞게 수정 
-                        r'./pretrained/CosChic_model.bin')
+                        r'C:\Users\hi\Desktop\pretrained\CosChic_labels.npy',  # pre-train 모델경로 맞게 수정 
+                        r'C:\Users\hi\Desktop\pretrained\CosChic_model.bin')
         # 중복제거 
         faceList = set(faceList)
         faceList = list(faceList)
