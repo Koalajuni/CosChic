@@ -82,6 +82,7 @@ class CosChicFaiss:
         face_rst = most_frequent(labels)
         print(face_rst)
         print(face_rst[0])
+        # return face_rst[0]
         return labels
 
 
@@ -104,7 +105,7 @@ def most_frequent(data):
 
 
 
-# model = CosChicFaiss()
+# model = CosChicFaiss(img_path,label_path,model_path)
 # model.detect_faces('C:/Users/ok/Desktop/BT/beautygan_web/media/src/source.jpg',
 #                 'C:/Users/ok/Desktop/BT/beautygan_web/train/CosChic_labels.npy',
 #                 'C:/Users/ok/Desktop/BT/beautygan_web/train/CosChic_model.bin')

@@ -1,4 +1,4 @@
-"use client"
+"use client" 
 import Header from "@/components/inc_header"
 import Footer from "@/components/inc_footer"
 import CardProfileInformation from "@/components/card_profileInfo";

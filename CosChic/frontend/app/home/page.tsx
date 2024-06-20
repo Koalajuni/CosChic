@@ -98,7 +98,7 @@ export default function Home() {
             setCamera(false);
             setCameraLoading(false); // 카메라 끌 때 로딩 상태를 false로 설정
         }
-        
+
         // const isFaceAnalysisButtonDisabled = !cameraOn;
         // const buttonStyles = isFaceAnalysisButtonDisabled
         //     ? "text-gray-500 bg-gray-200 cursor-not-allowed hover:bg-gray-200 focus:ring-0 focus:outline-none" // Disabled styles
@@ -130,7 +130,7 @@ export default function Home() {
             }
         } catch (error) {
             console.error("Error taking photo:", error); // 콘솔에 상세 오류 메시지 출력
-            Swal.fire("Error", `사진 찍는데 실패했습니다.`, "error"); // 사용자에게 오류 메시지 표시
+            Swal.fire("얼굴 인식 실패", `사진 찍는데 실패했습니다.`, "error"); // 사용자에게 오류 메시지 표시
         } finally {
             setCameraLoading2(false); // 두 번째 카메라 로딩 종료
         }
@@ -140,22 +140,22 @@ export default function Home() {
     const onFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
         if (event.target.files) {
             const file = event.target.files[0];
-          await onFileUpload(file); // 파일을 선택하자마자 업로드
+            await onFileUpload(file); // 파일을 선택하자마자 업로드
         }
     };
 
     const onFileUpload = async (file: File) => {
-    
+
         const formData = new FormData();
         formData.append('orgImage', file);
-    
+
         try {
             const response = await axios.post(
                 `${baseUrl}/v1/orgIMG/${userUID}`,
                 formData,
-            {
-                headers: {
-                'Content-Type': 'multipart/form-data',
+                {
+                    headers: {
+                        'Content-Type': 'multipart/form-data',
                     },
                 }
             );
@@ -169,19 +169,20 @@ export default function Home() {
                 console.error('Output image path not found in response:', response.data);
             }
         } catch (error) {
-        console.error('Error uploading the file:', error);
-        
-        } 
+            console.error('Error uploading the file:', error);
+            Swal.fire("Error", '얼굴 전체가 잘 보여야 코스칙이 분석할 수 있습니다!', "error");
+
+        }
     };
 
     // 모델카드 출력 
     const showcardSign = () => {
         setShowCard(true);
     }
-    
+
 
     const [showCard, setShowCard] = useState(false);
-    const [similarModel, setFaissModels] = useState<any[]>([]); 
+    const [similarModel, setFaissModels] = useState<any[]>([]);
     const [models, setModels] = useState<any[] | null>(null);
     // 분석하기 버튼
     const faceanalysisButton = async () => {
@@ -201,16 +202,16 @@ export default function Home() {
             Swal.fire("Error", `분석에 실패했습니다.`, "error");
         }
     }
-    
+
 
     //const models = [
-        // { name: "브랜드 모델 A", lips: 28, eyes: 48, contour: 78, similarity: 78, product: "A" },
-        // { name: "브랜드 모델 B", lips: 30, eyes: 50, contour: 80, similarity: 75, product: "B" },
-        // { name: "브랜드 모델 C", lips: 32, eyes: 52, contour: 82, similarity: 70, product: "C" },
-        // 나중에 DB되면 여기다 정보 가져올겁니다.
+    // { name: "브랜드 모델 A", lips: 28, eyes: 48, contour: 78, similarity: 78, product: "A" },
+    // { name: "브랜드 모델 B", lips: 30, eyes: 50, contour: 80, similarity: 75, product: "B" },
+    // { name: "브랜드 모델 C", lips: 32, eyes: 52, contour: 82, similarity: 70, product: "C" },
+    // 나중에 DB되면 여기다 정보 가져올겁니다.
     //];
 
-    
+
 
 
 
@@ -237,7 +238,7 @@ export default function Home() {
                                                 <div className="loader"></div> // 로딩화면
                                             ) : (<img className="object-cover object-center rounded" alt="hero" src={`${baseUrl}/v1/camera_video_feed`} />)
                                         )
-                                            
+
                                             :
                                             (<img
                                                 alt="content"
@@ -263,16 +264,16 @@ export default function Home() {
                                     <h4 className="title-font text-2xl font-small text-gray-900 mt-6 mb-3">{userData ? userData.names : 'Loading...'}</h4>
                                     <div className="relative mb-4 flex">
                                         <div className="flex w-1/2 pr-2">
-                                        <button onClick={cameraClick} type="button" className="text-gray-900 bg-white hover:bg-gray-100 border border-gray-200 focus:ring-4 focus:outline-none focus:ring-gray-100 font-medium rounded-lg text-sm px-3.5 py-2.5 text-left inline-flex items-center w-full dark:focus:ring-gray-600 dark:bg-gray-800 dark:border-gray-700 dark:text-white dark:hover:bg-gray-700">
-                                            <img src="./icons/camera.png" alt="Icon" className="w-10 h- me-4 -ms-1" />
-                                            {buttonText}
-                                        </button>
+                                            <button onClick={cameraClick} type="button" className="text-gray-900 bg-white hover:bg-gray-100 border border-gray-200 focus:ring-4 focus:outline-none focus:ring-gray-100 font-medium rounded-lg text-sm px-3.5 py-2.5 text-left inline-flex items-center w-full dark:focus:ring-gray-600 dark:bg-gray-800 dark:border-gray-700 dark:text-white dark:hover:bg-gray-700">
+                                                <img src="./icons/camera.png" alt="Icon" className="w-10 h- me-4 -ms-1" />
+                                                {buttonText}
+                                            </button>
                                         </div>
                                         <div className="flex w-1/2 pl-2">
-                                        <button onClick={takePhoto} type="button" className="text-gray-900 bg-white hover:bg-gray-100 border border-gray-200 focus:ring-4 focus:outline-none focus:ring-gray-100 font-medium rounded-lg text-sm px-3.5 py-2.5 text-left inline-flex items-center w-full dark:focus:ring-gray-600 dark:bg-gray-800 dark:border-gray-700 dark:text-white dark:hover:bg-gray-700">
-                                            <img src="./icons/camera.png" alt="Icon" className="w-10 h- me-4 -ms-1" />
-                                            사진찍기
-                                        </button>
+                                            <button onClick={takePhoto} type="button" className="text-gray-900 bg-white hover:bg-gray-100 border border-gray-200 focus:ring-4 focus:outline-none focus:ring-gray-100 font-medium rounded-lg text-sm px-3.5 py-2.5 text-left inline-flex items-center w-full dark:focus:ring-gray-600 dark:bg-gray-800 dark:border-gray-700 dark:text-white dark:hover:bg-gray-700">
+                                                <img src="./icons/camera.png" alt="Icon" className="w-10 h- me-4 -ms-1" />
+                                                사진찍기
+                                            </button>
                                         </div>
                                     </div>
                                     <div>
@@ -281,7 +282,7 @@ export default function Home() {
                                     <div className="relative mb-0 flex">
                                         {/* <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white" for="file_input">사진 업로드</label> */}
                                         {/* <input type="file" accept="image/png, image/gif, image/jpeg" name="name" className="flex-1 bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out mr-2" /> */}
-                                        <input className="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400" aria-describedby="file_input_help" id="file_input" type="file" onChange={onFileChange}/>
+                                        <input className="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400" aria-describedby="file_input_help" id="file_input" type="file" onChange={onFileChange} />
                                     </div>
                                     <div>
                                         <p className="mb-6 text-sm text-gray-500 dark:text-gray-300" id="file_input_help"> SVG, PNG, JPG or GIF (MAX. 800x400px)</p>
@@ -295,20 +296,20 @@ export default function Home() {
                                     </div> */}
                                     <div className="relative rounded-lg w-476 h-[350px] overflow-hidden flex justify-center items-center bg-black bg-opacity-50">
                                         {photoUrlState ? (
-                                                cameraLoading2 ? (
-                                                    <div className="loader2"></div> // 로딩화면
-                                                ) :
-                                        (<img
-                                            alt="content"
-                                            className="object-cover object-center w-5/6 h-5/6 "
-                                            src={photoUrl}
-                                        />)) : 
-                                        (<img
-                                            alt="content"
-                                            className="object-cover object-center w-5/6 h-5/6 "
-                                            src="https://cdn.pixabay.com/photo/2015/03/08/09/30/head-663997_1280.jpg"
-                                        />)}
-                                        </div>
+                                            cameraLoading2 ? (
+                                                <div className="loader2"></div> // 로딩화면
+                                            ) :
+                                                (<img
+                                                    alt="content"
+                                                    className="object-cover object-center w-5/6 h-5/6 "
+                                                    src={photoUrl}
+                                                />)) :
+                                            (<img
+                                                alt="content"
+                                                className="object-cover object-center w-5/6 h-5/6 "
+                                                src="https://cdn.pixabay.com/photo/2015/03/08/09/30/head-663997_1280.jpg"
+                                            />)}
+                                    </div>
                                     <div className="h-20"></div>
                                     <div className="relative mb-4 flex">
                                         <button
@@ -339,7 +340,7 @@ export default function Home() {
                     </form>
                 </section>
             }
-            
+
 
             <Footer />
             <script src="../path/to/flowbite/dist/flowbite.min.js"></script>

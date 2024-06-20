@@ -6,9 +6,15 @@ import { useRouter } from 'next/navigation';
 const CardSimilarModel = ({ models }) => {
     const router = useRouter();
 
-    const handleRedirect = () => {
-        router.push('/test-product');
-    };
+    const handleRedirect = (model) => {
+        console.log('Model:', model);  // 모델 전체 데이터 로그
+        const modelNamesArray = model.allModelNames.split(','); // 모델 이름을 배열로 분할
+        const modelNamesParams = modelNamesArray.map((name, index) => `model${index + 1}=${name}`).join('&'); // 매개변수 형식으로 변환
+        const url = `/test-product?name=${model.modelName}&url=${model.photoUrl}&modelNum=${model.modelNum}&${modelNamesParams}`;
+        // const url = `/test-product?name=${model.modelName}&url=${model.photoUrl}&modelNum=${model.modelNum}&allModelNames=${model.allModelNames}`;
+        router.push(url);
+
+        };
 
     return (
         <div className="p-4">
@@ -40,7 +46,11 @@ const CardSimilarModel = ({ models }) => {
                                     <button
                                         type="button"
                                         className="text-white bg-red-500 hover:bg-red-600 font-medium rounded-lg text-sm px-4 py-2"
-                                        onClick={handleRedirect}
+                                        onClick={() => {
+                                            // alert(model.modelName);
+                                            handleRedirect(model)
+                                            // alert(model.allModelNames)
+                                        }}
                                     >
                                         가상 화장 입히기
                                     </button>

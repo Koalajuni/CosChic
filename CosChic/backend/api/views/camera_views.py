@@ -184,7 +184,10 @@ def faiss_analysis(request, UUID):
         # 중복제거 
         faceList = set(faceList)
         faceList = list(faceList)
-        print(faceList)
+        # print(faceList)
+        modelNum = len(faceList)
+        allmodelNames = ','.join(f'{element}' for element in faceList)
+        print("allmodelNames: ", allmodelNames)
 
         jsonData = {}
         # jsonData["model_num"] = len(faceList)
@@ -197,13 +200,14 @@ def faiss_analysis(request, UUID):
             firstImage = images[0]
             # print(firstImage)
             modelPhotoUrl = f'http://localhost:8000/media/model_img/{faceList[i]}/{firstImage}' 
+            modelPhotoUrl = f'http://localhost:8000/media/model_img/{faceList[i]}/{firstImage}' 
 
-            print(modelFolderPath +"/"+ firstImage)
+            # print(modelFolderPath +"/"+ firstImage)
             # 모델사진 FaceMeshDetector로 이미지 처리
             output_image = f'./media/mediapipe/output_{nowString}.jpg' 
             detector = FaceMeshDetector(modelFolderPath +"/"+ firstImage, output_image)
             model_eye_ratio, model_nose_ratio, model_face_ratio, model_lip_ratio = detector.process_image()
-            print("모델의얼굴분석정보(eye_ratio, nose_ratio, face_ratio, lip_ratio):", model_eye_ratio, model_nose_ratio, model_face_ratio, model_lip_ratio)
+            # print("모델의얼굴분석정보(eye_ratio, nose_ratio, face_ratio, lip_ratio):", model_eye_ratio, model_nose_ratio, model_face_ratio, model_lip_ratio)
             
 
             lipsSimilarity = abs(100 - (abs(lip_ratio - model_lip_ratio)* 5))
@@ -218,7 +222,9 @@ def faiss_analysis(request, UUID):
                 "contour" : round(contourSimilarity, 1),
                 "similarity" : round(final_similarity, 1),
                 "product" : "product",
-                "photoUrl" : modelPhotoUrl
+                "photoUrl" : modelPhotoUrl,
+                "modelNum" : modelNum,
+                "allModelNames" : allmodelNames
             }
             jsonData[f"model_{i+1}"] = data
         print(jsonData)
