@@ -229,6 +229,7 @@ def used_product (request):
                 brand_name = brand_name[:6]
             print('used_brand_name' ,brand_name)
             # 조회 함수에 넣기(첫번째 상품을 사용했다고 가정)
+            
             result_data = get_product_data_by_brandname(brand_name)[0]
             result_data['productImage'] = 'http://localhost:8000/media/product_img/' + result_data['productImage']
             print(result_data)
