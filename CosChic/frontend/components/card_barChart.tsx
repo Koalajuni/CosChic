@@ -1,37 +1,57 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { CountUp } from 'countup.js';
 
-const CardBarChart = () => {
+const CardBarChart = ({ eye, nose, lips, eyebrows, total, contour }) => {
     const [cardOpen, setCardOpen] = useState(false);
     const totalRef = useRef<HTMLHeadingElement>(null);
     const cardRef = useRef<HTMLDivElement>(null);
 
+    const eyeNumber = parseFloat(eye);
+    const noseNumber = parseFloat(nose);
+    const lipsNumber = parseFloat(lips);
+    const eyebrowsNumber = parseFloat(eyebrows);
+    const contourNumber = parseFloat(contour);
+    const totalNumber = parseFloat(total);
+
+    const totalSum = eyeNumber + noseNumber + lipsNumber + eyebrowsNumber + contourNumber;
+
+    const eyeRatio = eyeNumber / totalSum;
+    const noseRatio = noseNumber / totalSum;
+    const lipsRatio = lipsNumber / totalSum;
+    const eyebrowsRatio = eyebrowsNumber / totalSum;
+    const contourRatio = contourNumber / totalSum;
+
     const sessions = [
         {
             label: "눈",
-            size: 60,
+            size: eyeRatio * 100,
             color: "bg-pink-600"
         },
         {
             label: "코",
-            size: 20,
+            size: noseRatio * 100,
             color: "bg-pink-400"
         },
         {
             label: "입",
-            size: 10,
+            size: lipsRatio * 100,
+            color: "bg-pink-200"
+        },
+        {
+            label: "눈썹",
+            size: eyebrowsRatio * 100,
             color: "bg-pink-200"
         },
         {
             label: "윤곽",
-            size: 10,
+            size: contourRatio * 100,
             color: "bg-pink-100"
         }
     ];
 
     useEffect(() => {
         if (cardOpen) {
-            const countUpTotal = new CountUp(totalRef.current, 72, { duration: 0.9 });
+            const countUpTotal = new CountUp(totalRef.current, totalNumber, { duration: 0.9 });
             countUpTotal.start();
             sessions.forEach((session, i) => {
                 const deviceRef = document.querySelector(`[data-device-index="${i}"]`);
@@ -39,7 +59,7 @@ const CardBarChart = () => {
                 countUpDevice.start();
             });
         }
-    }, [cardOpen]);
+    }, [cardOpen, totalNumber]);
 
     useEffect(() => {
         const timer = setTimeout(() => {

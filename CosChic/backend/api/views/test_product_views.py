@@ -1,3 +1,4 @@
+from uuid import UUID
 from rest_framework import status
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
@@ -6,6 +7,8 @@ from django.contrib.auth import authenticate, login
 from django.contrib.auth.hashers import make_password, check_password
 from api.models import UserData
 from api.models import Product
+from django.db import connection
+
 
 ##0620 11:11 backup
 from django.http import JsonResponse
@@ -17,25 +20,18 @@ import os
 import json
 
 # UUID를 기반으로 데이터를 조회하는 함수 => 다른함수 안에서 사용 
-def get_user_data_by_uuid(u_uid):
+def get_user_data_by_email(email):
     print("get_user_data_by_uuid")
     # print(u_uid)
     try:
-        # UUID를 기반으로 UserData 조회
-        u_uid = u_uid.strip()
-        print("user_uid = ", u_uid)
-        user_data = UserData.objects.get(email=u_uid)
+
+        print("user email = ", email)
+        user_data = UserData.objects.get(email=email)
+        print(f"Processed user_uid: '{email}'")
+
         # print(str(user_data.query))
         print("userdata :",user_data)
         response_data = {
-            'names': user_data.names,
-            'age': user_data.age,
-            'gender': user_data.gender,
-            'email': user_data.email,
-            'createDate': user_data.createDate,
-            'password': user_data.password,
-            'IP': user_data.IP,
-            'uploadDate': user_data.uploadDate,
             'orgImage': user_data.orgImage,
             'UUID': user_data.UUID,
         }
@@ -58,12 +54,14 @@ def get_product_data_by_brandname(brand_name):
         # print(str(user_data.query))
         # print("all_brand :",all_brand)
         for brand in all_brand:
+            full_product_image_url = f'http://localhost:8000/media/product_img/{brand.productImage}'
+
             brand_data_list.append({
                     'productUrl': brand.productUrl,
                     'productName': brand.productName,
                     # 'brandName': brand.brandName,
                     'price': brand.price,
-                    'productImage': brand.productImage,
+                    'productImage': full_product_image_url,
                     # 'modelImage': brand.modelImage,
                     # 'count': brand.count,
                     # 'categoryId': brand.categoryId,
@@ -81,13 +79,12 @@ def BG_result(request):
     if request.method == 'POST':
         try:
             # 클라이언트로부터 전달받은 UUID 지금은 email
-            user_uid = request.POST.get('user_uid')
-            user_email = request.POST.get('user_email')
+            email = request.POST.get('user_email')
             used_model_name = request.POST.get('used_model_name')
-            print(f"Received UUID from client: {user_uid}")
+            print(f"Received UUID from client: {email}")
 
             # UUID를 기반으로 데이터 조회
-            user_data = get_user_data_by_uuid(user_email)
+            user_data = get_user_data_by_email(email)
 
             # print(user_data)
             # 받고 나서 인공지능과 데이터베이스 처리 원래는 데이터 베이스에서 경로를 가져온다
@@ -96,17 +93,18 @@ def BG_result(request):
             org_img = user_data['orgImage']
             print('org_img', org_img)
 
-            ref_img_list = os.listdir(f"./media/ref/{used_model_name}")
+            ref_img_list = os.listdir(f"./media/model_img/{used_model_name}")
             print('ref_img_list', ref_img_list)
             ref_img  = ref_img_list[0]
             print('ref_img', ref_img)
-            ref_img = f'./media/ref/{used_model_name}/{ref_img}'
+            ref_img = f'./media/model_img/{used_model_name}/{ref_img}'
             print('ref_img_path ', ref_img)
             result_img = "./media/result"
             # imagePath = f'./media/org_img/{nowString}.jpg'
             # media_url = settings.MEDIA_URL
             # print(media_url)
             bg = BeautyGAN()
+            print("beautygan ended successfully")
             result_img = bg.makeup(org_img,ref_img,result_img) # = > #result_img(경로) 반환
             # print('bg_result',result_img)
             # result_img = result_img.split('/')[7] + '/' + result_img.split('/')[8] + '/' + result_img.split('/')[9]
@@ -231,7 +229,7 @@ def used_product (request):
             # 조회 함수에 넣기(첫번째 상품을 사용했다고 가정)
             
             result_data = get_product_data_by_brandname(brand_name)[0]
-            result_data['productImage'] = 'http://localhost:8000/media/product_img/' + result_data['productImage']
+            result_data['productImage'] =  result_data['productImage']
             print(result_data)
             if not used_model_name:
                 return JsonResponse({'error': 'used_model_name not found for the given condition.'}, status=404)
@@ -252,41 +250,42 @@ def other_models (request):
     #     print(ModelLists)
         try:
             # 클라이언트로부터 전달받은 모델리스트
-            modelstring= request.POST.get('models')
-            # user_email = request.POST.get('user_email')
+            modelstring = request.POST.get('models')
             print(f"Received other_modelstring from client: {modelstring}")
             if not modelstring:
                 return JsonResponse({'error': 'modelstring not found for the given condition.'}, status=404)
-            ModelList = modelstring.split(',') if modelstring else []
-            print(ModelList)
-            
-            model_data = []
-            for i in range(len(ModelList)):
-                # 파일이 들어있는 폴더 경로
-                modelFolderPath = f'./media/ref/{ModelList[i]}'
 
-                # 모델의 첫번째 사진
-                images = os.listdir(modelFolderPath)
-                firstImage = images[0]
-                # print(firstImage)
-                modelPhotoUrl = f'http://localhost:8000/media/ref/{ModelList[i]}/{firstImage}' 
-                
-                model_data.append({
-                    'names': ModelList[i],
-                    'modelPhotoUrl': modelPhotoUrl,
-                })
-            # for model in ModelList:
-            #     products = Product.objects.filter(brandName = brand)
-            #     model_image_list = []
-            #     for product in products:
-            #         model_image_list.append(product.modelImage)
-            # print(model_image_list)
-            
-            return JsonResponse(model_data, safe = False ,status=200)
+            # Correctly parse the JSON string to a list
+            ModelList = json.loads(modelstring)
+            print(f"Parsed ModelList: {ModelList}")
+
+            model_data = []
+            for model in ModelList:
+                # Trim any extra spaces
+                model = model.strip()
+                # 파일이 들어있는 폴더 경로
+                modelFolderPath = f'./media/model_img/{model}'
+
+                if os.path.exists(modelFolderPath):
+                    # 모델의 첫번째 사진
+                    images = os.listdir(modelFolderPath)
+                    if images:
+                        firstImage = images[0]
+                        modelPhotoUrl = f'http://localhost:8000/media/model_img/{model}/{firstImage}' 
+
+                        model_data.append({
+                            'names': model,
+                            'modelPhotoUrl': modelPhotoUrl,
+                        })
+                else:
+                    print(f"Folder path does not exist: {modelFolderPath}")
+
+            return JsonResponse(model_data, safe=False, status=200)
         
+        except json.JSONDecodeError:
+            return JsonResponse({'error': 'Failed to parse JSON.'}, status=400)
         except Exception as e:
             return JsonResponse({'error': str(e)}, status=500)
-
     else:
         return JsonResponse({'error': 'Only POST requests are allowed.'}, status=405)
 
@@ -302,7 +301,7 @@ def asso_product (request):
             specific_brand_name = used_model_name.split('_')[0]
             # print(specific_brand_name)
             # specific_brand_name 기반으로 특정 브랜드의 다른 상품 데이터 조회
-            asso_product_data = get_product_data_by_brandname(specific_brand_name)[:4]
+            asso_product_data = get_product_data_by_brandname(specific_brand_name)[:8]
             if not used_model_name:
                 return JsonResponse({'error': 'specific_used_model_name not found for the given condition.'}, status=404)
             

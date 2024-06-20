@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 
-const useUserUID = (): string | null => {
+const useUserEmail = (): string | null => {
     const [userData, setUserData] = useState<{ UUID: string | null; email: string | null }>({
         UUID: null,
         email: null,
@@ -20,9 +20,8 @@ const useUserUID = (): string | null => {
         }
     }, []);
 
-    // Return only userUID
-    return userData.UUID;
+    // Return only email
+    return userData.email;
 };
 
-export default useUserUID;
-
+export { useUserEmail };

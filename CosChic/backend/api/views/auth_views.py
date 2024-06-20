@@ -84,7 +84,7 @@ def login_user(request):
             user = custom_authenticate(email=email, password=password)
             if user is not None:
                 print("User is not none so we print:", user)
-                return Response( {'UUID': user.UUID}, status=status.HTTP_200_OK)
+                return Response( {'UUID': user.UUID, 'email':user.email}, status=status.HTTP_200_OK)
             else:
                 return Response({'error': 'Invalid email or password.'}, status=status.HTTP_400_BAD_REQUEST)
 

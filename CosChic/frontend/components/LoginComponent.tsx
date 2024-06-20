@@ -13,6 +13,7 @@ const LoginComponent = () => {
     const [mode, setMode] = useState("login");
     const router = useRouter();
 
+
     const login = async () => {
         try {
             console.log("this is the email:", email)
@@ -27,8 +28,15 @@ const LoginComponent = () => {
                 formData,
                 { headers: { 'Content-Type': 'multipart/form-data' } }
             );
-            const user = response.data.UUID;
-            localStorage.setItem('UUID', JSON.stringify(user));
+            // const user = response.data.UUID;
+            // const email = response.data.email;
+            const userData = {
+                UUID: response.data.UUID,
+                email: response.data.email,
+                // Add other user data properties here
+            };
+            localStorage.setItem('userData', JSON.stringify(userData));
+            // localStorage.setItem('email', JSON.stringify(email));
             router.push('/home');
         } catch (error) {
             setLoginErrorMsg('Login failed. Please check your credentials.');
