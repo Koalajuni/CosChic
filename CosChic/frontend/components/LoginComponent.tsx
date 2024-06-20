@@ -67,7 +67,7 @@ const LoginComponent = () => {
                 <div className={styles.iconContainer}>
                     <Image src={accountalert} width="16" alt="alert" />
                 </div>
-                <div className={styles.textContainer}>
+                <div className="text-[#C598F0]">
                     실제 사용하는 이메일 주소를 입력해 주세요
                 </div>
             </div>
@@ -107,7 +107,7 @@ const LoginComponent = () => {
                     type="button"
                     className={styles.accountBtn}
                     onClick={login}
-                    style={{ background: '#805F89', color: '#fff', border: 'none', padding: '20px 40px', borderRadius: '10px', marginRight: '20px' }}
+                    style={{ background: '#C598F0', color: '#fff', border: 'none', padding: '20px 40px', borderRadius: '10px', marginRight: '20px' }}
                 >
                     로그인
                 </button>
@@ -115,7 +115,7 @@ const LoginComponent = () => {
                     type="submit"
                     className={styles.accountBtn}
                     onClick={register}
-                    style={{ background: '#fff', color: '#805F89', border: '1px solid #805F89', padding: '20px 40px', borderRadius: '10px' }}
+                    style={{ background: '#fff', color: '#C598F0', border: '1px solid #C598F0', padding: '20px 40px', borderRadius: '10px' }}
                 >
                     회원가입
                 </button>
