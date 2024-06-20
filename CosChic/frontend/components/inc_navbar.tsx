@@ -13,13 +13,11 @@ export default function IncHero() {
         <div className="NAV">
             <div
                 className="flex justify-between items-center h-24 max-w-[1240px] mx-auto px-4 text-white"
-                // style={{ backgroundColor: '#FF6F91' }} // 배경색 변경
+            // style={{ backgroundColor: '#FF6F91' }} // 배경색 변경
             >
                 <h1 className="w-full text-3xl font-bold text-[#FF6F91] m-4">COSCHIC</h1> {/* 배경 색 변경 */}
                 <ul className="hidden md:flex">
                     <li className="p-2" style={{ color: '#FF6F91', width: '100px' }}>홈</li> {/* 글씨 색 변경 및 너비 수정 */}
-                    <li className="p-2" style={{ color: '#FF6F91', width: '100px' }}>검색</li> {/* 글씨 색 변경 및 너비 수정 */}
-                    <li className="p-2" style={{ color: '#FF6F91', width: '100px' }}>내프로필</li> {/* 글씨 색 변경 및 너비 수정 */}
                     <li className="p-2" style={{ color: '#FF6F91', width: '100px' }}>팀소개</li> {/* 글씨 색 변경 및 너비 수정 */}
                     <li className="p-2" style={{ color: '#FF6F91', width: '100px' }}>문의</li> {/* 글씨 색 변경 및 너비 수정 */}
                 </ul>
