@@ -226,13 +226,13 @@ def faiss_analysis(request, UUID):
         # jsonData["model_num"] = len(faceList)
         for i in range(len(faceList)):
             # 파일이 들어있는 폴더 경로
-            modelFolderPath = f'./media/model_img/{faceList[i]}'
+            modelFolderPath = f'./media/ref/{faceList[i]}'
 
             # 모델의 첫번째 사진
             images = os.listdir(modelFolderPath)
             firstImage = images[0]
             # print(firstImage)
-            modelPhotoUrl = f'http://localhost:8000/media/model_img/{faceList[i]}/{firstImage}' 
+            modelPhotoUrl = f'http://localhost:8000/media/ref/{faceList[i]}/{firstImage}' 
 
             # print(modelFolderPath +"/"+ firstImage)
             # 모델사진 FaceMeshDetector로 이미지 처리

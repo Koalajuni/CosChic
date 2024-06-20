@@ -2,5 +2,7 @@
 backend/model/
 backend/media/
 backend/pretrained/
+backend/venv
+frontend/venv
 backend/.DS_Store
 .env
