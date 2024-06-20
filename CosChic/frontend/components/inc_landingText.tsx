@@ -8,7 +8,7 @@ export default function IncAnaly() {
                     <img className="w-[500px] mx-auto my-4" src="/assets/image/image.svg" alt='.' />
                     <div className="flex flex-col justify-center">
                         <h1 className="text-[#8E65B7] font-bold p-2">인공지능을 통해 고객의 얼굴 유형에 맞춤형 화장품과 뷰티 스타일을 추천해주는 혁신적인 웹!!!</h1>
-                        <p className="p-2 md:text-5xl sm:text-4xl text-3xl font-bold md:py-6" style={{ color: '#FF6F91' }}>나랑 닮은 사람은?</p>
+                        <p className="p-2 md:text-5xl sm:text-4xl text-3xl font-bold md:py-6" style={{ color: '#FF6F91' }}>웹 기능</p>
 
                         <div className="p-2">
                             <p>1. 인공지능 기반 얼굴 인식: 고객이 얼굴 사진을 찍거나 업로드하면, 인공지능이 얼굴 유형을 정확하게 분석합니다.</p>
