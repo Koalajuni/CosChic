@@ -1,35 +1,34 @@
 import React from 'react';
 import { Radar, RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, ResponsiveContainer } from 'recharts';
 
-const data = [
-    {
-        subject: '윤곽',
-        A: 60,
-        fullMark: 100,
-    },
-    {
-        subject: '눈',
-        A: 40,
-        fullMark: 100,
-    },
-    {
-        subject: '코',
-        A: 70,
-        fullMark: 100,
-    },
-    {
-        subject: '입',
-        A: 32,
-        fullMark: 100,
-    },
-    {
-        subject: '눈썹',
-        A: 29,
-        fullMark: 100,
-    },
-];
-
-const CardRadarChart = () => {
+const CardRadarChart = ({ eye, nose, lips, eyebrows, contour }) => {
+    const data = [
+        {
+            subject: '윤곽',
+            A: contour,
+            fullMark: 100,
+        },
+        {
+            subject: '눈',
+            A: eye,
+            fullMark: 100,
+        },
+        {
+            subject: '코',
+            A: nose,
+            fullMark: 100,
+        },
+        {
+            subject: '입',
+            A: lips,
+            fullMark: 100,
+        },
+        {
+            subject: '눈썹',
+            A: eyebrows,
+            fullMark: 100,
+        },
+    ];
     return (
         <div className="bg-white text-gray-500 rounded shadow-xl py-2 px-5 w-full sm:w-2/3 md:w-1/2 lg:w-1/3">
             <div className="flex w-full">

@@ -14,8 +14,8 @@ export default function Main() {
             <hr className='border-black-400' />
             {/* <div className="min-h-[30vh]"></div> */}
             {/* </div> */}
-            <IncAnaly />
-            {/* <IncTestText /> */}
+            {/* <IncAnaly /> */}
+            <IncTestText />
             <hr className='border-black-400' />
             <IncHero />
             <hr className='border-black-400' />
