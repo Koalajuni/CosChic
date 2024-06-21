@@ -10,19 +10,13 @@ import random, os
 @csrf_exempt
 def search(request):
     if request.method == 'GET':
-        print("someone requested the search get")
         try:
-            print("this is the query request:", request)
 
             query = request.GET.get('query', '')
             category = request.GET.get('category', '모두')
             page = request.GET.get('page', 1)
             results_per_page = request.GET.get('results_per_page', 4)
             server_address = os.getenv('localhost:8000', 'http://127.0.0.1:8000')   #서버서 못 잡으면 local에서 잡을 수 있게끔 
-
-            print("this is the page nubmer,",page)
-            print("category,",category)
-            print("query", query)
 
             queryset = Product.objects.all()
 
@@ -45,10 +39,16 @@ def search(request):
             }
             results = []
             for queryset in queryset.values('productUrl', 'productName', 'brandName', 'price', 'productImage', 'modelImage', 'count', 'categoryId', 'category'):
+
+                if queryset['productImage']=="":
+                    resultImage = "assets/default_search.png"
+                else:
+                    resultImage = f"{server_address}/media/product_img/{queryset['productImage']}"
+
                 queryset['category'] = category_mapping.get(str(queryset['category']), '기타')
                 count_value = int(queryset['count']) if queryset['count'] != '' else 0
                 queryset['count'] = str(int(count_value) + random.randint(118, 289))
-                queryset['productImage'] = f"{server_address}/media/product_img/{queryset['productImage']}"
+                queryset['productImage'] = resultImage
                 queryset['modelImage'] = f"{server_address}/media/model_img/{queryset['modelImage']}"
                 results.append(queryset)
 

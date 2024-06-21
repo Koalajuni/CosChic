@@ -54,7 +54,10 @@ def get_product_data_by_brandname(brand_name):
         # print(str(user_data.query))
         # print("all_brand :",all_brand)
         for brand in all_brand:
-            full_product_image_url = f'http://localhost:8000/media/product_img/{brand.productImage}'
+            if brand.productImage == " ":
+                full_product_image_url = 'assets/default_search.png'
+            else:
+                full_product_image_url = f'http://localhost:8000/media/product_img/{brand.productImage}'
 
             brand_data_list.append({
                     'productUrl': brand.productUrl,
