@@ -294,7 +294,7 @@ export default function Home() {
                                     {/* <div className="rounded-lg h-[450px] overflow-hidden">
                                             <img alt="content" className="object-cover object-center w-full" src={refImage} />
                                     </div> */}
-                                    <div className="relative rounded-lg w-476 h-[350px] overflow-hidden flex justify-center items-center bg-black bg-opacity-50">
+                                    <div className="relative border border-[#FF6F91] rounded-lg w-full h-[350px] overflow-hidden flex justify-center items-center bg-gray-600 bg-opacity-50">
                                         {photoUrlState ? (
                                             cameraLoading2 ? (
                                                 <div className="loader2"></div> // 로딩화면
@@ -340,6 +340,7 @@ export default function Home() {
                     </form>
                 </section>
             }
+            
 
 
             <Footer />

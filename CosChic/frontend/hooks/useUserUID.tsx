@@ -1,13 +1,17 @@
 import { useState, useEffect } from 'react';
 
 const useUserUID = (): string | null => {
-    const [userUID, setUserUID] = useState<string | null>(null);
+    const [userData, setUserData] = useState<{ UUID: string | null; email: string | null }>({
+        UUID: null,
+        email: null,
+    });
 
     useEffect(() => {
-        const storedUser = localStorage.getItem('UUID');
-        if (storedUser) {
+        const storedData = localStorage.getItem('userData');
+        if (storedData) {
             try {
-                setUserUID(storedUser.replace(/"/g, ''));
+                const parsedData = JSON.parse(storedData);
+                setUserData(parsedData);
             } catch (error) {
                 console.error('Failed to parse user data from localStorage:', error);
             }
@@ -16,7 +20,9 @@ const useUserUID = (): string | null => {
         }
     }, []);
 
-    return userUID;
+    // Return only userUID
+    return userData.UUID;
 };
 
 export default useUserUID;
+
