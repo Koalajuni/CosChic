@@ -294,7 +294,7 @@ export default function Home() {
                                     {/* <div className="rounded-lg h-[450px] overflow-hidden">
                                             <img alt="content" className="object-cover object-center w-full" src={refImage} />
                                     </div> */}
-                                    <div className="relative rounded-lg w-476 h-[350px] overflow-hidden flex justify-center items-center bg-black bg-opacity-50">
+                                    <div className="relative border border-[#FF6F91] rounded-lg w-full h-[350px] overflow-hidden flex justify-center items-center bg-gray-600 bg-opacity-50">
                                         {photoUrlState ? (
                                             cameraLoading2 ? (
                                                 <div className="loader2"></div> // 로딩화면
@@ -304,11 +304,14 @@ export default function Home() {
                                                     className="object-cover object-center w-5/6 h-5/6 "
                                                     src={photoUrl}
                                                 />)) :
-                                            (<img
-                                                alt="content"
-                                                className="object-cover object-center w-5/6 h-5/6 "
-                                                src="https://cdn.pixabay.com/photo/2015/03/08/09/30/head-663997_1280.jpg"
-                                            />)}
+                                            (
+                                                <div className="flex items-center justify-center w-full h-full bg-gray-450 rounded sm:w-96 dark:bg-gray-600">
+                                                    <svg className="w-10 h-10 text-gray-200 dark:text-gray-600" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 18">
+                                                        <path d="M18 0H2a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2Zm-5.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3Zm4.376 10.481A1 1 0 0 1 16 15H4a1 1 0 0 1-.895-1.447l3.5-7A1 1 0 0 1 7.468 6a.965.965 0 0 1 .9.5l2.775 4.757 1.546-1.887a1 1 0 0 1 1.618.1l2.541 4a1 1 0 0 1 .028 1.011Z" />
+                                                    </svg>
+                                                </div>
+                                            )
+                                        }
                                     </div>
                                     <div className="h-20"></div>
                                     <div className="relative mb-4 flex">

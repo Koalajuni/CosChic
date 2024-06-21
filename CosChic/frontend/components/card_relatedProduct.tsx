@@ -7,8 +7,6 @@ const CardRelatedProduct = ({ product, name }) => {
     const lastPart = imageUrlParts[imageUrlParts.length - 1];
     const productImage = lastPart ? product.productImage : "assets/default_search.png";
     return (
-
-
         <div className="w-[300px] h-[180px] max-w-sm bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700 flex flex-col justify-between">
             <div className="py-2 px-5 flex flex-col justify-between h-full">
                 <div className="flex items-start justify-between mb-auto">
