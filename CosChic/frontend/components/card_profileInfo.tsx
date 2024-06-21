@@ -44,13 +44,13 @@ const CardProfileInformation = ({ name, email, age, gender, UUID }) => {
                 <div className="flex flex-wrap border shadow rounded-lg p-3 dark:bg-gray-600">
                     <h2 className="text-xl text-gray-600 dark:text-gray-300 pb-2">나의 계정:</h2>
 
-                    <div className="flex flex-col gap-2 w-full border-gray-400">
+                    <div className="flex flex-col gap-2 w-full  border-gray-400">
 
                         <div>
                             <label className="text-gray-600 dark:text-gray-400">이름
                             </label>
                             <input
-                                className="w-full py-3 border border-slate-200 rounded-lg px-3 focus:outline-none focus:border-slate-500 hover:shadow dark:bg-gray-600 dark:text-gray-100"
+                                className="w-full py-3 border border-slate-200 rounded-lg px-3 focus:outline-none text-black focus:border-slate-500 hover:shadow dark:bg-gray-600 dark:text-gray-100"
                                 type="text"
                                 name="names"
                                 placeholder="이름"
@@ -61,7 +61,7 @@ const CardProfileInformation = ({ name, email, age, gender, UUID }) => {
                         <div>
                             <label className="text-gray-600 dark:text-gray-400">이메일</label>
                             <input
-                                className="w-full py-3 border border-slate-200 rounded-lg px-3 focus:outline-none focus:border-slate-500 hover:shadow dark:bg-gray-600 dark:text-gray-100"
+                                className="w-full py-3 border border-slate-200 rounded-lg px-3 focus:outline-none text-black focus:border-slate-500 hover:shadow dark:bg-gray-600 dark:text-gray-100"
                                 type="text"
                                 name="email"
                                 placeholder="{user.email}"
@@ -71,7 +71,7 @@ const CardProfileInformation = ({ name, email, age, gender, UUID }) => {
                         <div>
                             <label className="text-gray-600 dark:text-gray-400">나이</label>
                             <input
-                                className="w-full py-3 border border-slate-200 rounded-lg px-3 focus:outline-none focus:border-slate-500 hover:shadow dark:bg-gray-600 dark:text-gray-100"
+                                className="w-full py-3 border border-slate-200 rounded-lg px-3 focus:outline-none text-black focus:border-slate-500 hover:shadow dark:bg-gray-600 dark:text-gray-100"
                                 type="text"
                                 name="age"
                                 value={formData.age}
@@ -82,7 +82,7 @@ const CardProfileInformation = ({ name, email, age, gender, UUID }) => {
                         <div>
                             <label className="text-gray-600 dark:text-gray-400">성별</label>
                             <input
-                                className="w-full py-3 border border-slate-200 rounded-lg px-3 focus:outline-none focus:border-slate-500 hover:shadow dark:bg-gray-600 dark:text-gray-100"
+                                className="w-full py-3 border border-slate-200 rounded-lg px-3 focus:outline-none text-black focus:border-slate-500 hover:shadow dark:bg-gray-600 dark:text-gray-100"
                                 name="gender"
                                 value={formData.gender}
                                 placeholder="gender"

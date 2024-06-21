@@ -12,11 +12,10 @@ export default function Header() {
     return (
         <header className="bg-white">
             <nav className="mx-auto flex max-w-7xl items-center justify-between p-6 lg:px-8" aria-label="Global">
-                <div className="flex lg:flex-1">
-                    <a href="#" className="-m-1.5 p-1.5">
-                        <span className="">CosChic</span>
+                <div className="flex lg:flex-1  items-center text-black">
+
+                        <img className='' src="icons/logo_img.png" width="140" height="140" />
                         <img className="h-8 w-auto" src="logo_SmartCctv.png" alt="" />
-                    </a>
                 </div>
                 <div className="flex lg:hidden">
                     <button onClick={handleNavClick} type="button" className="-m-2.5 inline-flex items-center justify-center rounded-md p-2.5 text-gray-700">
@@ -27,11 +26,11 @@ export default function Header() {
                     </button>
                 </div>
                 <div className="hidden lg:flex lg:gap-x-12">
-                    <a href="/home" className="text-sm font-semibold leading-6 text-gray-900">홈</a>
-                    <a href="/search" className="text-sm font-semibold leading-6 text-gray-900">검색</a>
-                    <a href="/profile" className="text-sm font-semibold leading-6 text-gray-900">내 프로필</a>
-                    <a href="/team" className="text-sm font-semibold leading-6 text-gray-900">팀 소개</a>
-                    <a href="/contact" className="text-sm font-semibold leading-6 text-gray-900">문의</a>
+                    <a href="/home" className="text-sm font-semibold leading-6 text-gray-900 hover:translate-y-1 ;}">홈</a>
+                    <a href="/search" className="text-sm font-semibold leading-6 text-gray-900 hover:translate-y-1  ;}">검색</a>
+                    <a href="/profile" className="text-sm font-semibold leading-6 text-gray-900 hover:translate-y-1  ;}">내 프로필</a>
+                    <a href="/team" className="text-sm font-semibold leading-6 text-gray-900 hover:translate-y-1  ;}">팀 소개</a>
+                    <a href="/contact" className="text-sm font-semibold leading-6 text-gray-900 hover:translate-y-1  ;}">문의</a>
                 </div>
                 <div className="hidden lg:flex lg:flex-1 lg:justify-end">
                     <a href="/home" className="text-sm font-semibold leading-6 text-gray-900"> <span aria-hidden="true"></span></a>

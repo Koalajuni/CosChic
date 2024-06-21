@@ -90,10 +90,10 @@ def BG_result(request):
             # print(user_data)
             # 받고 나서 인공지능과 데이터베이스 처리 원래는 데이터 베이스에서 경로를 가져온다
             # 현재 uid로 조회가 되지 않아 로컬 경로를 직접 쓴다
-            org_img = "C:/Users/ok/Desktop/2024-06-13 21_23_48.jpg"
+            org_img = "C:/Users/hi/Desktop/2024-06-13 21_23_48.jpg"
             #그전 페이지의 faiss 통해서 경로 받기 여기서 이제 브랜드 명 추출 후 사용아이템 추가
-            ref_img = "C:/Users/ok/Desktop/CosChic/CosChic/backend/media/ref/3ce_model1/3CE_lipstick_20.jpg"
-            result_img = "C:/Users/ok/Desktop/CosChic/CosChic/backend/media/result"
+            ref_img = "C:/Users/hi/Desktop/CosChic/CosChic/backend/media/ref/3ce_model1/3CE_lipstick_20.jpg"
+            result_img = "C:/Users/hi/Desktop/CosChic/CosChic/backend/media/result"
             # media_url = settings.MEDIA_URL
             # print(media_url)
             bg = BeautyGAN()
