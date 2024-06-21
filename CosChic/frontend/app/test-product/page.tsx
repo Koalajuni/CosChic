@@ -13,6 +13,7 @@ import CardRelatedProduct from '@/components/card_relatedProduct';
 import styles from '@/styles/CardRelatedProduct.module.css';
 import axios from "axios";
 import { useUserEmail } from '@/hooks/useUserEmail';
+import UserFaceDetail from '@/components/userFaceDetail';
 
 const TestProductPage = () => {
     const [userUid, setUserUid] = useState("");
@@ -55,6 +56,27 @@ const TestProductPage = () => {
     const modelFaceNoseHeightRatio = params.get("mfnh");
     const modelFaceNoseWidthRatio = params.get("mfnw");
 
+    const paramsRatio = {
+        userFullEyesizeRatio: userFullEyesizeRatio,
+        userFullTailEyeRatio: userFullTailEyeRatio,
+        userTopLipRatio: userTopLipRatio,
+        userBottomLipRatio: userBottomLipRatio,
+        userRightSymmetryRatio: userRightSymmetryRatio,
+        userLeftSymmertyRatio: userLeftSymmertyRatio,
+        userFaceNoseHeightRatio: userFaceNoseHeightRatio,
+        userFaceNoseWidthRatio: userFaceNoseWidthRatio,
+
+        modelFullEyesizeRatio: modelFullEyesizeRatio,
+        modelFullTailEyeRatio: modelFullTailEyeRatio,
+        modelTopLipRatio: modelTopLipRatio,
+        modelBottomLipRatio: modelBottomLipRatio,
+        modelRightSymmetryRatio: modelRightSymmetryRatio,
+        modelLeftSymmertyRatio: modelLeftSymmertyRatio,
+        modelFaceNoseHeightRatio: modelFaceNoseHeightRatio,
+        modelFaceNoseWidthRatio: modelFaceNoseWidthRatio
+    };
+    const [isLoading, setIsLoading] = useState(true);
+
     // uid 받아오는 함수
     useEffect(() => {
         // User UID 가져와서 저장
@@ -62,6 +84,11 @@ const TestProductPage = () => {
         if (storedUserUid) {
             setUserUid(storedUserUid);
         }
+        const timer = setTimeout(() => {
+            setIsLoading(false);
+        }, 2000);
+
+        return () => clearTimeout(timer);
     }, []);
 
     useEffect(() => {
@@ -157,20 +184,32 @@ const TestProductPage = () => {
             <Header />
             <div className="container mx-auto p-6">
                 <h1 className="text-3xl font-bold mb-4">가상화장</h1>
-                <div className="flex justify-center mb-20">
-                    <div>
+                <div className="flex h-[400px] justify-center items-center mb-10 border rounded-lg shadow-lg bg-white">
+                    <div className="w-1/2 flex flex-col items-center px-4 border-r border-gray-200">
                         {responseData && responseData.org_image && (
-                            <img src={responseData.org_image} alt="원본 사진" className="w-60 h-60 rounded-md mr-40" />
+                            <img src={responseData.org_image} alt="원본 사진" className="w-72 h-72 rounded-md mb-4 shadow-md border border-gray-200" />
                         )}
-                        <p>원본 사진</p>
+                        <p className="text-lg font-semibold text-gray-700 mt-2">원본 사진</p>
                     </div>
-                    <div>
+                    <div className="w-1/2 flex flex-col items-center px-4">
                         {responseData && responseData.result_img_path && (
-                            <img src={responseData.result_img_path} alt="화장 후 사진" className="w-60 h-60 rounded-md" />
+                            <img src={responseData.result_img_path} alt="화장 후 사진" className="w-72 h-72 rounded-md mb-4 shadow-md border border-gray-200" />
                         )}
-                        <p>화장 후 사진</p>
+                        <p className="text-lg font-semibold text-gray-700 mt-2">화장 후 사진</p>
                     </div>
                 </div>
+                <h1 className="text-3xl font-semibold mb-2">My Beauty</h1>
+                <section className="analysis row flex justify-start gap-8 py-8">
+                    <div className="left side">
+                        <div>
+                            <CardBarChart eye={eyeSimilarity} nose={noseSimilarity} lips={lipSimilarity} eyebrows={eyebrowSimilarity} contour={contourSimilarity} total={allSimilarity} />
+                        </div>
+                        <div className="py-2">
+                            <CardRadalChart eye={eyeSimilarity} nose={noseSimilarity} lips={lipSimilarity} eyebrows={eyebrowSimilarity} contour={contourSimilarity} />
+                        </div>
+                    </div>
+                    <UserFaceDetail detailRatios={paramsRatio} />
+                </section>
 
                 <ProductDetails product={responseData2} />
 
@@ -223,10 +262,6 @@ const TestProductPage = () => {
                     </div>
                 </div>
 
-                <div className="flex gap-4 content-between py-4">
-                    <CardBarChart eye={eyeSimilarity} nose={noseSimilarity} lips={lipSimilarity} eyebrows={eyebrowSimilarity} contour={contourSimilarity} total={allSimilarity} />
-                    <CardRadalChart eye={eyeSimilarity} nose={noseSimilarity} lips={lipSimilarity} eyebrows={eyebrowSimilarity} contour={contourSimilarity} />
-                </div>
                 <div>
                 </div>
             </div>
