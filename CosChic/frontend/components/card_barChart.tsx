@@ -70,9 +70,9 @@ const CardBarChart = ({ eye, nose, lips, eyebrows, total, contour }) => {
     }, []);
 
     return (
-        <div className="bg-white text-bg-gray-500 rounded shadow-xl py-5 px-5 w-full h-1/2 sm:w-2/3 md:w-1/2 lg:w-1/3">
+        <div className="bg-white text-bg-gray-500 rounded shadow-xl py-5 px-5 w-full h-1/2 ">
             <div className="flex w-full">
-                <h3 className="text-lg font-semibold leading-tight flex-1">TOTAL SCORE</h3>
+                <h3 className="text-lg font-semibold leading-tight flex-1 mt-2">코스칙 점수</h3>
                 <div className="relative h-5 leading-none">
                     <button
                         className="text-xl text-gray-500 hover:text-gray-300 h-6 focus:outline-none"
@@ -109,7 +109,7 @@ const CardBarChart = ({ eye, nose, lips, eyebrows, total, contour }) => {
                         {sessions.map((item, index) => (
                             <div
                                 key={index}
-                                className={`w-1/3 px-4 ${index !== 0 ? 'border-l border-bg-gray-700' : ''}`}
+                                className={`w-1/3 px-4 ${index !== 0 ? 'border-l border-bg-gray-700' : ''} whitespace-nowrap`} // Added class here
                             >
                                 <div className="text-sm">
                                     <span className={`inline-block w-2 h-2 rounded-full mr-1 align-middle ${item.color}`}>&nbsp;</span>
