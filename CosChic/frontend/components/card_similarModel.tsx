@@ -40,7 +40,7 @@ const CardSimilarModel = ({ models }) => {
         // const url = `/test-product?name=${model.modelName}&url=${model.photoUrl}&modelNum=${model.modelNum}&allModelNames=${model.allModelNames}`;
         router.push(url);
 
-        };
+    };
 
     return (
         <div className="p-4">
@@ -52,7 +52,7 @@ const CardSimilarModel = ({ models }) => {
                             {/* Profile Image */}
                             <div className="w-1/4 flex justify-center">
                                 <div className="w-24 h-24 bg-gray-300 rounded-full">
-                                <img src= {model.photoUrl} />
+                                    <img src={model.photoUrl} />
                                 </div>
                             </div>
 

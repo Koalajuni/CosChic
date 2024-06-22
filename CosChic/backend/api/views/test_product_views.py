@@ -62,12 +62,12 @@ def get_product_data_by_brandname(brand_name):
             brand_data_list.append({
                     'productUrl': brand.productUrl,
                     'productName': brand.productName,
-                    # 'brandName': brand.brandName,
+                    'brandName': brand.brandName,
                     'price': brand.price,
                     'productImage': full_product_image_url,
                     # 'modelImage': brand.modelImage,
-                    # 'count': brand.count,
-                    # 'categoryId': brand.categoryId,
+                    'count': brand.count,
+                    'categoryId': brand.categoryId,
                     # 'category': brand.category,   
                 })
         # print(brand_data_list)
