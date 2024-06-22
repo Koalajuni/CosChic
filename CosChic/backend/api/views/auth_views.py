@@ -42,7 +42,7 @@ def register(request):
         )
         user_data.save()
 
-        return Response({'UUID': str(user_uuid)}, status=status.HTTP_201_CREATED)
+        return Response({'UUID': str(user_uuid),'email':email}, status=status.HTTP_201_CREATED)
 
     except Exception as e:
         logging.error(f"Error during registration: {e}")
