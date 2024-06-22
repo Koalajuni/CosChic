@@ -261,6 +261,7 @@ class FaceMeshDetector:
             full_tail_eye_ratio, top_lip_ratio, bottom_lip_ratio, right_symmetry_ratio, left_symmetry_ratio, \
                 face_nose_height_ratio, face_nose_width_ratio
 
+
 # 사용 예제
 # image_path = r'C:\Users\LeeSangWhui\Desktop\CosChic\CosChic\backend\media\model_img\deardahila_model2\deardahila_tint_4.jpg'  # 얼굴 이미지 파일 경로 설정
 # output_image_path = 'output_face.png'
