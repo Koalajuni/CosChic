@@ -1,8 +1,6 @@
 import React from 'react';
 
-
 const UserFaceDetail = ({ detailRatios }) => {
-
     const detailsData = [
         {
             category: "EYES",
@@ -11,7 +9,7 @@ const UserFaceDetail = ({ detailRatios }) => {
                 { label: "눈 길이 비율", values: [detailRatios.userFullEyesizeRatio, detailRatios.modelFullEyesizeRatio] },
                 { label: "눈 꼬리 비율", values: [detailRatios.userFullTailEyeRatio, detailRatios.modelFullTailEyeRatio] },
                 { label: "왼쪽 눈 비대칭", values: [detailRatios.userLeftSymmertyRatio, detailRatios.modelLeftSymmertyRatio] },
-                { label: "오른쪽 눈 비대칭", values: [detailRatios.userRightSymmetryRatio, detailRatios.modelRightSymmetryRatio], color: "bg-black" }
+                { label: "오른쪽 눈 비대칭", values: [detailRatios.userRightSymmetryRatio, detailRatios.modelRightSymmetryRatio] }
             ]
         },
         {
@@ -19,7 +17,7 @@ const UserFaceDetail = ({ detailRatios }) => {
             icon: "icons/lip.png",
             attributes: [
                 { label: "아랫입술 비율", values: [detailRatios.userBottomLipRatio, detailRatios.modelBottomLipRatio] },
-                { label: "윗입술 비율", values: [detailRatios.userTopLipRatio, detailRatios.modelTopLipRatio], color: "bg-red-500" }
+                { label: "윗입술 비율", values: [detailRatios.userTopLipRatio, detailRatios.modelTopLipRatio] }
             ]
         },
         {
@@ -32,49 +30,42 @@ const UserFaceDetail = ({ detailRatios }) => {
         }
     ];
 
-
     return (
-        <div className="bg-white text-gray-500 rounded shadow-xl py-2 px-5 h-[600px] w-full overflow-auto">
-            <table className="w-full table-auto">
-                <thead>
-                    <tr className="justify-start">
-                        <th className="text-xl text-black font-semibold mt-2 ml-4 py-2 text-start" colSpan={4}>분석표</th>
-                    </tr>
-                    <tr className="justify-start">
-                        <th className="px-4 py-2"></th>
-                        <th className="px-4 py-2">비율 기준</th>
-                        <th className="px-4 py-2 text-center">사용자 분석</th>
-                        <th className="px-4 py-2 text-center">모델 분석</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {detailsData.map((detail, index) => (
-                        <React.Fragment key={index}>
-                            <tr>
-                                <td className="flex w-full items-center px-4 py-2" colSpan={4}>
-                                    <img src={detail.icon} alt={`${detail.category} Icon`} className="w-6 h-6 mr-4" />
-                                    <span className="text-xl text-[#8E65B7] font-semibold">{detail.category}</span>
-                                </td>
-                            </tr>
-                            {detail.attributes.map((attr, attrIndex) => (
-                                <tr key={attrIndex} className="bg-white justify-center items-center border-b border-gray-200">
-                                    <td className="px-4 py-2"></td>
-                                    <td className="px-4 py-2 text-center text-pink-500">{attr.label}</td>
-                                    {attr.values.map((value, valueIndex) => (
-                                        <td key={valueIndex} className="px-4 py-2 text-center">
-                                            {value ? (
-                                                <span className="w-auto text-black">{value}</span>
-                                            ) : (
-                                                <div className={`w-8 h-4 ${attr.color} border border-gray-300`}></div>
-                                            )}
-                                        </td>
-                                    ))}
+        <div className="bg-white rounded-lg shadow-xl p-6 h-[700px] w-full overflow-auto">
+            <h2 className="text-2xl font-bold text-gray-800 mb-4">분석표</h2>
+            <div className="space-y-6">
+                {detailsData.map((detail, index) => (
+                    <div key={index} className="bg-gray-50 rounded-lg p-4">
+                        <div className="flex items-center mb-3">
+                            <img src={detail.icon} alt={`${detail.category} Icon`} className="w-6 h-6 mr-2" />
+                            <h3 className="text-xl font-semibold text-[#8E65B7]">{detail.category}</h3>
+                        </div>
+                        <table className="w-full">
+                            <thead>
+                                <tr className="text-sm text-gray-600">
+                                    <th className="font-medium text-left py-2">비율 기준</th>
+                                    <th className="font-medium text-center py-2">사용자 분석</th>
+                                    <th className="font-medium text-center py-2">모델 분석</th>
                                 </tr>
-                            ))}
-                        </React.Fragment>
-                    ))}
-                </tbody>
-            </table>
+                            </thead>
+                            <tbody>
+                                {detail.attributes.map((attr, attrIndex) => (
+                                    <tr key={attrIndex} className="border-t border-gray-200">
+                                        <td className="py-2 text-pink-500">{attr.label}</td>
+                                        {attr.values.map((value, valueIndex) => (
+                                            <td key={valueIndex} className="py-2 text-center">
+                                                <span className="inline-block bg-gray-100 rounded px-2 py-1 text-sm font-medium text-gray-700">
+                                                    {value || '-'}
+                                                </span>
+                                            </td>
+                                        ))}
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                    </div>
+                ))}
+            </div>
         </div>
     );
 };

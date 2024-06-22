@@ -195,7 +195,12 @@ export default function Home() {
                 setModels(similarModelArray)
                 setShowCard(true);
 
-                Swal.fire("success", `분석에 성공했습니다.`, "success");
+                Swal.fire("success", `분석에 성공했습니다.`, "success").then(() => {
+                    const element = document.getElementById('similar-models');
+                    if (element) {
+                        element.scrollIntoView({ behavior: 'smooth' });
+                    }
+                });
             }
         } catch (error) {
             console.error("face analysis error:", error);
@@ -337,9 +342,10 @@ export default function Home() {
                                 </div>
                             </div>
                         </div>
-                        <div>
+                        <div className="mb-10">
                             {showCard && <CardSimilarModel models={models} />}
                         </div>
+                        <div className="mt-4" id="similar-models"></div>
                     </form>
                 </section>
             }

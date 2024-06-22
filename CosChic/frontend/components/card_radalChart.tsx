@@ -32,7 +32,7 @@ const CardRadarChart = ({ eye, nose, lips, eyebrows, contour }) => {
     return (
         <div className="bg-white text-bg-gray-500 rounded shadow-xl py-2 px-5 w-full">
             <div className="flex w-full">
-                <h3 className="text-lg font-semibold leading-tight flex-1 mt-2">모델 유사도</h3>
+                <h3 className="text-2xl font-bold text-gray-800 mb-4">모델 유사도</h3>
             </div>
             <div className="relative overflow-hidden transition-all duration-500">
                 <div className="pb-2 lg:pb-2">
