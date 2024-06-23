@@ -14,7 +14,7 @@ export default function UserProfile() {
     const [userData, setUserData] = useState<any | null>(null);
     const [loading, setLoading] = useState<boolean>(true);
     const [error, setError] = useState<string | null>(null);
-    const [image, setImage] = useState<string>('/icons/logo_img.png');
+    const [image, setImage] = useState<string>('/assets/logo.png');
     const fileInput = useRef<HTMLInputElement>(null);
     const baseUrl = 'http://127.0.0.1:8000/api';
 
@@ -120,7 +120,7 @@ export default function UserProfile() {
                     <div className="px-3 py-2">
                         <div className="flex flex-wrap border shadow rounded-lg p-3 dark:bg-gray-600 items-center flex-col ">
                             <div className="hover:translate-y-1 hover:bg-gray-200" style={profileImageStyle} onClick={() => fileInput.current?.click()} />
-                                <input type="file"style={{display : "none"}} ref={fileInput} onChange={onFileChange} accept="image/*"/>
+                                <input type="file"style={{display : "none"}} ref={fileInput} onChange={onFileChange} />
                                 
                                 {userData && (
                                 <>
