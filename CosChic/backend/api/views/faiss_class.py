@@ -88,39 +88,32 @@ class CosChicFaiss:
         # return face_rst[0]
         return labels
 
-    def landingpage_detect_faces(self,img,label_path,model_path):
-        # global gWait
-
-        # if gWait == True:
-        #     return "unknown"
-        # gWait = True
+    def landingpage_detect_faces(self, img, label_path, model_path):
         pilImg = Image.fromarray(img)
-        image = pilImg.save('./media/result/live.jpg')
+        pilImg.save('./media/result/live.jpg')
 
         testImage = face_recognition.load_image_file('./media/result/live.jpg')
         testFace = face_recognition.face_locations(testImage)
 
-        # if len(testFace) != 1:
-        #     gWait = False
-        #     return "unknown"
+        if len(testFace) == 0:
+            return "unknown"
 
         top, right, bottom, left = testFace[0]
-        faceCut = testImage[top-20:bottom+20, left-20:right+20]
+        faceCut = testImage[max(top-20, 0):bottom+20, max(left-20, 0):right+20]
         pilImage = Image.fromarray(faceCut)
         pilImage.save('./live.jpg')
         img = face_recognition.load_image_file('./live.jpg')
-        
 
-        test_en = face_recognition.face_encodings(img)[0]
-        test_en = np.array(test_en, dtype=np.float32).reshape(-1, 128)
+        test_en = face_recognition.face_encodings(img)
+        if len(test_en) == 0:
+            return "unknown"
+
+        test_en = np.array(test_en[0], dtype=np.float32).reshape(-1, 128)
         face_index = faiss.read_index(model_path)
         distance, result = face_index.search(test_en, k=5)
         labels = np.load(label_path)
         labels = [labels[i] for i in result[0]]
         face_rst = most_frequent(labels)
-        print(face_rst)
-        print(face_rst[0])
-        # return face_rst[0]
         return face_rst[0]
 
 

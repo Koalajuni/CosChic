@@ -80,9 +80,16 @@ const TestProductPage = () => {
     // uid 받아오는 함수
     useEffect(() => {
         // User UID 가져와서 저장
-        const storedUserUid = localStorage.getItem('UUID');
-        if (storedUserUid) {
-            setUserUid(storedUserUid);
+        const storedData = localStorage.getItem('userData');
+        if (storedData) {
+            try {
+                const parsedData = JSON.parse(storedData);
+                setUserUid(parsedData.UUID || null);
+            } catch (error) {
+                console.error('Failed to parse user data from localStorage:', error);
+            }
+        } else {
+            console.error('No user data found in localStorage');
         }
         const timer = setTimeout(() => {
             setIsLoading(false);
@@ -90,6 +97,7 @@ const TestProductPage = () => {
 
         return () => clearTimeout(timer);
     }, []);
+
 
     useEffect(() => {
         const fetchData = async () => {
@@ -99,6 +107,7 @@ const TestProductPage = () => {
                 formData1.append('user_uid', userUid);
                 formData1.append('user_email', userEmail);
                 formData1.append('used_model_name', name);
+                console.log("getting formdata", formData1)
 
                 const beautyganResponse = await axios.post('http://127.0.0.1:8000/api/v1/BG_result', formData1);
                 setResponseData(beautyganResponse.data);

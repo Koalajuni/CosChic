@@ -17,11 +17,10 @@ const IncTestText = () => {
     useEffect(() => {
         // User UID 가져와서 저장
         const storedUserUid = localStorage.getItem('UUID');
-        console.log(storedUserUid)
+        console.log("Stored UUID:", storedUserUid);
         if (storedUserUid) {
             setUserUid(storedUserUid);
         }
-        console.log(storedUserUid)
     }, []);
 
     // uuid 로 유저정보 처리
@@ -55,17 +54,26 @@ const IncTestText = () => {
         setCameraLoading(true); // 카메라 로딩 시작
         const newCameraOnState = !cameraOn; // 새로운 카메라 상태 계산
         setCamera(newCameraOnState); // cameraOn 상태를 토글합니다.
+        console.log("Camera toggled, new state:", newCameraOnState);
 
         if (!cameraOn) {
             setCamera(true);
-            setTimeout(() => setCameraLoading(false), 10000);
+            console.log("Camera turned on");
 
+            // Start streaming
+            startStreaming();
+            setTimeout(() => setCameraLoading(false), 10000);
+            // Fetch the most common name after streaming ends
             setTimeout(async () => {
                 try {
-                    const response = await axios.get(`http://127.0.0.1:8000/api/v1/live_video`);
+                    console.log("Fetching most common name...");
+                    const response = await axios.get(`http://127.0.0.1:8000/api/v1/get_most_common_name`);
+                    console.log("Response received:", response.data);
                     if (response.data.most_common_name) {
                         setMostCommonName(response.data.most_common_name);
-                        console.log("response", response.data);
+                        console.log("Most common name set:", response.data.most_common_name);
+                    } else {
+                        console.log("No most common name found in response");
                     }
                 } catch (err) {
                     console.error("Failed to fetch most common name:", err);
@@ -75,6 +83,20 @@ const IncTestText = () => {
         } else {
             setCamera(false);
             setCameraLoading(false); // 카메라 끌 때 로딩 상태를 false로 설정
+            console.log("Camera turned off");
+        }
+    };
+
+    const startStreaming = async () => {
+        const videoElement = document.getElementById('video') as HTMLVideoElement | null;
+        if (videoElement) {
+            videoElement.srcObject = null; // Reset any previous source object
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+                videoElement.srcObject = stream;
+            } catch (err) {
+                console.error('Error accessing camera:', err);
+            }
         }
     };
 

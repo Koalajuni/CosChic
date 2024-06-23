@@ -12,6 +12,7 @@ urlpatterns = [
 
     #랜딩 페이지
     path('v1/live_video',landing_views.live_video, name='landing_video'),
+    path('v1/get_most_common_name', landing_views.get_most_common_name, name="get_most_common_name"),
 
     # 일반
     path('v1/', index_views.api_index, name='api_index'),
