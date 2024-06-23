@@ -63,7 +63,6 @@ const IncTestText = () => {
             // Start streaming
             startStreaming();
             setTimeout(() => setCameraLoading(false), 10000);
-            // Fetch the most common name after streaming ends
             setTimeout(async () => {
                 try {
                     console.log("Fetching most common name...");

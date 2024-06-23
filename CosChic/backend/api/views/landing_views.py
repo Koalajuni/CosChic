@@ -1,58 +1,53 @@
-from django.http import StreamingHttpResponse,JsonResponse
+from django.http import StreamingHttpResponse, JsonResponse
 import cv2
 import time
 import mediapipe as mp
 from collections import Counter
-import threading
 from api.views.faiss_class import CosChicFaiss
 
 # Shared storage for the detected names
 detected_names = []
+stream_ended = False
+analyzed_name = None
 
 def live_video(request):
-    print("someone requested the video_feed")
+    global stream_ended, analyzed_name
+    stream_ended = False
+    analyzed_name = None
+    print("Someone requested the video_feed")
     return StreamingHttpResponse(
         stream(),
         content_type='multipart/x-mixed-replace; boundary=frame')
 
 def stream():
-    global detected_names
+    global detected_names, stream_ended, analyzed_name
     detected_names.clear()  # Clear previous detections
-    predictorPath = "/model/dlib/shape_predictor_5_face_landmarks.dat"
-    cap = cv2.VideoCapture(1)
+    cap = cv2.VideoCapture(1)  # Use 0 for default camera
     cap.set(cv2.CAP_PROP_FRAME_WIDTH, 640)
     cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 480)
 
     start_time = time.time()
-    end_time = start_time + 5
+    stream_duration = 5  # Stream for 5 seconds
 
     mp_face_mesh = mp.solutions.face_mesh
     drawing_spec = mp.solutions.drawing_utils.DrawingSpec(thickness=1, circle_radius=1)
-    model = CosChicFaiss()
-    last_frame = None
 
     with mp_face_mesh.FaceMesh(
             static_image_mode=False,
             max_num_faces=1,
             min_detection_confidence=0.5) as face_mesh:
 
-        frame_count = 0
         while cap.isOpened():
             ret, frame = cap.read()
-            frame = cv2.flip(frame, 1)
             if not ret:
                 print("Can't find the camera")
                 break
 
-            last_frame = frame.copy()
+            frame = cv2.flip(frame, 1)
 
             elapsed_time = time.time() - start_time
-            if elapsed_time > 5:
+            if elapsed_time > stream_duration:
                 break
-
-            frame_count += 1
-            if frame_count % 3 != 0:
-                continue
 
             rgb_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
             result = face_mesh.process(rgb_frame)
@@ -73,14 +68,25 @@ def stream():
     cap.release()
     cv2.destroyAllWindows()
 
-    if last_frame is not None:
-        faceName = model.landingpage_detect_faces(last_frame,
-                                                  r'./pretrained/CosChic_labels.npy',
-                                                  r'./pretrained/CosChic_model.bin')
-        detected_names.append(faceName)
+    # Call analysis function after stream ends
+    analyze_frame(frame)
+    stream_ended = True
+
+def analyze_frame(frame):
+    global analyzed_name
+    model = CosChicFaiss()
+    faceName = model.landingpage_detect_faces(frame,
+                                              r'./pretrained/CosChic_labels.npy',
+                                              r'./pretrained/CosChic_model.bin')
+    analyzed_name = faceName
+    print(f"Analyzed name: {analyzed_name}")
 
 def get_most_common_name(request):
-    global detected_names
-    most_common_name = Counter(detected_names).most_common(1)[0][0] if detected_names else "unknown"
-    print("most_common_name", most_common_name)
-    return JsonResponse({"most_common_name": most_common_name})
+    global stream_ended, analyzed_name
+    if not stream_ended:
+        return JsonResponse({"status": "processing", "message": "Video stream is still in progress"})
+
+    if analyzed_name:
+        return JsonResponse({"status": "success", "most_common_name": analyzed_name})
+    else:
+        return JsonResponse({"status": "error", "message": "No face detected or analysis failed"})
