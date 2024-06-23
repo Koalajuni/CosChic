@@ -1,6 +1,6 @@
 
 from django.urls import path,include
-from .views import index_views, camera_views, profile_veiws,auth_views,test_product_views,product_views
+from .views import index_views, camera_views, profile_veiws,auth_views,test_product_views,product_views,landing_views
 from django.conf import settings
 from django.conf.urls.static import static
 from django.urls import path
@@ -9,6 +9,10 @@ urlpatterns = [
     #계정 로그인/회원가입 
     path('v1/register', auth_views.register, name='register'),
     path('v1/login', auth_views.login_user, name='login_user'),
+
+    #랜딩 페이지
+    path('v1/live_video',landing_views.live_video, name='landing_video'),
+    path('v1/get_most_common_name', landing_views.get_most_common_name, name="get_most_common_name"),
 
     # 일반
     path('v1/', index_views.api_index, name='api_index'),

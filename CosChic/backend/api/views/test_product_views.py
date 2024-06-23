@@ -47,14 +47,14 @@ def get_product_data_by_brandname(brand_name):
     try:
         # brandname를 기반으로 Product 조회
         brand_name = brand_name.strip()
-        # print("brand_name = ", brand_name)
+        print("brand_name = ", brand_name)
         # 브랜드 이름을 가지고 있는 모든 데이터 조회
         all_brand =Product.objects.filter(brandName=brand_name)
         brand_data_list = []
         # print(str(user_data.query))
-        # print("all_brand :",all_brand)
+        print("all_brand :",all_brand)
         for brand in all_brand:
-            if brand.productImage == " ":
+            if not brand.productImage:
                 full_product_image_url = 'assets/default_search.png'
             else:
                 full_product_image_url = f'http://localhost:8000/media/product_img/{brand.productImage}'
@@ -70,7 +70,7 @@ def get_product_data_by_brandname(brand_name):
                     'categoryId': brand.categoryId,
                     # 'category': brand.category,   
                 })
-        # print(brand_data_list)
+        print("brand data list", brand_data_list)
         return brand_data_list
         # return "ok"
     except Product.DoesNotExist:
@@ -221,7 +221,7 @@ def used_product (request):
         try:
             used_model_name = request.POST.get('used_model_name')
             user_email = request.POST.get('user_email')
-            # print(f"Received used_model_name from client: {used_model_name}")
+            print(f"Received used_model_name from client: {used_model_name}")
 
             # ModelList 중 첫번째를 기반으로 데이터 조회(상품명,상품 url,사진 경로,상품 가격 등)
             brand_name = used_model_name.split('_')[0]
