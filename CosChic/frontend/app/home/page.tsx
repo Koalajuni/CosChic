@@ -9,6 +9,7 @@ import CardSimilarModel from "@/components/card_similarModel"
 import useUserUID from "@/hooks/useUserUID";
 import './loading.css';
 import './loading2.css';
+import axiosInstance from "@/hooks/axiosConfig"
 
 
 export default function Home() {
@@ -37,7 +38,7 @@ export default function Home() {
             // console.log("fetching UserData:", userUID)
             if (userUID) {
                 try {
-                    const response = await axios.get(`http://127.0.0.1:8000/api/v1/userdata/${userUID}`);
+                    const response = await axiosInstance.get(`/userdata/${userUID}`);
                     setUserData(response.data);
                 } catch (err) {
                     setError('Failed to fetch user data.');
@@ -73,7 +74,7 @@ export default function Home() {
     // const [selfRef, setSelRef] = ("");
     // const [refImage, setRefImage] = useState(-1);
     const [refId, setRefId] = useState(-1);
-    const baseUrl = 'http://127.0.0.1:8000/api';
+    const baseUrl = 'http://211.216.177.2:18000/api/v1';
 
     const [buttonText, setButtonText] = useState("카메라 사용하기");
 
@@ -113,7 +114,7 @@ export default function Home() {
             setCameraLoading2(true); // 카메라 로딩 시작
             console.log('photoUrlState 값:', photoUrlState);
             console.log('cameraLoading2 값:', cameraLoading2);
-            const response = await axios.post(`${baseUrl}/v1/camera_take_photo/${userUID}`, {
+            const response = await axiosInstance.post(`/camera_take_photo/${userUID}`, {
                 timeout: 30000,
             });
             if (response.status == 200) {
@@ -150,8 +151,8 @@ export default function Home() {
         formData.append('orgImage', file);
 
         try {
-            const response = await axios.post(
-                `${baseUrl}/v1/orgIMG/${userUID}`,
+            const response = await axiosInstance.post(
+                `/orgIMG/${userUID}`,
                 formData,
                 {
                     headers: {
@@ -187,7 +188,7 @@ export default function Home() {
     // 분석하기 버튼
     const faceanalysisButton = async () => {
         try {
-            const response = await axios.get(`${baseUrl}/v1/face_analysis/${userUID}`);
+            const response = await axiosInstance.get(`/face_analysis/${userUID}`);
             if (response.status === 202) {
                 const data = response.data;
                 const similarModelArray: any[] = Object.values(data);
@@ -228,7 +229,7 @@ export default function Home() {
                 <LoadingProcess />
             ) : (
                 <section className="bg-gradient-to-r from-white to-gray-100 min-h-screen py-12">
-                    <form action="http://localhost:8000/api/v1/sendimage/" method="post" encType="multipart/form-data">
+                    <form action={`${baseUrl}/sendimage/`} method="post" encType="multipart/form-data">
                         <input type="hidden" name="refId" value={refId} />
                         <div className="container mx-auto px-4">
                             <h1 className="text-4xl font-bold text-gray-800 mb-8 text-center">
@@ -246,7 +247,7 @@ export default function Home() {
                                                     <img
                                                         className="object-cover object-center w-full h-full"
                                                         alt="Camera feed"
-                                                        src={`${baseUrl}/v1/camera_video_feed`}
+                                                        src={`${baseUrl}/camera_video_feed`}
                                                     />
                                                 )
                                             ) : (

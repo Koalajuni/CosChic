@@ -1,4 +1,4 @@
-"use client" 
+"use client"
 import Header from "@/components/inc_header"
 import Footer from "@/components/inc_footer"
 import CardProfileInformation from "@/components/card_profileInfo";
@@ -6,6 +6,7 @@ import SimilarModels from "@/components/similarModels";
 import useUserUID from "@/hooks/useUserUID";
 import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
+import axiosInstance from "@/hooks/axiosConfig";
 
 
 export default function UserProfile() {
@@ -16,18 +17,17 @@ export default function UserProfile() {
     const [error, setError] = useState<string | null>(null);
     const [image, setImage] = useState<string>('https://pds.joongang.co.kr/news/component/htmlphoto_mmdata/202306/04/138bdfca-3e86-4c09-9632-d22df52a0484.jpg');
     const fileInput = useRef<HTMLInputElement>(null);
-    const baseUrl = 'http://127.0.0.1:8000/api';
 
     useEffect(() => {
         const fetchUserData = async () => {
             // console.log("fetching UserData:", userUID)
             if (userUID) {
                 try {
-                    const response = await axios.get(`http://127.0.0.1:8000/api/v1/userdata/${userUID}`);
+                    const response = await axiosInstance.get(`/userdata/${userUID}`);
                     setUserData(response.data);
                     // 프로필 이미지가 있는 경우 설정
                     if (response.data.profileImage) {
-                    setImage(response.data.profileImage);
+                        setImage(response.data.profileImage);
                     }
                 } catch (err) {
                     setError('Failed to fetch user data.');
@@ -53,25 +53,18 @@ export default function UserProfile() {
     const onFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
         if (event.target.files) {
             const file = event.target.files[0];
-          await onFileUpload(file); // 파일을 선택하자마자 업로드
+            await onFileUpload(file); // 파일을 선택하자마자 업로드
         }
     };
 
     const onFileUpload = async (file: File) => {
-    
+
         const formData = new FormData();
         formData.append('profileImage', file);
-    
+
         try {
-            const response = await axios.post(
-                `${baseUrl}/v1/userdata/upload/${userUID}`,
-                formData,
-            {
-                headers: {
-                'Content-Type': 'multipart/form-data',
-                    },
-                }
-            );
+            const response = await axiosInstance.post(`/userdata/upload/${userUID}`, formData);
+
             console.log('File uploaded successfully:', response.data);
             // 서버 응답 형식 점검
             if (response.data && response.data.output_image_path) {
@@ -80,9 +73,9 @@ export default function UserProfile() {
                 console.error('Output image path not found in response:', response.data);
             }
         } catch (error) {
-        console.error('Error uploading the file:', error);
-        
-        } 
+            console.error('Error uploading the file:', error);
+
+        }
     };
 
 
@@ -105,8 +98,7 @@ export default function UserProfile() {
         { name: '모델 D', similarity: 23, image: 'https://via.placeholder.com/100' },
         { name: '모델 E', similarity: 23, image: 'https://via.placeholder.com/100' }
     ];
-    
-    
+
 
     return (
         <>
@@ -120,9 +112,9 @@ export default function UserProfile() {
                     <div className="px-3 py-2">
                         <div className="flex flex-wrap border shadow rounded-lg p-3 dark:bg-gray-600 items-center flex-col">
                             <div style={profileImageStyle} onClick={() => fileInput.current?.click()} />
-                                <input type="file"style={{display : "none"}} ref={fileInput} onChange={onFileChange} accept="image/*"/>
-                                
-                                {userData && (
+                            <input type="file" style={{ display: "none" }} ref={fileInput} onChange={onFileChange} accept="image/*" />
+
+                            {userData && (
                                 <>
                                     <p className="font-serif font-semibold p-4">{userData.names}</p>
                                     <span className="text-sm text-gray-400">

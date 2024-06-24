@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import styles from '@/styles/CardProfileInformation.module.css';
+import axiosInstance from '@/hooks/axiosConfig';
 
 const CardProfileInformation = ({ name, email, age, gender, UUID }) => {
     const [formData, setFormData] = useState({
@@ -30,7 +31,7 @@ const CardProfileInformation = ({ name, email, age, gender, UUID }) => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const response = await axios.put(`http://127.0.0.1:8000/api/v1/userdata/${UUID}`, formData);
+            const response = await axios.put(`http://211.216.177.2:18000/api/v1/userdata/${UUID}`, formData);
             console.log('Data submitted successfully:', response.data);
             window.location.reload();
         } catch (error) {

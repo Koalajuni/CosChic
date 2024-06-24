@@ -1,6 +1,6 @@
 
 from django.urls import path,include
-from .views import index_views, camera_views, profile_views,auth_views,test_product_views,product_views,landing_views
+from .views import index_views, camera_views, profile_views,auth_views,test_product_views,product_views,landing_views,contact_views
 from django.conf import settings
 from django.conf.urls.static import static
 from django.urls import path
@@ -44,6 +44,9 @@ urlpatterns = [
 
     #검색
     path('v1/search', product_views.search, name='search_query'),
+
+    #문의 
+    path('v1/send_email', contact_views.send_email, name='send_email'),
 
 ]
 
