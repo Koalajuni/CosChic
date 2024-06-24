@@ -14,6 +14,7 @@ import styles from '@/styles/CardRelatedProduct.module.css';
 import axios from "axios";
 import { useUserEmail } from '@/hooks/useUserEmail';
 import UserFaceDetail from '@/components/userFaceDetail';
+import axiosInstance from '@/hooks/axiosConfig';
 
 const TestProductPage = () => {
     const [userUid, setUserUid] = useState("");
@@ -109,7 +110,7 @@ const TestProductPage = () => {
                 formData1.append('used_model_name', name);
                 console.log("getting formdata", formData1)
 
-                const beautyganResponse = await axios.post('http://127.0.0.1:8000/api/v1/BG_result', formData1);
+                const beautyganResponse = await axiosInstance.post('/BG_result', formData1);
                 setResponseData(beautyganResponse.data);
             } catch (error) {
                 console.error('Error fetching beautygan data:', error);
@@ -120,8 +121,7 @@ const TestProductPage = () => {
                 const formData2 = new FormData();
                 formData2.append('used_model_name', name);
                 formData2.append('user_email', userEmail);
-
-                const usedProductResponse = await axios.post('http://127.0.0.1:8000/api/v1/used_product', formData2);
+                const usedProductResponse = await axiosInstance.post('/used_product', formData2);
                 setResponseData2(usedProductResponse.data);
             } catch (error) {
                 console.error('Error fetching used product data:', error);
@@ -132,8 +132,7 @@ const TestProductPage = () => {
                 const formData3 = new FormData();
                 formData3.append('models', JSON.stringify(models));
                 formData3.append('user_email', userEmail);
-
-                const otherModelsResponse = await axios.post('http://127.0.0.1:8000/api/v1/other_models', formData3);
+                const otherModelsResponse = await axiosInstance.post('/other_models', formData3);
                 setResponseData3(otherModelsResponse.data);
             } catch (error) {
                 console.error('Error fetching other models data:', error);
@@ -144,7 +143,7 @@ const TestProductPage = () => {
                 const formData4 = new FormData();
                 formData4.append('used_model_name', name);
 
-                const relatedProductsResponse = await axios.post('http://127.0.0.1:8000/api/v1/asso_product', formData4);
+                const relatedProductsResponse = await axiosInstance.post('/asso_product', formData4);
                 setResponseData4(relatedProductsResponse.data);
                 console.log("this is how the brand related will appear", relatedProductsResponse.data)
             } catch (error) {

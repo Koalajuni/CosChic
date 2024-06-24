@@ -1,36 +1,35 @@
 from django.http import StreamingHttpResponse, JsonResponse
-import cv2
-import time
+import cv2,os
+import time, uuid
 import mediapipe as mp
-from collections import Counter
+from collections import defaultdict
 from api.views.faiss_class import CosChicFaiss
+import threading
 
 # Shared storage for the detected names
-detected_names = []
-stream_ended = False
-analyzed_name = None
+session_data = defaultdict(lambda: {
+    "detected_names": [],
+    "stream_ended": False,
+    "analyzed_name": None
+})
+
+mp_face_mesh = mp.solutions.face_mesh
+drawing_spec = mp.solutions.drawing_utils.DrawingSpec(thickness=1, circle_radius=1)
 
 def live_video(request):
-    global stream_ended, analyzed_name
-    stream_ended = False
-    analyzed_name = None
-    print("Someone requested the video_feed")
+    session_id = request.GET.get('session_id')
+    if not session_id:
+        session_id = str(uuid.uuid4())
+
     return StreamingHttpResponse(
-        stream(),
-        content_type='multipart/x-mixed-replace; boundary=frame')
+        stream_with_face_mesh(session_id),
+        content_type='multipart/x-mixed-replace; boundary=frame'
+    )
 
-def stream():
-    global detected_names, stream_ended, analyzed_name
-    detected_names.clear()  # Clear previous detections
-    cap = cv2.VideoCapture(1)  # Use 0 for default camera
-    cap.set(cv2.CAP_PROP_FRAME_WIDTH, 640)
-    cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 480)
-
+def stream_with_face_mesh(session_id):
+    cap = cv2.VideoCapture(1)
     start_time = time.time()
-    stream_duration = 5  # Stream for 5 seconds
-
-    mp_face_mesh = mp.solutions.face_mesh
-    drawing_spec = mp.solutions.drawing_utils.DrawingSpec(thickness=1, circle_radius=1)
+    duration = 5  # 5 seconds of streaming
 
     with mp_face_mesh.FaceMesh(
             static_image_mode=False,
@@ -40,20 +39,19 @@ def stream():
         while cap.isOpened():
             ret, frame = cap.read()
             if not ret:
-                print("Can't find the camera")
                 break
 
+            # Flip the frame horizontally for a later selfie-view display
             frame = cv2.flip(frame, 1)
-
-            elapsed_time = time.time() - start_time
-            if elapsed_time > stream_duration:
-                break
-
+            
+            # Convert the BGR image to RGB
             rgb_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
-            result = face_mesh.process(rgb_frame)
+            
+            # Process the frame with MediaPipe Face Mesh
+            results = face_mesh.process(rgb_frame)
 
-            if result.multi_face_landmarks:
-                for face_landmarks in result.multi_face_landmarks:
+            if results.multi_face_landmarks:
+                for face_landmarks in results.multi_face_landmarks:
                     mp.solutions.drawing_utils.draw_landmarks(
                         image=frame,
                         landmark_list=face_landmarks,
@@ -61,32 +59,63 @@ def stream():
                         landmark_drawing_spec=drawing_spec,
                         connection_drawing_spec=drawing_spec)
 
-            image_bytes = cv2.imencode('.jpg', frame)[1].tobytes()
+            # Encode the frame in JPEG format
+            _, buffer = cv2.imencode('.jpg', frame)
+            frame_bytes = buffer.tobytes()
+            
             yield (b'--frame\r\n'
-                   b'Content-Type: image/jpeg\r\n\r\n' + image_bytes + b'\r\n')
+                   b'Content-Type: image/jpeg\r\n\r\n' + frame_bytes + b'\r\n')
+
+            if time.time() - start_time > duration:
+                break
 
     cap.release()
-    cv2.destroyAllWindows()
 
-    # Call analysis function after stream ends
-    analyze_frame(frame)
-    stream_ended = True
+    # Save the last frame
+    os.makedirs(f'./media/result/{session_id}', exist_ok=True)
+    frame_path = f'./media/result/{session_id}/captured_frame.jpg'
+    cv2.imwrite(frame_path, frame)
 
-def analyze_frame(frame):
-    global analyzed_name
-    model = CosChicFaiss()
-    faceName = model.landingpage_detect_faces(frame,
-                                              r'./pretrained/CosChic_labels.npy',
-                                              r'./pretrained/CosChic_model.bin')
-    analyzed_name = faceName
-    print(f"Analyzed name: {analyzed_name}")
+    # Return a response to signal the end of the stream
+    yield (b'--frame\r\n'
+           b'Content-Type: application/json\r\n\r\n' + 
+           JsonResponse({"status": "complete", "session_id": session_id}).content + b'\r\n')
+
+def analyze_frame(frame_path, session_id):
+    global session_data
+    try:
+        print(f"Starting analysis for session {session_id}")
+        model = CosChicFaiss()
+        faceName = model.landingpage_detect_faces(frame_path,
+                                                session_id,
+                                                r'./pretrained/CosChic_labels.npy',
+                                                r'./pretrained/CosChic_model.bin')
+        session_data[session_id]["analyzed_name"] = faceName
+        print(f"Analysis completed for session {session_id}. Result: {faceName}")
+    except Exception as e:
+        print(f"Error in analyze_frame: {str(e)}")
+        session_data[session_id]["analyzed_name"] = "Error in analysis"
+    finally:
+        session_data[session_id]["stream_ended"] = True
+
 
 def get_most_common_name(request):
-    global stream_ended, analyzed_name
-    if not stream_ended:
-        return JsonResponse({"status": "processing", "message": "Video stream is still in progress"})
+    session_id = request.GET.get('session_id')
+    if not session_id:
+        return JsonResponse({"status": "error", "message": "Session ID is required"}, status=400)
 
-    if analyzed_name:
-        return JsonResponse({"status": "success", "most_common_name": analyzed_name})
-    else:
-        return JsonResponse({"status": "error", "message": "No face detected or analysis failed"})
+    frame_path = f'./media/result/{session_id}/captured_frame.jpg'
+    if not os.path.exists(frame_path):
+        return JsonResponse({"status": "error", "message": "No captured image found"}, status=404)
+
+    try:
+        model = CosChicFaiss()
+        faceName = model.landingpage_detect_faces(frame_path,
+                                                  session_id,
+                                                  r'./pretrained/CosChic_labels.npy',
+                                                  r'./pretrained/CosChic_model.bin')
+        
+        return JsonResponse({"status": "success", "most_common_name": faceName})
+    except Exception as e:
+        print(f"Error in analysis: {str(e)}")
+        return JsonResponse({"status": "error", "message": "Analysis failed"}, status=500)
