@@ -1,12 +1,18 @@
 
 from django.urls import path,include
-from .views import index_views, camera_views, profile_veiws,auth_views, product_views
-
+from .views import index_views, camera_views, profile_veiws,auth_views,test_product_views,product_views,landing_views
+from django.conf import settings
+from django.conf.urls.static import static
+from django.urls import path
 urlpatterns = [
 
     #계정 로그인/회원가입 
     path('v1/register', auth_views.register, name='register'),
     path('v1/login', auth_views.login_user, name='login_user'),
+
+    #랜딩 페이지
+    path('v1/live_video',landing_views.live_video, name='landing_video'),
+    path('v1/get_most_common_name', landing_views.get_most_common_name, name="get_most_common_name"),
 
     # 일반
     path('v1/', index_views.api_index, name='api_index'),
@@ -25,12 +31,21 @@ urlpatterns = [
 
     #프로필뷰 
     path('v1/userdata/<str:UUID>', profile_veiws.handle_userdata, name='handle_userData'),
+    path('v1/userdata/upload/<str:UUID>', profile_veiws.upload_image, name='upload_image'),
     path('v1/product', profile_veiws.api_product, name='api_product'),
     path('v1/recommend', profile_veiws.api_recommend, name='api_recommend'),
 
+    #test_product
+    path('v1/used_product',test_product_views.used_product,name='used_product'),
+    path('v1/BG_result',test_product_views.BG_result,name='BG_result'),
+    path('v1/get_all_users', test_product_views.get_all_users, name='get_all_users'),
+    path('v1/other_models', test_product_views.other_models, name='other_models'),
+    path('v1/asso_product', test_product_views.asso_product, name='asso_product'),
 
     #검색
     path('v1/search', product_views.search, name='search_query'),
 
 ]
 
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

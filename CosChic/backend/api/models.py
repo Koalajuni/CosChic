@@ -11,6 +11,7 @@ class UserData(models.Model):
     IP = models.CharField(max_length=20)
     uploadDate = models.CharField(max_length=50,default="", blank=True)
     orgImage = models.CharField(max_length=255,default="", blank=True)
+    profileImage = models.CharField(max_length=255,default="", blank=True)
     UUID = models.CharField(max_length=255)
     def __str__(self):
         return self.names

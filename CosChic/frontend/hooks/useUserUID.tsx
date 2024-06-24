@@ -4,10 +4,11 @@ const useUserUID = (): string | null => {
     const [userUID, setUserUID] = useState<string | null>(null);
 
     useEffect(() => {
-        const storedUser = localStorage.getItem('UUID');
-        if (storedUser) {
+        const storedData = localStorage.getItem('userData');
+        if (storedData) {
             try {
-                setUserUID(storedUser.replace(/"/g, ''));
+                const parsedData = JSON.parse(storedData);
+                setUserUID(parsedData.UUID || null);
             } catch (error) {
                 console.error('Failed to parse user data from localStorage:', error);
             }

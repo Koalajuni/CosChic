@@ -1,10 +1,10 @@
-"use client"
+"use client" 
 import Header from "@/components/inc_header"
 import Footer from "@/components/inc_footer"
 import CardProfileInformation from "@/components/card_profileInfo";
 import SimilarModels from "@/components/similarModels";
 import useUserUID from "@/hooks/useUserUID";
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
 
 
@@ -14,7 +14,9 @@ export default function UserProfile() {
     const [userData, setUserData] = useState<any | null>(null);
     const [loading, setLoading] = useState<boolean>(true);
     const [error, setError] = useState<string | null>(null);
-
+    const [image, setImage] = useState<string>('https://pds.joongang.co.kr/news/component/htmlphoto_mmdata/202306/04/138bdfca-3e86-4c09-9632-d22df52a0484.jpg');
+    const fileInput = useRef<HTMLInputElement>(null);
+    const baseUrl = 'http://127.0.0.1:8000/api';
 
     useEffect(() => {
         const fetchUserData = async () => {
@@ -23,6 +25,10 @@ export default function UserProfile() {
                 try {
                     const response = await axios.get(`http://127.0.0.1:8000/api/v1/userdata/${userUID}`);
                     setUserData(response.data);
+                    // 프로필 이미지가 있는 경우 설정
+                    if (response.data.profileImage) {
+                    setImage(response.data.profileImage);
+                    }
                 } catch (err) {
                     setError('Failed to fetch user data.');
                 } finally {
@@ -43,8 +49,45 @@ export default function UserProfile() {
     }, [userData]);
 
 
+    // 파일 업로드
+    const onFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
+        if (event.target.files) {
+            const file = event.target.files[0];
+          await onFileUpload(file); // 파일을 선택하자마자 업로드
+        }
+    };
+
+    const onFileUpload = async (file: File) => {
+    
+        const formData = new FormData();
+        formData.append('profileImage', file);
+    
+        try {
+            const response = await axios.post(
+                `${baseUrl}/v1/userdata/upload/${userUID}`,
+                formData,
+            {
+                headers: {
+                'Content-Type': 'multipart/form-data',
+                    },
+                }
+            );
+            console.log('File uploaded successfully:', response.data);
+            // 서버 응답 형식 점검
+            if (response.data && response.data.output_image_path) {
+                setImage(response.data.output_image_path);
+            } else {
+                console.error('Output image path not found in response:', response.data);
+            }
+        } catch (error) {
+        console.error('Error uploading the file:', error);
+        
+        } 
+    };
+
+
     const profileImageStyle = {
-        backgroundImage: "url('https://pds.joongang.co.kr/news/component/htmlphoto_mmdata/202306/04/138bdfca-3e86-4c09-9632-d22df52a0484.jpg')",
+        backgroundImage: `url(${image})`,
         backgroundSize: "cover",
         backgroundPosition: "center",
         width: "200px",
@@ -52,7 +95,9 @@ export default function UserProfile() {
         borderRadius: "30%",
         border: "1px solid gray",
         boxShadow: "0px 0px 5px rgba(0, 0, 0, 0.2)",
+
     };
+
     const userResembleModels = [
         { name: '모델 A', similarity: 87, image: 'https://via.placeholder.com/100' },
         { name: '모델 B', similarity: 63, image: 'https://via.placeholder.com/100' },
@@ -60,6 +105,8 @@ export default function UserProfile() {
         { name: '모델 D', similarity: 23, image: 'https://via.placeholder.com/100' },
         { name: '모델 E', similarity: 23, image: 'https://via.placeholder.com/100' }
     ];
+    
+    
 
     return (
         <>
@@ -69,15 +116,13 @@ export default function UserProfile() {
             ) : error ? (
                 <div>Error: {error}</div>
             ) : (
-                <section className="h-full flex justify-center">
+                <div className="h-full flex justify-center">
                     <div className="px-3 py-2">
                         <div className="flex flex-wrap border shadow rounded-lg p-3 dark:bg-gray-600 items-center flex-col">
-                            <a
-                                className="block mx-auto"
-                                href=""
-                                style={profileImageStyle}
-                            ></a>
-                            {userData && (
+                            <div style={profileImageStyle} onClick={() => fileInput.current?.click()} />
+                                <input type="file"style={{display : "none"}} ref={fileInput} onChange={onFileChange} accept="image/*"/>
+                                
+                                {userData && (
                                 <>
                                     <p className="font-serif font-semibold p-4">{userData.names}</p>
                                     <span className="text-sm text-gray-400">
@@ -94,7 +139,7 @@ export default function UserProfile() {
                     <div>
                         <CardProfileInformation name={userData?.names} email={userData?.email} age={userData?.age} gender={userData?.gender} UUID={userUID} />
                     </div>
-                </section>
+                </div>
             )}
             <div>
                 <h2 className="text-xl font-semibold mt-4 mb-2 p-6">나와 비슷한 모델</h2>
@@ -103,5 +148,4 @@ export default function UserProfile() {
             <Footer />
         </>
     )
-
-} 
+}

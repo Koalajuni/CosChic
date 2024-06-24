@@ -24,7 +24,7 @@ export default function Home() {
     useEffect(() => {
         // User UID 가져와서 저장
         const storedUserUid = localStorage.getItem('UUID');
-        console.log(storedUserUid)
+        console.log("this is the storedUserUid", storedUserUid)
         if (storedUserUid) {
             setUserUid(storedUserUid);
         }
@@ -98,7 +98,7 @@ export default function Home() {
             setCamera(false);
             setCameraLoading(false); // 카메라 끌 때 로딩 상태를 false로 설정
         }
-        
+
         // const isFaceAnalysisButtonDisabled = !cameraOn;
         // const buttonStyles = isFaceAnalysisButtonDisabled
         //     ? "text-gray-500 bg-gray-200 cursor-not-allowed hover:bg-gray-200 focus:ring-0 focus:outline-none" // Disabled styles
@@ -130,7 +130,7 @@ export default function Home() {
             }
         } catch (error) {
             console.error("Error taking photo:", error); // 콘솔에 상세 오류 메시지 출력
-            Swal.fire("Error", `사진 찍는데 실패했습니다.`, "error"); // 사용자에게 오류 메시지 표시
+            Swal.fire("얼굴 인식 실패", `사진 찍는데 실패했습니다.`, "error"); // 사용자에게 오류 메시지 표시
         } finally {
             setCameraLoading2(false); // 두 번째 카메라 로딩 종료
         }
@@ -140,22 +140,22 @@ export default function Home() {
     const onFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
         if (event.target.files) {
             const file = event.target.files[0];
-          await onFileUpload(file); // 파일을 선택하자마자 업로드
+            await onFileUpload(file); // 파일을 선택하자마자 업로드
         }
     };
 
     const onFileUpload = async (file: File) => {
-    
+
         const formData = new FormData();
         formData.append('orgImage', file);
-    
+
         try {
             const response = await axios.post(
                 `${baseUrl}/v1/orgIMG/${userUID}`,
                 formData,
-            {
-                headers: {
-                'Content-Type': 'multipart/form-data',
+                {
+                    headers: {
+                        'Content-Type': 'multipart/form-data',
                     },
                 }
             );
@@ -169,8 +169,9 @@ export default function Home() {
                 console.error('Output image path not found in response:', response.data);
             }
         } catch (error) {
-        console.error('Error uploading the file:', error);
-        
+            console.error('Error uploading the file:', error);
+            Swal.fire("Error", '얼굴 전체가 잘 보여야 코스칙이 분석할 수 있습니다!', "error");
+
         }
     };
 
@@ -178,10 +179,10 @@ export default function Home() {
     const showcardSign = () => {
         setShowCard(true);
     }
-    
+
 
     const [showCard, setShowCard] = useState(false);
-    const [similarModel, setFaissModels] = useState<any[]>([]); 
+    const [similarModel, setFaissModels] = useState<any[]>([]);
     const [models, setModels] = useState<any[] | null>(null);
     // 분석하기 버튼
     const faceanalysisButton = async () => {
@@ -194,23 +195,28 @@ export default function Home() {
                 setModels(similarModelArray)
                 setShowCard(true);
 
-                Swal.fire("success", `분석에 성공했습니다.`, "success");
+                Swal.fire("success", `분석에 성공했습니다.`, "success").then(() => {
+                    const element = document.getElementById('similar-models');
+                    if (element) {
+                        element.scrollIntoView({ behavior: 'smooth' });
+                    }
+                });
             }
         } catch (error) {
             console.error("face analysis error:", error);
             Swal.fire("Error", `분석에 실패했습니다.`, "error");
         }
     }
-    
+
 
     //const models = [
-        // { name: "브랜드 모델 A", lips: 28, eyes: 48, contour: 78, similarity: 78, product: "A" },
-        // { name: "브랜드 모델 B", lips: 30, eyes: 50, contour: 80, similarity: 75, product: "B" },
-        // { name: "브랜드 모델 C", lips: 32, eyes: 52, contour: 82, similarity: 70, product: "C" },
-        // 나중에 DB되면 여기다 정보 가져올겁니다.
+    // { name: "브랜드 모델 A", lips: 28, eyes: 48, contour: 78, similarity: 78, product: "A" },
+    // { name: "브랜드 모델 B", lips: 30, eyes: 50, contour: 80, similarity: 75, product: "B" },
+    // { name: "브랜드 모델 C", lips: 32, eyes: 52, contour: 82, similarity: 70, product: "C" },
+    // 나중에 DB되면 여기다 정보 가져올겁니다.
     //];
 
-    
+
 
 
 
@@ -218,128 +224,151 @@ export default function Home() {
         <>
             <Header />
 
-            {loading ?
-                <LoadingProcess /> :
-                <section className="text-gray-600 body-font">
+            {loading ? (
+                <LoadingProcess />
+            ) : (
+                <section className="bg-gradient-to-r from-white to-gray-100 min-h-screen py-12">
                     <form action="http://localhost:8000/api/v1/sendimage/" method="post" encType="multipart/form-data">
                         <input type="hidden" name="refId" value={refId} />
-                        <div className="mb-2 px-4">
-                            <h1 className="text-2xl font-semibold text-gray-600 mb-2 pl-4">
+                        <div className="container mx-auto px-4">
+                            <h1 className="text-4xl font-bold text-gray-800 mb-8 text-center">
                                 Face Analysis
                             </h1>
-                        </div>
-                        <div className="container px-5 py-5 mx-auto">
-                            <div className="flex flex-wrap -mx-4 -mb-10 text-center">
-                                <div className="sm:w-1/2 mb-10 px-4">
-                                    <div className="relative rounded-lg h-[350px] overflow-hidden flex justify-center items-center bg-black bg-opacity-50">
-                                        {cameraOn ? (
-                                            cameraLoading ? (
-                                                <div className="loader"></div> // 로딩화면
-                                            ) : (<img className="object-cover object-center rounded" alt="hero" src={`${baseUrl}/v1/camera_video_feed`} />)
-                                        )
-                                            
-                                            :
-                                            (<img
-                                                alt="content"
-                                                className="object-cover object-center w-3/4 filter blur-md"
-                                                src="https://pds.joongang.co.kr/news/component/htmlphoto_mmdata/202306/04/138bdfca-3e86-4c09-9632-d22df52a0484.jpg"
-                                            />
-                                            )
-                                        }
-                                        {cameraOn ? (<div>
-
-                                        </div>) : (
-                                            <button
-                                                onClick={cameraClick}
-                                                type="button"
-                                                className="absolute text-gray-900 bg-white bg-opacity-90 hover:bg-gray-100 border border-gray-200 focus:ring-4 focus:outline-none focus:ring-gray-100 font-medium rounded-lg text-sm px-3.5 py-2.5 text-left inline-flex items-center w-1/2 justify-center dark:focus:ring-gray-600 dark:bg-gray-800 dark:border-gray-700 dark:text-white dark:hover:bg-gray-700"
-                                            >
-                                                <img src="./icons/camera.png" alt="Icon" className="w-10 h-10 me-4 -ms-1" />
-                                                {buttonText}
-                                            </button>
-                                        )
-                                        }
-                                    </div>
-                                    <h4 className="title-font text-2xl font-small text-gray-900 mt-6 mb-3">{userData ? userData.names : 'Loading...'}</h4>
-                                    <div className="relative mb-4 flex">
-                                        <div className="flex w-1/2 pr-2">
-                                        <button onClick={cameraClick} type="button" className="text-gray-900 bg-white hover:bg-gray-100 border border-gray-200 focus:ring-4 focus:outline-none focus:ring-gray-100 font-medium rounded-lg text-sm px-3.5 py-2.5 text-left inline-flex items-center w-full dark:focus:ring-gray-600 dark:bg-gray-800 dark:border-gray-700 dark:text-white dark:hover:bg-gray-700">
-                                            <img src="./icons/camera.png" alt="Icon" className="w-10 h- me-4 -ms-1" />
-                                            {buttonText}
-                                        </button>
+                            <div className="flex flex-col lg:flex-row gap-8">
+                                {/* Left Column - Image Input */}
+                                <div className="w-full lg:w-1/2">
+                                    <div className="bg-white rounded-xl shadow-lg overflow-hidden">
+                                        <div className="relative h-[400px] overflow-hidden flex justify-center items-center bg-gray-100">
+                                            {cameraOn ? (
+                                                cameraLoading ? (
+                                                    <div className="loader"></div>
+                                                ) : (
+                                                    <img
+                                                        className="object-cover object-center w-full h-full"
+                                                        alt="Camera feed"
+                                                        src={`${baseUrl}/v1/camera_video_feed`}
+                                                    />
+                                                )
+                                            ) : (
+                                                <div className="text-center p-8">
+                                                    <img
+                                                        src="./icons/webcam.png"
+                                                        alt="Camera icon"
+                                                        className="w-24 h-24 mx-auto mb-4 opacity-50"
+                                                    />
+                                                    <p className="text-gray-500 text-lg">카메라 사용해서 사진을 찍어요</p>
+                                                </div>
+                                            )}
+                                            {!cameraOn && (
+                                                <button
+                                                    onClick={cameraClick}
+                                                    type="button"
+                                                    className="absolute bottom-4 left-1/2 transform -translate-x-1/2 bg-[#FF6F91] hover:bg-[#FF5B82] text-white font-medium rounded-full px-6 py-3 text-sm transition duration-300 ease-in-out flex items-center"
+                                                >
+                                                    <img src="./icons/camera.png" alt="Camera" className="w-5 h-5 mr-2" />
+                                                    {buttonText}
+                                                </button>
+                                            )}
                                         </div>
-                                        <div className="flex w-1/2 pl-2">
-                                        <button onClick={takePhoto} type="button" className="text-gray-900 bg-white hover:bg-gray-100 border border-gray-200 focus:ring-4 focus:outline-none focus:ring-gray-100 font-medium rounded-lg text-sm px-3.5 py-2.5 text-left inline-flex items-center w-full dark:focus:ring-gray-600 dark:bg-gray-800 dark:border-gray-700 dark:text-white dark:hover:bg-gray-700">
-                                            <img src="./icons/camera.png" alt="Icon" className="w-10 h- me-4 -ms-1" />
-                                            사진찍기
-                                        </button>
+                                        <div className="p-6">
+                                            <h4 className="text-xl font-semibold text-gray-800 mb-4">
+                                                {userData ? userData.names : 'Loading...'}
+                                            </h4>
+                                            <div className="flex gap-4 mb-6">
+                                                <button
+                                                    onClick={cameraClick}
+                                                    type="button"
+                                                    className="flex-1 bg-white hover:bg-gray-50 text-gray-800 font-medium rounded-lg text-sm px-4 py-2.5 border border-gray-300 transition duration-300 ease-in-out flex items-center justify-center"
+                                                >
+                                                    <img src="./icons/camera.png" alt="Camera" className="w-5 h-5 mr-2" />
+                                                    {buttonText}
+                                                </button>
+                                                <button
+                                                    onClick={takePhoto}
+                                                    type="button"
+                                                    className="flex-1 bg-[#8E65B7] hover:bg-[#7A52A5] text-white font-medium rounded-lg text-sm px-4 py-2.5 transition duration-300 ease-in-out flex items-center justify-center"
+                                                >
+                                                    <img src="./icons/capture.png" alt="Capture" className="w-5 h-5 mr-2" />
+                                                    사진 촬영하기
+                                                </button>
+                                            </div>
+                                            <div className="text-center">
+                                                <p className="text-sm text-gray-500 mb-2">또는</p>
+                                                <label className="cursor-pointer inline-flex items-center bg-white hover:bg-gray-50 text-gray-800 font-medium rounded-lg text-sm px-4 py-2.5 border border-gray-300 transition duration-300 ease-in-out">
+                                                    <img src="./icons/upload.png" alt="Upload" className="w-5 h-5 mr-2" />
+                                                    사진 업로드
+                                                    <input
+                                                        type="file"
+                                                        className="hidden"
+                                                        onChange={onFileChange}
+                                                        accept="image/*"
+                                                    />
+                                                </label>
+                                                <p className="mt-2 text-xs text-gray-500">
+                                                    SVG, PNG, JPG or GIF (MAX. 800x400px)
+                                                </p>
+                                            </div>
                                         </div>
                                     </div>
-                                    <div>
-                                        <p className="mb-6 text-sm text-gray-500 dark:text-gray-300" id="file_input_help">또는</p>
-                                    </div>
-                                    <div className="relative mb-0 flex">
-                                        {/* <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white" for="file_input">사진 업로드</label> */}
-                                        {/* <input type="file" accept="image/png, image/gif, image/jpeg" name="name" className="flex-1 bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out mr-2" /> */}
-                                        <input className="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400" aria-describedby="file_input_help" id="file_input" type="file" onChange={onFileChange}/>
-                                    </div>
-                                    <div>
-                                        <p className="mb-6 text-sm text-gray-500 dark:text-gray-300" id="file_input_help"> SVG, PNG, JPG or GIF (MAX. 800x400px)</p>
-                                    </div>
-
-                                    {/* <button type="submit" href="image_result.html" className="flex mx-auto mt-6 text-white bg-indigo-500 border-0 py-2 px-5 focus:outline-none hover:bg-indigo-600 rounded">사진등록</button> */}
                                 </div>
-                                <div className="sm:w-1/2 mb-10 px-4 flex flex-col justify-center items-center">
-                                    {/* <div className="rounded-lg h-[450px] overflow-hidden">
-                                            <img alt="content" className="object-cover object-center w-full" src={refImage} />
-                                    </div> */}
-                                    <div className="relative rounded-lg w-476 h-[350px] overflow-hidden flex justify-center items-center bg-black bg-opacity-50">
-                                        {photoUrlState ? (
-                                                cameraLoading2 ? (
-                                                    <div className="loader2"></div> // 로딩화면
-                                                ) :
-                                        (<img
-                                            alt="content"
-                                            className="object-cover object-center w-5/6 h-5/6 "
-                                            src={photoUrl}
-                                        />)) : 
-                                        (<img
-                                            alt="content"
-                                            className="object-cover object-center w-5/6 h-5/6 "
-                                            src="https://cdn.pixabay.com/photo/2015/03/08/09/30/head-663997_1280.jpg"
-                                        />)}
-                                        </div>
-                                    <div className="h-20"></div>
-                                    <div className="relative mb-4 flex">
-                                        <button
-                                            onClick={faceanalysisButton}
-                                            type="button"
-                                            className="text-gray-900 bg-white hover:bg-gray-100 border border-gray-200 focus:ring-4 focus:outline-none focus:ring-gray-100 font-medium rounded-lg text-sm px-12 py-8 text-center inline-flex items-center dark:focus:ring-gray-600 dark:bg-gray-800 dark:border-gray-700 dark:text-white dark:hover:bg-gray-700"
-                                            disabled={!faceAnalysisButtonState}
-                                        >
-                                            <img src="./icons/facial-recognition.png" alt="Icon" className="w-10 h-8 me-2 -ms-1" />
-                                            얼굴 분석하기
-                                        </button>
-                                    </div>
-                                    <div className="h-20"></div>
-                                    {/* <select onChange={chgRefName} name="model" id="lang" className="w-full h-[50px] bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
-                                        {refModel.map((data, index) => (
-                                            <option value={index} key={data.id}>{data.name}</option>
-                                        )
 
-                                        )}
-                                    </select>
-                                    <button onClick={messageClick} className="flex mx-auto mt-6 text-white bg-indigo-500 border-0 py-2 px-5 focus:outline-none hover:bg-indigo-600 rounded">모델적용</button> */}
+                                {/* Right Column - Analysis Result */}
+                                <div className="w-full lg:w-1/2">
+                                    <div className="bg-white rounded-xl shadow-lg overflow-hidden">
+                                        <div className="relative h-[400px] overflow-hidden flex justify-center items-center bg-gray-100 border-4 border-[#FF6F91]">
+                                            {photoUrlState ? (
+                                                cameraLoading2 ? (
+                                                    <div className="loader2"></div>
+                                                ) : (
+                                                    <img
+                                                        alt="Analyzed face"
+                                                        className="object-cover object-center w-full h-full"
+                                                        src={photoUrl}
+                                                    />
+                                                )
+                                            ) : (
+                                                <div className="text-center p-8">
+                                                    <img
+                                                        src="./icons/face-scan.png"
+                                                        alt="Face scan icon"
+                                                        className="w-24 h-24 mx-auto mb-4 opacity-50"
+                                                    />
+                                                    <p className="text-gray-500 text-lg">사진을 올린 후 얼굴 분석이 진행돼요</p>
+                                                </div>
+                                            )}
+                                        </div>
+                                        <div className="p-6 flex justify-center">
+                                            <button
+                                                onClick={faceanalysisButton}
+                                                type="button"
+                                                className={`bg-gradient-to-r from-[#FF6F91] to-[#8E65B7] text-white font-medium rounded-full px-8 py-4 text-lg transition duration-300 ease-in-out flex items-center ${!faceAnalysisButtonState
+                                                    ? 'opacity-50 cursor-not-allowed'
+                                                    : 'hover:shadow-lg'
+                                                    }`}
+                                                disabled={!faceAnalysisButtonState}
+                                            >
+                                                <img src="./icons/facial-recognition.png" alt="Face analysis" className="w-6 h-6 mr-3" />
+                                                Analyze Face
+                                            </button>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                        <div>
-                            {showCard && <CardSimilarModel models={models} />}
+
+                            {/* Similar Models Section */}
+                            <div className="mt-16">
+                                {showCard && (
+                                    <div className="bg-white rounded-xl shadow-lg overflow-hidden p-6">
+                                        <h2 className="text-2xl font-bold text-gray-800 mb-6">Similar Models</h2>
+                                        <CardSimilarModel models={models} />
+                                    </div>
+                                )}
+                            </div>
+                            <div className="mt-4" id="similar-models"></div>
                         </div>
                     </form>
                 </section>
-            }
-            
+            )}
 
             <Footer />
             <script src="../path/to/flowbite/dist/flowbite.min.js"></script>

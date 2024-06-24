@@ -13,6 +13,7 @@ const LoginComponent = () => {
     const [mode, setMode] = useState("login");
     const router = useRouter();
 
+
     const login = async () => {
         try {
             console.log("this is the email:", email)
@@ -27,8 +28,15 @@ const LoginComponent = () => {
                 formData,
                 { headers: { 'Content-Type': 'multipart/form-data' } }
             );
-            const user = response.data.UUID;
-            localStorage.setItem('UUID', JSON.stringify(user));
+            // const user = response.data.UUID;
+            // const email = response.data.email;
+            const userData = {
+                UUID: response.data.UUID,
+                email: response.data.email,
+                // Add other user data properties here
+            };
+            localStorage.setItem('userData', JSON.stringify(userData));
+            // localStorage.setItem('email', JSON.stringify(email));
             router.push('/home');
         } catch (error) {
             setLoginErrorMsg('Login failed. Please check your credentials.');
@@ -50,8 +58,12 @@ const LoginComponent = () => {
             );
             if (response.status === 201) {
                 console.log('Registration successful!');
-                const user = response.data.UUID;
-                localStorage.setItem('UUID', JSON.stringify(user));
+                const userData = {
+                    UUID: response.data.UUID,
+                    email: response.data.email,
+                    // Add other user data properties here
+                };
+                localStorage.setItem('userData', JSON.stringify(userData));
                 router.push('/profile');
             } else {
                 console.error('Registration failed:', response.data);
@@ -67,7 +79,7 @@ const LoginComponent = () => {
                 <div className={styles.iconContainer}>
                     <Image src={accountalert} width="16" alt="alert" />
                 </div>
-                <div className={styles.textContainer}>
+                <div className="text-[#C598F0]">
                     실제 사용하는 이메일 주소를 입력해 주세요
                 </div>
             </div>
@@ -107,7 +119,7 @@ const LoginComponent = () => {
                     type="button"
                     className={styles.accountBtn}
                     onClick={login}
-                    style={{ background: '#805F89', color: '#fff', border: 'none', padding: '20px 40px', borderRadius: '10px', marginRight: '20px' }}
+                    style={{ background: '#C598F0', color: '#fff', border: 'none', padding: '20px 40px', borderRadius: '10px', marginRight: '20px' }}
                 >
                     로그인
                 </button>
@@ -115,7 +127,7 @@ const LoginComponent = () => {
                     type="submit"
                     className={styles.accountBtn}
                     onClick={register}
-                    style={{ background: '#fff', color: '#805F89', border: '1px solid #805F89', padding: '20px 40px', borderRadius: '10px' }}
+                    style={{ background: '#fff', color: '#C598F0', border: '1px solid #C598F0', padding: '20px 40px', borderRadius: '10px' }}
                 >
                     회원가입
                 </button>
