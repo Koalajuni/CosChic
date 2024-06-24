@@ -16,7 +16,7 @@ def search(request):
             category = request.GET.get('category', '모두')
             page = request.GET.get('page', 1)
             results_per_page = request.GET.get('results_per_page', 4)
-            server_address = os.getenv('localhost:8000', 'http://127.0.0.1:8000')   #서버서 못 잡으면 local에서 잡을 수 있게끔 
+            server_address = os.getenv('0.0.0.0:18000', 'http://211.216.177.2:18000')   #서버서 못 잡으면 local에서 잡을 수 있게끔 
 
             queryset = Product.objects.all()
 

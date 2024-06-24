@@ -57,7 +57,7 @@ def get_product_data_by_brandname(brand_name):
             if not brand.productImage:
                 full_product_image_url = 'assets/default_search.png'
             else:
-                full_product_image_url = f'http://localhost:8000/media/product_img/{brand.productImage}'
+                full_product_image_url = f'http://211.216.177.2:18000/media/product_img/{brand.productImage}'
 
             brand_data_list.append({
                     'productUrl': brand.productUrl,
@@ -111,8 +111,8 @@ def BG_result(request):
             result_img = bg.makeup(org_img,ref_img,result_img) # = > #result_img(경로) 반환
             # print('bg_result',result_img)
             # result_img = result_img.split('/')[7] + '/' + result_img.split('/')[8] + '/' + result_img.split('/')[9]
-            full_url = 'http://localhost:8000' + '/' + result_img
-            org_url = 'http://localhost:8000' + '/' + org_img
+            full_url = 'http://211.216.177.2:18000' + '/' + result_img
+            org_url = 'http://211.216.177.2:18000' + '/' + org_img
             
             print(full_url)
             result_data = {
@@ -274,7 +274,7 @@ def other_models (request):
                     images = os.listdir(modelFolderPath)
                     if images:
                         firstImage = images[0]
-                        modelPhotoUrl = f'http://localhost:8000/media/model_img/{model}/{firstImage}' 
+                        modelPhotoUrl = f'http://211.216.177.2:18000/media/model_img/{model}/{firstImage}' 
 
                         model_data.append({
                             'names': model,

@@ -61,7 +61,7 @@ def handle_userdata(request, UUID):
                 # 'IP': user.IP,
                 # 'uploadDate': user.uploadDate,
                 'orgImage': user.orgImage,
-                'profileImage':f'http://127.0.0.1:8000/{user.profileImage}' if user.profileImage else None,
+                'profileImage':f'http://211.216.177.2:18000/{user.profileImage}' if user.profileImage else None,
             }
             return JsonResponse(user_data, safe=False,
                             json_dumps_params={"ensure_ascii" : False},
@@ -70,6 +70,7 @@ def handle_userdata(request, UUID):
             return JsonResponse({'error': 'User not found'}, status=404)
 
     elif request.method == 'PUT':
+        print("requested put")
         try:
             user = UserData.objects.get(UUID=UUID)
             data = json.loads(request.body)
@@ -119,7 +120,7 @@ def upload_image(request, UUID):
                 user.profileImage = url  
                 user.save()
 
-                output_image_url = f'http://127.0.0.1:8000/{user.profileImage}'
+                output_image_url = f'http://211.216.177.2:18000/{user.profileImage}'
                 return JsonResponse({ 'imagepath':user.profileImage, "output_image_path": output_image_url}, status=200)
         return JsonResponse({'error': "Invalid request method"}, status=405)
 
