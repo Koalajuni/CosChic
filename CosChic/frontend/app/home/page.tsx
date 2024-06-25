@@ -371,7 +371,7 @@ export default function Home() {
             )}
 
             <Footer />
-            <script src="../path/to/flowbite/dist/flowbite.min.js"></script>
+            <script src="../path/to/flowbite/dist/flowbite.min.js" async />
         </>
 
 
