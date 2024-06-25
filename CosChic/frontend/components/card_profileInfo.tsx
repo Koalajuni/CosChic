@@ -4,7 +4,15 @@ import axios from 'axios';
 import styles from '@/styles/CardProfileInformation.module.css';
 import axiosInstance from '@/hooks/axiosConfig';
 
-const CardProfileInformation = ({ name, email, age, gender, UUID }) => {
+interface CardProfileInformationProps {
+    name?: string;
+    email?: string;
+    age?: string;
+    gender?: string;
+    UUID: string | null;
+}
+
+const CardProfileInformation: React.FC<CardProfileInformationProps> = ({ name, email, age, gender, UUID }) => {
     const [formData, setFormData] = useState({
         names: name || "홍길동",
         email: email || "coschic@gmail.com",
@@ -20,7 +28,7 @@ const CardProfileInformation = ({ name, email, age, gender, UUID }) => {
         });
     }, [name, email, age, gender]);
 
-    const handleChange = (e) => {
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
         setFormData({
             ...formData,
@@ -28,7 +36,7 @@ const CardProfileInformation = ({ name, email, age, gender, UUID }) => {
         });
     };
 
-    const handleSubmit = async (e) => {
+    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         try {
             const response = await axios.put(`http://211.216.177.2:18000/api/v1/userdata/${UUID}`, formData);

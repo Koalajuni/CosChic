@@ -3,7 +3,48 @@
 import React from 'react';
 import { useRouter } from 'next/navigation';
 
-const BarChart = ({ value, maxValue, color }) => (
+interface BarChartProps {
+    value: number;
+    maxValue: number;
+    color: string;
+}
+
+interface Model {
+    modelName: string;
+    photoUrl: string;
+    lips: number;
+    eyes: number;
+    eyebrow?: number;
+    nose?: number;
+    contour: number;
+    similarity: number;
+    userFullEyesizeRatio?: number;
+    userFullTailEyeRatio?: number;
+    userTopLipRatio?: number;
+    userBottomLipRatio?: number;
+    userRightSymmetryRatio?: number;
+    userLeftSymmertyRatio?: number;
+    userFaceNoseHeightRatio?: number;
+    userFaceNoseWidthRatio?: number;
+    modelFullEyesizeRatio?: number;
+    modelFullTailEyeRatio?: number;
+    modelTopLipRatio?: number;
+    modelBottomLipRatio?: number;
+    modelRightSymmetryRatio?: number;
+    modelLeftSymmertyRatio?: number;
+    modelFaceNoseHeightRatio?: number;
+    modelFaceNoseWidthRatio?: number;
+    modelNum: string;
+    allModelNames: string;
+    product: string;
+}
+
+interface CardSimilarModelProps {
+    models: Model[];
+}
+
+
+const BarChart: React.FC<BarChartProps> = ({ value, maxValue, color }) => (
     <div className="w-full bg-gray-200 rounded-full h-2.5 mb-4 dark:bg-gray-700 relative">
         <div
             className="h-2.5 rounded-full"
@@ -13,10 +54,10 @@ const BarChart = ({ value, maxValue, color }) => (
     </div>
 );
 
-const CardSimilarModel = ({ models }) => {
+const CardSimilarModel: React.FC<CardSimilarModelProps> = ({ models }) => {
     const router = useRouter();
 
-    const handleRedirect = (model) => {
+    const handleRedirect = (model: Model) => {
         console.log('Model:', model);  // 모델 전체 데이터 로그
         const modelNamesArray = model.allModelNames.split(','); // 모델 이름을 배열로 분할
         const modelNamesParams = modelNamesArray.map((name, index) => `model${index + 1}=${name}`).join('&'); // 매개변수 형식으로 변환
@@ -99,7 +140,7 @@ const CardSimilarModel = ({ models }) => {
                                         onClick={() => handleRedirect(model)}
                                     >
                                         Try Virtual Makeup
-                                    
+
                                     </button>
                                 </div>
                             </div>

@@ -112,9 +112,9 @@ export default function UserProfile() {
                     <div className="px-3 py-2">
                         <div className="flex flex-wrap border shadow rounded-lg p-3 dark:bg-gray-600 items-center flex-col ">
                             <div className="hover:translate-y-1 hover:bg-[#e9b4c0]" style={profileImageStyle} onClick={() => fileInput.current?.click()} />
-                                <input type="file"style={{display : "none"}} ref={fileInput} onChange={onFileChange} />
-                                
-                                {userData && (
+                            <input type="file" style={{ display: "none" }} ref={fileInput} onChange={onFileChange} />
+
+                            {userData && (
                                 <>
                                     <p className="font-serif font-semibold p-4  text-black">{userData.names}</p>
                                     <span className="text-sm text-gray-400">
@@ -129,7 +129,7 @@ export default function UserProfile() {
                         </div>
                     </div>
                     <div>
-                        <CardProfileInformation name={userData?.names} email={userData?.email} age={userData?.age} gender={userData?.gender} UUID={userUID} />
+                        <CardProfileInformation name={userData?.names} email={userData?.email} age={userData?.age} gender={userData?.gender} UUID={userUID || ''} />
                     </div>
                 </div>
             )}
