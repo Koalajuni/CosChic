@@ -246,33 +246,13 @@ const TestProductPage = () => {
 
                 <ProductDetails product={responseData2} />
 
-                <h2 className="text-xl font-semibold mb-2">GPT 설명</h2>
-                <div className="p-4 bg-gray-200 rounded-md">
-                    GPT가 설명하는 칸입니다. 여기서는 화장품 또는 위에 GAN이 설명할 칸이라고 생각해주시면 되겠습니다.
-                    <p>lipSimilarity: {lipSimilarity}</p>
-                    <p>eyeSimilarity: {eyeSimilarity}</p>
-                    <p>eyebrowSimilarity: {eyebrowSimilarity}</p>
-                    <p>noseSimilarity: {noseSimilarity}</p>
-                    <p>contourSimilarity: {contourSimilarity}</p>
-                    <p>allSimilarity: {allSimilarity}</p>
-
-                    <p>userFullEyesizeRatio: {userFullEyesizeRatio}</p>
-                    <p>userFullTailEyeRatio: {userFullTailEyeRatio}</p>
-                    <p>userTopLipRatio: {userTopLipRatio}</p>
-                    <p>userBottomLipRatio: {userBottomLipRatio}</p>
-                    <p>userRightSymmetryRatio: {userRightSymmetryRatio}</p>
-                    <p>userLeftSymmertyRatio: {userLeftSymmertyRatio}</p>
-                    <p>userFaceNoseHeightRatio: {userFaceNoseHeightRatio}</p>
-                    <p>userFaceNoseWidthRatio: {userFaceNoseWidthRatio}</p>
-
-                    <p>modelFullEyesizeRatio: {modelFullEyesizeRatio}</p>
-                    <p>modelFullTailEyeRatio: {modelFullTailEyeRatio}</p>
-                    <p>modelTopLipRatio: {modelTopLipRatio}</p>
-                    <p>modelBottomLipRatio: {modelBottomLipRatio}</p>
-                    <p>modelRightSymmetryRatio: {modelRightSymmetryRatio}</p>
-                    <p>modelLeftSymmertyRatio: {modelLeftSymmertyRatio}</p>
-                    <p>modelFaceNoseHeightRatio: {modelFaceNoseHeightRatio}</p>
-                    <p>modelFaceNoseWidthRatio: {modelFaceNoseWidthRatio}</p>
+                <h2 className="text-xl font-semibold mb-2">나에게 맞는 화장법</h2>
+                <div className="coming-soon-container flex items-center justify-center mb-10 bg-gradient-to-r from-pink-100 to-purple-100 p-8 rounded-2xl shadow-2xl">
+                    <div className="coming-soon-content text-center bg-white p-8 rounded-lg shadow-lg">
+                        <i className="fas fa-cog fa-spin text-blue-500 text-5xl mb-4"></i>
+                        <h2 className="text-2xl font-semibold text-gray-800 mb-2">준비 중</h2>
+                        <p className="text-gray-600 text-base">곧 새로운 기능으로 찾아뵙겠습니다!</p>
+                    </div>
                 </div>
 
                 <h2 className="text-xl font-semibold mt-4 mb-4">추가로 비슷한 모델</h2>

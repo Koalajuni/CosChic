@@ -133,10 +133,10 @@ export default function UserProfile() {
                     </div>
                 </div>
             )}
-            <div>
+            {/* <div>
                 <h2 className="text-xl font-semibold mt-4 mb-2 p-6">나와 비슷한 모델</h2>
                 <SimilarModels models={userResembleModels} />
-            </div>
+            </div> */}
             <Footer />
         </>
     )
