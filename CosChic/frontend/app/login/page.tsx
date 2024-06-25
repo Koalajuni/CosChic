@@ -3,7 +3,7 @@ import React from 'react';
 import Lottie from "lottie-react";
 import animationData from '@/public/assets/globeAnimation.json';
 import styles from '@/styles/Login.module.css';
-import LoginComponent from '@/components/loginComponent';
+import LoginComponent from '@/components/LoginComponent';
 
 const Login = () => {
 

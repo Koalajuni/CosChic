@@ -53,7 +53,7 @@ def api_sendimage(fileName):
         location=f'media/org_img',
         base_url=f'media/org_img'
     )
-    url = f'http://localhost:8000/media/org_img/' + orgImg + ".jpg"
+    url = f'http://211.216.177.2:18000/media/org_img/' + orgImg + ".jpg"
     return url
 
 
@@ -128,7 +128,7 @@ def take_photo(request, UUID):
         print("얼굴분석정보:", eye_ratio, eyebrow_ratio, nose_ratio, lip_ratio, face_ratio, full_eyesize_ratio, \
             full_tail_eye_ratio, top_lip_ratio, bottom_lip_ratio, right_symmetry_ratio, left_symmetry_ratio, \
                 face_nose_height_ratio, face_nose_width_ratio)
-        output_image_path = f'http://localhost:8000/media/mediapipe/output_{nowString}.jpg' 
+        output_image_path = f'http://211.216.177.2:18000/media/mediapipe/output_{nowString}.jpg' 
         # JSON 응답에 output_image_path 포함
         return JsonResponse({"message": "Image processed successfully", 'imagePath': imagePath, "output_image_path": output_image_path}, status=200)
         
@@ -175,7 +175,7 @@ def img_send(request, UUID):
                 full_tail_eye_ratio, top_lip_ratio, bottom_lip_ratio, right_symmetry_ratio, left_symmetry_ratio, \
                 face_nose_height_ratio, face_nose_width_ratio = detector.process_image()
                 # print("얼굴분석정보(eye_ratio, nose_ratio, face_ratio, lip_ratio):", eye_ratio, nose_ratio, face_ratio, lip_ratio)
-                output_image_path = f'http://localhost:8000/media/mediapipe/output_{nowString}.jpg' 
+                output_image_path = f'http://211.216.177.2:18000/media/mediapipe/output_{nowString}.jpg' 
                 # JSON 응답에 output_image_path 포함
                 return JsonResponse({"message": "Image processed successfully", "output_image_path": output_image_path}, status=201)
             else:
@@ -232,7 +232,7 @@ def faiss_analysis(request, UUID):
             images = os.listdir(modelFolderPath)
             firstImage = images[0]
             # print(firstImage)
-            modelPhotoUrl = f'http://localhost:8000/media/model_img/{faceList[i]}/{firstImage}' 
+            modelPhotoUrl = f'http://211.216.177.2:18000/media/model_img/{faceList[i]}/{firstImage}' 
 
             # print(modelFolderPath +"/"+ firstImage)
             # 모델사진 FaceMeshDetector로 이미지 처리

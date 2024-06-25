@@ -15,6 +15,7 @@ import axios from "axios";
 import { useUserEmail } from '@/hooks/useUserEmail';
 import UserFaceDetail from '@/components/userFaceDetail';
 import LoadingProcess from "@/components/loadingProcess"
+import axiosInstance from '@/hooks/axiosConfig';
 
 const TestProductPage = () => {
     const [userUid, setUserUid] = useState("");
@@ -114,7 +115,7 @@ const TestProductPage = () => {
                 formData1.append('used_model_name', name);
                 console.log("getting formdata", formData1)
 
-                const beautyganResponse = await axios.post('http://127.0.0.1:8000/api/v1/BG_result', formData1);
+                const beautyganResponse = await axiosInstance.post('/BG_result', formData1);
                 setResponseData(beautyganResponse.data);
             } catch (error) {
                 console.error('Error fetching beautygan data:', error);
@@ -125,8 +126,7 @@ const TestProductPage = () => {
                 const formData2 = new FormData();
                 formData2.append('used_model_name', name);
                 formData2.append('user_email', userEmail);
-
-                const usedProductResponse = await axios.post('http://127.0.0.1:8000/api/v1/used_product', formData2);
+                const usedProductResponse = await axiosInstance.post('/used_product', formData2);
                 setResponseData2(usedProductResponse.data);
             } catch (error) {
                 console.error('Error fetching used product data:', error);
@@ -137,8 +137,7 @@ const TestProductPage = () => {
                 const formData3 = new FormData();
                 formData3.append('models', JSON.stringify(models));
                 formData3.append('user_email', userEmail);
-
-                const otherModelsResponse = await axios.post('http://127.0.0.1:8000/api/v1/other_models', formData3);
+                const otherModelsResponse = await axiosInstance.post('/other_models', formData3);
                 setResponseData3(otherModelsResponse.data);
             } catch (error) {
                 console.error('Error fetching other models data:', error);
@@ -149,7 +148,7 @@ const TestProductPage = () => {
                 const formData4 = new FormData();
                 formData4.append('used_model_name', name);
 
-                const relatedProductsResponse = await axios.post('http://127.0.0.1:8000/api/v1/asso_product', formData4);
+                const relatedProductsResponse = await axiosInstance.post('/asso_product', formData4);
                 setResponseData4(relatedProductsResponse.data);
                 console.log("this is how the brand related will appear", relatedProductsResponse.data)
             } catch (error) {
@@ -247,13 +246,13 @@ const TestProductPage = () => {
 
                 <ProductDetails product={responseData2} />
 
-                <h2 className="text-xl font-semibold mb-2">GPT 설명</h2>
-                <div className="p-4 bg-gray-200 rounded-md">
-                    <p><b>모델보다 눈꼬리가 낮습니다. </b></p>
-                    <p>눈꼬리를 강조하는 방식으로 눈의 외곽을 어두운 색으로 음영을 주어 눈꼬리를 위로 올려 보이게 합니다.</p> 
-                    <br></br>
-                    <p><b>모델보다 코가 더 깁니다.</b></p> 
-                    <p>코 옆 부분에 어두운 색의 쉐이딩을 사용하여 코가 짧아 보이도록 합니다.</p>
+                <h2 className="text-xl font-semibold mb-2">나에게 맞는 화장법</h2>
+                <div className="coming-soon-container flex items-center justify-center mb-10 bg-gradient-to-r from-pink-100 to-purple-100 p-8 rounded-2xl shadow-2xl">
+                    <div className="coming-soon-content text-center bg-white p-8 rounded-lg shadow-lg">
+                        <i className="fas fa-cog fa-spin text-blue-500 text-5xl mb-4"></i>
+                        <h2 className="text-2xl font-semibold text-gray-800 mb-2">준비 중</h2>
+                        <p className="text-gray-600 text-base">곧 새로운 기능으로 찾아뵙겠습니다!</p>
+                    </div>
                 </div>
 
                 <h2 className="text-xl font-semibold mt-4 mb-4">추가로 비슷한 모델</h2>

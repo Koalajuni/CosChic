@@ -9,6 +9,7 @@ import CardSimilarModel from "@/components/card_similarModel"
 import useUserUID from "@/hooks/useUserUID";
 import './loading.css';
 import './loading2.css';
+import axiosInstance from "@/hooks/axiosConfig"
 
 
 export default function Home() {
@@ -37,7 +38,7 @@ export default function Home() {
             // console.log("fetching UserData:", userUID)
             if (userUID) {
                 try {
-                    const response = await axios.get(`http://127.0.0.1:8000/api/v1/userdata/${userUID}`);
+                    const response = await axiosInstance.get(`/userdata/${userUID}`);
                     setUserData(response.data);
                 } catch (err) {
                     setError('Failed to fetch user data.');
@@ -73,7 +74,7 @@ export default function Home() {
     // const [selfRef, setSelRef] = ("");
     // const [refImage, setRefImage] = useState(-1);
     const [refId, setRefId] = useState(-1);
-    const baseUrl = 'http://127.0.0.1:8000/api';
+    const baseUrl = 'http://211.216.177.2:18000/api/v1';
 
     const [buttonText, setButtonText] = useState("카메라 사용하기");
 
@@ -98,12 +99,11 @@ export default function Home() {
             setCamera(false);
             setCameraLoading(false); // 카메라 끌 때 로딩 상태를 false로 설정
         }
-
-        // const isFaceAnalysisButtonDisabled = !cameraOn;
-        // const buttonStyles = isFaceAnalysisButtonDisabled
-        //     ? "text-gray-500 bg-gray-200 cursor-not-allowed hover:bg-gray-200 focus:ring-0 focus:outline-none" // Disabled styles
-        //     : "text-gray-900 bg-white hover:bg-gray-100";
     }
+
+    const cameraComingSoon = async () => {
+        Swal.fire("준비 중인 기능", `곧 출시될 기능입니다. 이미지 업로드를 사용 부탁드려요`, "info");
+    };
 
     // 사진찍기
     const takePhoto = async () => {
@@ -113,7 +113,7 @@ export default function Home() {
             setCameraLoading2(true); // 카메라 로딩 시작
             console.log('photoUrlState 값:', photoUrlState);
             console.log('cameraLoading2 값:', cameraLoading2);
-            const response = await axios.post(`${baseUrl}/v1/camera_take_photo/${userUID}`, {
+            const response = await axiosInstance.post(`/camera_take_photo/${userUID}`, {
                 timeout: 30000,
             });
             if (response.status == 200) {
@@ -150,8 +150,8 @@ export default function Home() {
         formData.append('orgImage', file);
 
         try {
-            const response = await axios.post(
-                `${baseUrl}/v1/orgIMG/${userUID}`,
+            const response = await axiosInstance.post(
+                `/orgIMG/${userUID}`,
                 formData,
                 {
                     headers: {
@@ -187,7 +187,7 @@ export default function Home() {
     // 분석하기 버튼
     const faceanalysisButton = async () => {
         try {
-            const response = await axios.get(`${baseUrl}/v1/face_analysis/${userUID}`);
+            const response = await axiosInstance.get(`/face_analysis/${userUID}`);
             if (response.status === 202) {
                 const data = response.data;
                 const similarModelArray: any[] = Object.values(data);
@@ -228,11 +228,11 @@ export default function Home() {
                 <LoadingProcess />
             ) : (
                 <section className="bg-gradient-to-r from-white to-gray-100 min-h-screen py-12">
-                    <form action="http://localhost:8000/api/v1/sendimage/" method="post" encType="multipart/form-data">
+                    <form action={`${baseUrl}/sendimage/`} method="post" encType="multipart/form-data">
                         <input type="hidden" name="refId" value={refId} />
                         <div className="container mx-auto px-4">
                             <h1 className="text-4xl font-bold text-gray-800 mb-8 text-center">
-                                Face Analysis
+                                Powder Room
                             </h1>
                             <div className="flex flex-col lg:flex-row gap-8">
                                 {/* Left Column - Image Input */}
@@ -246,7 +246,7 @@ export default function Home() {
                                                     <img
                                                         className="object-cover object-center w-full h-full"
                                                         alt="Camera feed"
-                                                        src={`${baseUrl}/v1/camera_video_feed`}
+                                                        src={`${baseUrl}/camera_video_feed`}
                                                     />
                                                 )
                                             ) : (
@@ -261,7 +261,7 @@ export default function Home() {
                                             )}
                                             {!cameraOn && (
                                                 <button
-                                                    onClick={cameraClick}
+                                                    onClick={cameraComingSoon} //나중에 이 부분을 실제 카메라로 바꿔주세요
                                                     type="button"
                                                     className="absolute bottom-4 left-1/2 transform -translate-x-1/2 bg-[#FF6F91] hover:bg-[#FF5B82] text-white font-medium rounded-full px-6 py-3 text-sm transition duration-300 ease-in-out flex items-center"
                                                 >
@@ -276,7 +276,7 @@ export default function Home() {
                                             </h4>
                                             <div className="flex gap-4 mb-6">
                                                 <button
-                                                    onClick={cameraClick}
+                                                    onClick={cameraComingSoon} // 나중에 이 부분을 실제 카메라로 바꿔주세요
                                                     type="button"
                                                     className="flex-1 bg-white hover:bg-gray-50 text-gray-800 font-medium rounded-lg text-sm px-4 py-2.5 border border-gray-300 transition duration-300 ease-in-out flex items-center justify-center"
                                                 >
@@ -348,7 +348,7 @@ export default function Home() {
                                                 disabled={!faceAnalysisButtonState}
                                             >
                                                 <img src="./icons/facial-recognition.png" alt="Face analysis" className="w-6 h-6 mr-3" />
-                                                Analyze Face
+                                                AI 분석하기
                                             </button>
                                         </div>
                                     </div>
@@ -359,7 +359,7 @@ export default function Home() {
                             <div className="mt-16">
                                 {showCard && (
                                     <div className="bg-white rounded-xl shadow-lg overflow-hidden p-6">
-                                        <h2 className="text-2xl font-bold text-gray-800 mb-6">Similar Models</h2>
+                                        <h2 className="text-2xl font-bold text-gray-800 mb-6">나와 유사한 모델</h2>
                                         <CardSimilarModel models={models} />
                                     </div>
                                 )}
