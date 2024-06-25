@@ -1,7 +1,15 @@
 import React, { useState } from 'react';
 
+interface CardTeamProfileProps {
+    imageUrl: string;
+    name: string;
+    job: string;
+    emailUrl: string;
+    githubUrl: string;
+}
 
-const CardTeamProfile = ({ imageUrl, name, job, emailUrl, githubUrl }) => {
+
+const CardTeamProfile: React.FC<CardTeamProfileProps> = ({ imageUrl, name, job, emailUrl, githubUrl }) => {
 
     return (
         <div className="h-auto  border min-w-xs  w-full hover:shadow-xl rounded-md bg-white dark:bg-gray-800 ">

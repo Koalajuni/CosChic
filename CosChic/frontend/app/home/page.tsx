@@ -10,6 +10,8 @@ import useUserUID from "@/hooks/useUserUID";
 import './loading.css';
 import './loading2.css';
 import axiosInstance from "@/hooks/axiosConfig"
+import { Model } from '@/types/model';
+
 
 
 export default function Home() {
@@ -183,7 +185,7 @@ export default function Home() {
 
     const [showCard, setShowCard] = useState(false);
     const [similarModel, setFaissModels] = useState<any[]>([]);
-    const [models, setModels] = useState<any[] | null>(null);
+    const [models, setModels] = useState<Model[]>([]);
     // 분석하기 버튼
     const faceanalysisButton = async () => {
         try {
@@ -371,7 +373,7 @@ export default function Home() {
             )}
 
             <Footer />
-            <script src="../path/to/flowbite/dist/flowbite.min.js"></script>
+            <script src="../path/to/flowbite/dist/flowbite.min.js" async />
         </>
 
 

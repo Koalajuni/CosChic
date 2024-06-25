@@ -3,7 +3,18 @@
 import React from 'react';
 import Swal from "sweetalert2"
 
-const CardSearchProduct = ({ image, title, description, price, count, category, productUrl }) => {
+
+interface CardSearchProductProps {
+    image: string;
+    title: string;
+    description: string;
+    price: string;
+    count: string;
+    category: string;
+    productUrl: string;
+}
+
+const CardSearchProduct: React.FC<CardSearchProductProps> = ({ image, title, description, price, count, category, productUrl }) => {
     const clickMoreDetails = () => {
         Swal.fire("준비 중인 기능입니다", '비즈니스 관련 문의는 문의 페이지를 방문해주세요', 'info'); // 사용자에게 오류 메시지 표시
     };

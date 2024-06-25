@@ -1,7 +1,15 @@
 import React from 'react';
 import { Radar, RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, ResponsiveContainer } from 'recharts';
 
-const CardRadarChart = ({ eye, nose, lips, eyebrows, contour }) => {
+interface CardRadarChartProps {
+    eye: number | string | null;
+    nose: number | string | null;
+    lips: number | string | null;
+    eyebrows: number | string | null;
+    contour: number | string | null;
+}
+
+const CardRadarChart: React.FC<CardRadarChartProps> = ({ eye, nose, lips, eyebrows, contour }) => {
     const data = [
         {
             subject: '윤곽',

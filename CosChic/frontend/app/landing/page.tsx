@@ -3,7 +3,6 @@ import IncNavbar from "@/components/inc_navbar";
 import IncHero from "@/components/inc_landingHero";
 import IncAnaly from "@/components/inc_landingText";
 import IncNews from "@/components/inc_news";
-import IncTestText from "@/components/test_landingText";
 import IncLandingExplanation from "@/components/inc_landingExplanation";
 
 export default function Main() {

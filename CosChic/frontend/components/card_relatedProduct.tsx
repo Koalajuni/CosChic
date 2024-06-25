@@ -1,7 +1,20 @@
 import React, { useState } from 'react';
 
 
-const CardRelatedProduct = ({ product, name }) => {
+interface Product {
+    productImage: string;
+    productName: string;
+    price: number;
+    productUrl: string;
+}
+
+interface CardRelatedProductProps {
+    product: Product;
+    name: string;
+}
+
+
+const CardRelatedProduct: React.FC<CardRelatedProductProps> = ({ product, name }) => {
     const brandName = name.split('_')[0];
     const imageUrlParts = product.productImage.split('/');
     const lastPart = imageUrlParts[imageUrlParts.length - 1];

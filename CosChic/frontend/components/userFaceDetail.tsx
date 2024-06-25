@@ -1,6 +1,28 @@
 import React from 'react';
+interface DetailRatios {
+    userFullEyesizeRatio: number;
+    modelFullEyesizeRatio: number;
+    userFullTailEyeRatio: number;
+    modelFullTailEyeRatio: number;
+    userLeftSymmertyRatio: number;
+    modelLeftSymmertyRatio: number;
+    userRightSymmetryRatio: number;
+    modelRightSymmetryRatio: number;
+    userBottomLipRatio: number;
+    modelBottomLipRatio: number;
+    userTopLipRatio: number;
+    modelTopLipRatio: number;
+    userFaceNoseHeightRatio: number;
+    modelFaceNoseHeightRatio: number;
+    userFaceNoseWidthRatio: number;
+    modelFaceNoseWidthRatio: number;
+}
 
-const UserFaceDetail = ({ detailRatios }) => {
+interface UserFaceDetailProps {
+    detailRatios: DetailRatios;
+}
+
+const UserFaceDetail: React.FC<UserFaceDetailProps> = ({ detailRatios }) => {
     const detailsData = [
         {
             category: "EYES",
