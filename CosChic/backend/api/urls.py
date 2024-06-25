@@ -1,6 +1,6 @@
 
 from django.urls import path,include
-from .views import index_views, camera_views, profile_veiws,auth_views,test_product_views,product_views,landing_views
+from .views import index_views, camera_views, profile_views,auth_views,test_product_views,product_views,landing_views,contact_views
 from django.conf import settings
 from django.conf.urls.static import static
 from django.urls import path
@@ -30,10 +30,10 @@ urlpatterns = [
 
 
     #프로필뷰 
-    path('v1/userdata/<str:UUID>', profile_veiws.handle_userdata, name='handle_userData'),
-    path('v1/userdata/upload/<str:UUID>', profile_veiws.upload_image, name='upload_image'),
-    path('v1/product', profile_veiws.api_product, name='api_product'),
-    path('v1/recommend', profile_veiws.api_recommend, name='api_recommend'),
+    path('v1/userdata/<str:UUID>', profile_views.handle_userdata, name='handle_userData'),
+    path('v1/userdata/upload/<str:UUID>', profile_views.upload_image, name='upload_image'),
+    path('v1/product', profile_views.api_product, name='api_product'),
+    path('v1/recommend', profile_views.api_recommend, name='api_recommend'),
 
     #test_product
     path('v1/used_product',test_product_views.used_product,name='used_product'),
@@ -44,6 +44,9 @@ urlpatterns = [
 
     #검색
     path('v1/search', product_views.search, name='search_query'),
+
+    #문의 
+    path('v1/send_email', contact_views.send_email, name='send_email'),
 
 ]
 

@@ -5,6 +5,8 @@ import { useRouter } from 'next/navigation';
 import accountalert from "@/public/assets/account-alert.png";
 import styles from "@/styles/LoginComponent.module.css";
 import axios from "axios"
+import axiosInstance from '@/hooks/axiosConfig';
+
 
 const LoginComponent = () => {
     const [email, setEmail] = useState("");
@@ -23,13 +25,8 @@ const LoginComponent = () => {
             formData.append('email', email);
             formData.append('password', password);
 
-            const response = await axios.post(
-                'http://127.0.0.1:8000/api/v1/login',
-                formData,
-                { headers: { 'Content-Type': 'multipart/form-data' } }
-            );
-            // const user = response.data.UUID;
-            // const email = response.data.email;
+            const response = await axiosInstance.post('/login', formData);
+
             const userData = {
                 UUID: response.data.UUID,
                 email: response.data.email,
@@ -51,11 +48,7 @@ const LoginComponent = () => {
             formData.append('email', email);
             formData.append('password', password);
 
-            const response = await axios.post(
-                'http://127.0.0.1:8000/api/v1/register',
-                formData,
-                { headers: { 'Content-Type': 'multipart/form-data' } }
-            );
+            const response = await axiosInstance.post('/register', formData);
             if (response.status === 201) {
                 console.log('Registration successful!');
                 const userData = {

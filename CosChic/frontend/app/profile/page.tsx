@@ -1,4 +1,4 @@
-"use client" 
+"use client"
 import Header from "@/components/inc_header"
 import Footer from "@/components/inc_footer"
 import CardProfileInformation from "@/components/card_profileInfo";
@@ -6,6 +6,7 @@ import SimilarModels from "@/components/similarModels";
 import useUserUID from "@/hooks/useUserUID";
 import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
+import axiosInstance from "@/hooks/axiosConfig";
 
 
 export default function UserProfile() {
@@ -16,18 +17,17 @@ export default function UserProfile() {
     const [error, setError] = useState<string | null>(null);
     const [image, setImage] = useState<string>('/assets/logo.png');
     const fileInput = useRef<HTMLInputElement>(null);
-    const baseUrl = 'http://127.0.0.1:8000/api';
 
     useEffect(() => {
         const fetchUserData = async () => {
             // console.log("fetching UserData:", userUID)
             if (userUID) {
                 try {
-                    const response = await axios.get(`http://127.0.0.1:8000/api/v1/userdata/${userUID}`);
+                    const response = await axiosInstance.get(`/userdata/${userUID}`);
                     setUserData(response.data);
                     // 프로필 이미지가 있는 경우 설정
                     if (response.data.profileImage) {
-                    setImage(response.data.profileImage);
+                        setImage(response.data.profileImage);
                     }
                 } catch (err) {
                     setError('Failed to fetch user data.');
@@ -53,25 +53,18 @@ export default function UserProfile() {
     const onFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
         if (event.target.files) {
             const file = event.target.files[0];
-          await onFileUpload(file); // 파일을 선택하자마자 업로드
+            await onFileUpload(file); // 파일을 선택하자마자 업로드
         }
     };
 
     const onFileUpload = async (file: File) => {
-    
+
         const formData = new FormData();
         formData.append('profileImage', file);
-    
+
         try {
-            const response = await axios.post(
-                `${baseUrl}/v1/userdata/upload/${userUID}`,
-                formData,
-            {
-                headers: {
-                'Content-Type': 'multipart/form-data',
-                    },
-                }
-            );
+            const response = await axiosInstance.post(`/userdata/upload/${userUID}`, formData);
+
             console.log('File uploaded successfully:', response.data);
             // 서버 응답 형식 점검
             if (response.data && response.data.output_image_path) {
@@ -80,9 +73,9 @@ export default function UserProfile() {
                 console.error('Output image path not found in response:', response.data);
             }
         } catch (error) {
-        console.error('Error uploading the file:', error);
-        
-        } 
+            console.error('Error uploading the file:', error);
+
+        }
     };
 
 
@@ -105,8 +98,7 @@ export default function UserProfile() {
         { name: '모델 D', similarity: 23, image: 'https://via.placeholder.com/100' },
         { name: '모델 E', similarity: 23, image: 'https://via.placeholder.com/100' }
     ];
-    
-    
+
 
     return (
         <>

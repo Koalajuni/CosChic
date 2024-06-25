@@ -7,6 +7,7 @@ import CardSearchProduct from '@/components/card_searchProduct';
 import Header from '@/components/inc_header';
 import Footer from '@/components/inc_footer';
 import Pagination from '@/components/inc_pagination';
+import axiosInstance from '@/hooks/axiosConfig';
 
 const SearchPage = () => {
     const router = useRouter();
@@ -29,7 +30,7 @@ const SearchPage = () => {
     const fetchResults = async (page = 1, query = searchTerm, cat = category) => {
         setLoading(true);
         try {
-            const response = await axios.get(`http://127.0.0.1:8000/api/v1/search`, {
+            const response = await axiosInstance.get('/search', {
                 params: {
                     query: query,
                     category: cat,
