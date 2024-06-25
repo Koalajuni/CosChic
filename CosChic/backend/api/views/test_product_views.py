@@ -18,6 +18,7 @@ from django.conf import settings
 from os.path import join
 import os
 import json
+import random
 
 # UUID를 기반으로 데이터를 조회하는 함수 => 다른함수 안에서 사용 
 def get_user_data_by_email(email):
