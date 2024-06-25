@@ -15,7 +15,7 @@ export default function UserProfile() {
     const [userData, setUserData] = useState<any | null>(null);
     const [loading, setLoading] = useState<boolean>(true);
     const [error, setError] = useState<string | null>(null);
-    const [image, setImage] = useState<string>('https://pds.joongang.co.kr/news/component/htmlphoto_mmdata/202306/04/138bdfca-3e86-4c09-9632-d22df52a0484.jpg');
+    const [image, setImage] = useState<string>('/assets/logo.png');
     const fileInput = useRef<HTMLInputElement>(null);
 
     useEffect(() => {
@@ -110,13 +110,13 @@ export default function UserProfile() {
             ) : (
                 <div className="h-full flex justify-center">
                     <div className="px-3 py-2">
-                        <div className="flex flex-wrap border shadow rounded-lg p-3 dark:bg-gray-600 items-center flex-col">
-                            <div style={profileImageStyle} onClick={() => fileInput.current?.click()} />
-                            <input type="file" style={{ display: "none" }} ref={fileInput} onChange={onFileChange} accept="image/*" />
-
-                            {userData && (
+                        <div className="flex flex-wrap border shadow rounded-lg p-3 dark:bg-gray-600 items-center flex-col ">
+                            <div className="hover:translate-y-1 hover:bg-[#e9b4c0]" style={profileImageStyle} onClick={() => fileInput.current?.click()} />
+                                <input type="file"style={{display : "none"}} ref={fileInput} onChange={onFileChange} />
+                                
+                                {userData && (
                                 <>
-                                    <p className="font-serif font-semibold p-4">{userData.names}</p>
+                                    <p className="font-serif font-semibold p-4  text-black">{userData.names}</p>
                                     <span className="text-sm text-gray-400">
                                         {userData.email}
                                     </span>
