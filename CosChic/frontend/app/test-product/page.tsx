@@ -13,6 +13,8 @@ import CardRelatedProduct from '@/components/card_relatedProduct';
 import styles from '@/styles/CardRelatedProduct.module.css';
 import axios from "axios";
 import { useUserEmail } from '@/hooks/useUserEmail';
+import UserFaceDetail from '@/components/userFaceDetail';
+import LoadingProcess from "@/components/loadingProcess"
 
 const TestProductPage = () => {
     const [userUid, setUserUid] = useState("");
@@ -20,6 +22,7 @@ const TestProductPage = () => {
     const [responseData2, setResponseData2] = useState(null);
     const [responseData3, setResponseData3] = useState(null);
     const [responseData4, setResponseData4] = useState(null);
+    const [loading, setLoading] = useState<boolean>(false);
     const userUID = useUserUID(); // USER UID 가져오는 변수  
     const userEmail = useUserEmail(); // USER Email 가져오는 변수 
     const params = useSearchParams();
@@ -55,14 +58,51 @@ const TestProductPage = () => {
     const modelFaceNoseHeightRatio = params.get("mfnh");
     const modelFaceNoseWidthRatio = params.get("mfnw");
 
+    const paramsRatio = {
+        userFullEyesizeRatio: userFullEyesizeRatio,
+        userFullTailEyeRatio: userFullTailEyeRatio,
+        userTopLipRatio: userTopLipRatio,
+        userBottomLipRatio: userBottomLipRatio,
+        userRightSymmetryRatio: userRightSymmetryRatio,
+        userLeftSymmertyRatio: userLeftSymmertyRatio,
+        userFaceNoseHeightRatio: userFaceNoseHeightRatio,
+        userFaceNoseWidthRatio: userFaceNoseWidthRatio,
+
+        modelFullEyesizeRatio: modelFullEyesizeRatio,
+        modelFullTailEyeRatio: modelFullTailEyeRatio,
+        modelTopLipRatio: modelTopLipRatio,
+        modelBottomLipRatio: modelBottomLipRatio,
+        modelRightSymmetryRatio: modelRightSymmetryRatio,
+        modelLeftSymmertyRatio: modelLeftSymmertyRatio,
+        modelFaceNoseHeightRatio: modelFaceNoseHeightRatio,
+        modelFaceNoseWidthRatio: modelFaceNoseWidthRatio
+    };
+    const [isLoading, setIsLoading] = useState(true);
+
     // uid 받아오는 함수
     useEffect(() => {
         // User UID 가져와서 저장
-        const storedUserUid = localStorage.getItem('UUID');
-        if (storedUserUid) {
-            setUserUid(storedUserUid);
+        const storedData = localStorage.getItem('userData');
+        if (storedData) {
+            try {
+                const parsedData = JSON.parse(storedData);
+                setUserUid(parsedData.UUID || null);
+            } catch (error) {
+                console.error('Failed to parse user data from localStorage:', error);
+            } finally {
+                setLoading(false);
+            }
+        } else {
+            setLoading(false);
+            console.error('No user data found in localStorage');
         }
+        const timer = setTimeout(() => {
+            setIsLoading(false);
+        }, 2000);
+
+        return () => clearTimeout(timer);
     }, []);
+
 
     useEffect(() => {
         const fetchData = async () => {
@@ -72,6 +112,7 @@ const TestProductPage = () => {
                 formData1.append('user_uid', userUid);
                 formData1.append('user_email', userEmail);
                 formData1.append('used_model_name', name);
+                console.log("getting formdata", formData1)
 
                 const beautyganResponse = await axios.post('http://127.0.0.1:8000/api/v1/BG_result', formData1);
                 setResponseData(beautyganResponse.data);
@@ -155,22 +196,54 @@ const TestProductPage = () => {
     return (
         <>
             <Header />
+            {loading ? (
+                <LoadingProcess />
+            ) : (
             <div className="container mx-auto p-6">
-                <h1 className="text-3xl font-bold mb-4">가상화장</h1>
-                <div className="flex justify-center mb-20">
-                    <div>
+                <h1 className="text-3xl font-bold mb-6 text-center text-gray-800">가상 메이크업 시뮬레이터</h1>
+
+                <div className="flex justify-center items-center mb-10 bg-gradient-to-r from-pink-100 to-purple-100 rounded-xl shadow-2xl overflow-hidden">
+                    <div className="w-1/2 p-6 flex flex-col items-center border-r border-gray-200">
                         {responseData && responseData.org_image && (
-                            <img src={responseData.org_image} alt="원본 사진" className="w-60 h-60 rounded-md mr-40" />
+                            <div className="relative">
+                                <img src={responseData.org_image} alt="원본 사진" className="w-80 h-80 object-cover rounded-lg shadow-md" />
+                                <div className="absolute top-2 left-2 bg-white rounded-full p-2">
+                                    <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" />
+                                    </svg>
+                                </div>
+                            </div>
                         )}
-                        <p>원본 사진</p>
+                        <p className="text-lg font-semibold text-gray-700 mt-4">원본 사진</p>
                     </div>
-                    <div>
+
+                    <div className="w-1/2 p-6 flex flex-col items-center">
                         {responseData && responseData.result_img_path && (
-                            <img src={responseData.result_img_path} alt="화장 후 사진" className="w-60 h-60 rounded-md" />
+                            <div className="relative">
+                                <img src={responseData.result_img_path} alt="화장 후 사진" className="w-80 h-80 object-cover rounded-lg shadow-md" />
+                                <div className="absolute top-2 right-2 bg-white rounded-full p-2">
+                                    <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-pink-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+                                    </svg>
+                                </div>
+                            </div>
                         )}
-                        <p>화장 후 사진</p>
+                        <p className="text-lg font-semibold text-gray-700 mt-4">화장 후 사진</p>
                     </div>
                 </div>
+                <h1 className="text-3xl font-semibold mb-2">My Beauty</h1>
+                <section className="analysis row flex justify-start gap-8 py-8">
+                    <div className="left side">
+                        <div>
+                            <CardBarChart eye={eyeSimilarity} nose={noseSimilarity} lips={lipSimilarity} eyebrows={eyebrowSimilarity} contour={contourSimilarity} total={allSimilarity} />
+                        </div>
+                        <div className="py-2">
+                            <CardRadalChart eye={eyeSimilarity} nose={noseSimilarity} lips={lipSimilarity} eyebrows={eyebrowSimilarity} contour={contourSimilarity} />
+                        </div>
+                    </div>
+                    <UserFaceDetail detailRatios={paramsRatio} />
+                </section>
 
                 <ProductDetails product={responseData2} />
 
@@ -223,13 +296,10 @@ const TestProductPage = () => {
                     </div>
                 </div>
 
-                <div className="flex gap-4 content-between py-4">
-                    <CardBarChart eye={eyeSimilarity} nose={noseSimilarity} lips={lipSimilarity} eyebrows={eyebrowSimilarity} contour={contourSimilarity} total={allSimilarity} />
-                    <CardRadalChart eye={eyeSimilarity} nose={noseSimilarity} lips={lipSimilarity} eyebrows={eyebrowSimilarity} contour={contourSimilarity} />
-                </div>
                 <div>
                 </div>
             </div>
+            )}
             <Footer />
         </>
     );

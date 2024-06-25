@@ -1,25 +1,16 @@
 /* HTML: <div class="loader"></div> */
 .loader {
-    width: 100px;
-    aspect-ratio: 1;
-    padding: 10px;
-    box-sizing: border-box;
-    display: grid;
-    background: #fff;
-    filter: blur(3px) contrast(7) hue-rotate(290deg);
-    mix-blend-mode: darken;
-  }
-  .loader:before{
-    content: "";
-    margin: auto;
-    width: 30px;
-    height: 30px;
-    border-radius: 50%;
-    color: #ff0000;
-    background: currentColor;
-    box-shadow: -30px 0,30px 0,0 30px, 0 -30px;
-    animation: l6 1s infinite alternate;
-  }
-  @keyframes l6{
-    90%,100% {box-shadow: -10px 0,10px 0,0 10px, 0 -10px;transform: rotate(180deg)}
-  }
+  width: 50px;
+  --b: 8px; 
+  aspect-ratio: 1;
+  border-radius: 50%;
+  padding: 1px;
+  background: conic-gradient(#0000 10%,#f03355) content-box;
+  -webkit-mask:
+    repeating-conic-gradient(#0000 0deg,#000 1deg 20deg,#0000 21deg 36deg),
+    radial-gradient(farthest-side,#0000 calc(100% - var(--b) - 1px),#000 calc(100% - var(--b)));
+  -webkit-mask-composite: destination-in;
+          mask-composite: intersect;
+  animation:l4 1s infinite steps(10);
+}
+@keyframes l4 {to{transform: rotate(1turn)}}

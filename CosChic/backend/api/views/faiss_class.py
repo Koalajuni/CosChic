@@ -3,6 +3,9 @@ import numpy as np
 from PIL import Image
 import faiss
 import face_recognition
+import cv2
+
+gWait = False
 
 class CosChicFaiss:
     def __init__(self):
@@ -84,6 +87,34 @@ class CosChicFaiss:
         print(face_rst[0])
         # return face_rst[0]
         return labels
+
+    def landingpage_detect_faces(self, img, label_path, model_path):
+        pilImg = Image.fromarray(img)
+        pilImg.save('./media/result/live.jpg')
+
+        testImage = face_recognition.load_image_file('./media/result/live.jpg')
+        testFace = face_recognition.face_locations(testImage)
+
+        if len(testFace) == 0:
+            return "unknown"
+
+        top, right, bottom, left = testFace[0]
+        faceCut = testImage[max(top-20, 0):bottom+20, max(left-20, 0):right+20]
+        pilImage = Image.fromarray(faceCut)
+        pilImage.save('./live.jpg')
+        img = face_recognition.load_image_file('./live.jpg')
+
+        test_en = face_recognition.face_encodings(img)
+        if len(test_en) == 0:
+            return "unknown"
+
+        test_en = np.array(test_en[0], dtype=np.float32).reshape(-1, 128)
+        face_index = faiss.read_index(model_path)
+        distance, result = face_index.search(test_en, k=5)
+        labels = np.load(label_path)
+        labels = [labels[i] for i in result[0]]
+        face_rst = most_frequent(labels)
+        return face_rst[0]
 
 
 # 많이 나온 단어 확인

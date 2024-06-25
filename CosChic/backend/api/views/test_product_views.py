@@ -47,14 +47,14 @@ def get_product_data_by_brandname(brand_name):
     try:
         # brandname를 기반으로 Product 조회
         brand_name = brand_name.strip()
-        # print("brand_name = ", brand_name)
+        print("brand_name = ", brand_name)
         # 브랜드 이름을 가지고 있는 모든 데이터 조회
         all_brand =Product.objects.filter(brandName=brand_name)
         brand_data_list = []
         # print(str(user_data.query))
-        # print("all_brand :",all_brand)
+        print("all_brand :",all_brand)
         for brand in all_brand:
-            if brand.productImage == " ":
+            if not brand.productImage:
                 full_product_image_url = 'assets/default_search.png'
             else:
                 full_product_image_url = f'http://localhost:8000/media/product_img/{brand.productImage}'
@@ -62,15 +62,15 @@ def get_product_data_by_brandname(brand_name):
             brand_data_list.append({
                     'productUrl': brand.productUrl,
                     'productName': brand.productName,
-                    # 'brandName': brand.brandName,
+                    'brandName': brand.brandName,
                     'price': brand.price,
                     'productImage': full_product_image_url,
                     # 'modelImage': brand.modelImage,
-                    # 'count': brand.count,
-                    # 'categoryId': brand.categoryId,
+                    'count': brand.count,
+                    'categoryId': brand.categoryId,
                     # 'category': brand.category,   
                 })
-        # print(brand_data_list)
+        print("brand data list", brand_data_list)
         return brand_data_list
         # return "ok"
     except Product.DoesNotExist:
@@ -92,10 +92,6 @@ def BG_result(request):
             # print(user_data)
             # 받고 나서 인공지능과 데이터베이스 처리 원래는 데이터 베이스에서 경로를 가져온다
             # 현재 uid로 조회가 되지 않아 로컬 경로를 직접 쓴다
-            org_img = "C:/Users/hi/Desktop/2024-06-13 21_23_48.jpg"
-            #그전 페이지의 faiss 통해서 경로 받기 여기서 이제 브랜드 명 추출 후 사용아이템 추가
-            ref_img = "C:/Users/hi/Desktop/CosChic/CosChic/backend/media/ref/3ce_model1/3CE_lipstick_20.jpg"
-            result_img = "C:/Users/hi/Desktop/CosChic/CosChic/backend/media/result"
             # org_img = "C:/Users/ok/Desktop/2024-06-13 21_23_48.jpg"
             org_img = user_data['orgImage']
             print('org_img', org_img)
@@ -225,7 +221,7 @@ def used_product (request):
         try:
             used_model_name = request.POST.get('used_model_name')
             user_email = request.POST.get('user_email')
-            # print(f"Received used_model_name from client: {used_model_name}")
+            print(f"Received used_model_name from client: {used_model_name}")
 
             # ModelList 중 첫번째를 기반으로 데이터 조회(상품명,상품 url,사진 경로,상품 가격 등)
             brand_name = used_model_name.split('_')[0]

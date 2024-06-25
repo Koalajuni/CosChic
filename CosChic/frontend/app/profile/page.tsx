@@ -119,7 +119,7 @@ export default function UserProfile() {
                 <div className="h-full flex justify-center">
                     <div className="px-3 py-2">
                         <div className="flex flex-wrap border shadow rounded-lg p-3 dark:bg-gray-600 items-center flex-col ">
-                            <div className="hover:translate-y-1 hover:bg-gray-200" style={profileImageStyle} onClick={() => fileInput.current?.click()} />
+                            <div className="hover:translate-y-1 hover:bg-[#e9b4c0]" style={profileImageStyle} onClick={() => fileInput.current?.click()} />
                                 <input type="file"style={{display : "none"}} ref={fileInput} onChange={onFileChange} />
                                 
                                 {userData && (

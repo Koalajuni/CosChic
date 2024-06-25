@@ -70,9 +70,9 @@ const CardBarChart = ({ eye, nose, lips, eyebrows, total, contour }) => {
     }, []);
 
     return (
-        <div className="bg-white text-bg-gray-500 rounded shadow-xl py-5 px-5 w-full h-1/2 sm:w-2/3 md:w-1/2 lg:w-1/3">
+        <div className="bg-white text-bg-gray-500 rounded shadow-xl py-5 px-5 w-full h-1/2 ">
             <div className="flex w-full">
-                <h3 className="text-lg font-semibold leading-tight flex-1">TOTAL SCORE</h3>
+                <h3 className="text-2xl font-bold text-gray-800 mb-4">코스칙 점수</h3>
                 <div className="relative h-5 leading-none">
                     <button
                         className="text-xl text-gray-500 hover:text-gray-300 h-6 focus:outline-none"

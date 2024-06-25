@@ -30,9 +30,9 @@ const CardRadarChart = ({ eye, nose, lips, eyebrows, contour }) => {
         },
     ];
     return (
-        <div className="bg-white text-gray-500 rounded shadow-xl py-2 px-5 w-full sm:w-2/3 md:w-1/2 lg:w-1/3">
+        <div className="bg-white text-bg-gray-500 rounded shadow-xl py-2 px-5 w-full">
             <div className="flex w-full">
-                <h3 className="text-lg font-semibold leading-tight flex-1">유사도 분석</h3>
+                <h3 className="text-2xl font-bold text-gray-800 mb-4">모델 유사도</h3>
             </div>
             <div className="relative overflow-hidden transition-all duration-500">
                 <div className="pb-2 lg:pb-2">
@@ -41,7 +41,7 @@ const CardRadarChart = ({ eye, nose, lips, eyebrows, contour }) => {
                             <PolarGrid />
                             <PolarAngleAxis dataKey="subject" />
                             <PolarRadiusAxis />
-                            <Radar name="Mike" dataKey="A" stroke="#8884d8" fill="#8884d8" fillOpacity={0.6} />
+                            <Radar name="Mike" dataKey="A" stroke="#FF6F91" fill="#FF6F91" fillOpacity={0.6} />
                         </RadarChart>
                     </ResponsiveContainer>
                 </div>
