@@ -249,31 +249,11 @@ const TestProductPage = () => {
 
                 <h2 className="text-xl font-semibold mb-2">GPT 설명</h2>
                 <div className="p-4 bg-gray-200 rounded-md">
-                    GPT가 설명하는 칸입니다. 여기서는 화장품 또는 위에 GAN이 설명할 칸이라고 생각해주시면 되겠습니다.
-                    <p>lipSimilarity: {lipSimilarity}</p>
-                    <p>eyeSimilarity: {eyeSimilarity}</p>
-                    <p>eyebrowSimilarity: {eyebrowSimilarity}</p>
-                    <p>noseSimilarity: {noseSimilarity}</p>
-                    <p>contourSimilarity: {contourSimilarity}</p>
-                    <p>allSimilarity: {allSimilarity}</p>
-
-                    <p>userFullEyesizeRatio: {userFullEyesizeRatio}</p>
-                    <p>userFullTailEyeRatio: {userFullTailEyeRatio}</p>
-                    <p>userTopLipRatio: {userTopLipRatio}</p>
-                    <p>userBottomLipRatio: {userBottomLipRatio}</p>
-                    <p>userRightSymmetryRatio: {userRightSymmetryRatio}</p>
-                    <p>userLeftSymmertyRatio: {userLeftSymmertyRatio}</p>
-                    <p>userFaceNoseHeightRatio: {userFaceNoseHeightRatio}</p>
-                    <p>userFaceNoseWidthRatio: {userFaceNoseWidthRatio}</p>
-
-                    <p>modelFullEyesizeRatio: {modelFullEyesizeRatio}</p>
-                    <p>modelFullTailEyeRatio: {modelFullTailEyeRatio}</p>
-                    <p>modelTopLipRatio: {modelTopLipRatio}</p>
-                    <p>modelBottomLipRatio: {modelBottomLipRatio}</p>
-                    <p>modelRightSymmetryRatio: {modelRightSymmetryRatio}</p>
-                    <p>modelLeftSymmertyRatio: {modelLeftSymmertyRatio}</p>
-                    <p>modelFaceNoseHeightRatio: {modelFaceNoseHeightRatio}</p>
-                    <p>modelFaceNoseWidthRatio: {modelFaceNoseWidthRatio}</p>
+                    <p><b>모델보다 눈꼬리가 낮습니다. </b></p>
+                    <p>눈꼬리를 강조하는 방식으로 눈의 외곽을 어두운 색으로 음영을 주어 눈꼬리를 위로 올려 보이게 합니다.</p> 
+                    <br></br>
+                    <p><b>모델보다 코가 더 깁니다.</b></p> 
+                    <p>코 옆 부분에 어두운 색의 쉐이딩을 사용하여 코가 짧아 보이도록 합니다.</p>
                 </div>
 
                 <h2 className="text-xl font-semibold mt-4 mb-4">추가로 비슷한 모델</h2>

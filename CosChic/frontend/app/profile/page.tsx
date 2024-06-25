@@ -15,6 +15,8 @@ export default function UserProfile() {
     const [loading, setLoading] = useState<boolean>(true);
     const [error, setError] = useState<string | null>(null);
     const [image, setImage] = useState<string>('/assets/logo.png');
+    const [responseData3, setResponseData3] = useState(null);
+    const [imagePath, setImagePath] = useState('');
     const fileInput = useRef<HTMLInputElement>(null);
     const baseUrl = 'http://127.0.0.1:8000/api';
 
@@ -99,13 +101,12 @@ export default function UserProfile() {
     };
 
     const userResembleModels = [
-        { name: '모델 A', similarity: 87, image: 'https://via.placeholder.com/100' },
-        { name: '모델 B', similarity: 63, image: 'https://via.placeholder.com/100' },
-        { name: '모델 C', similarity: 43, image: 'https://via.placeholder.com/100' },
-        { name: '모델 D', similarity: 23, image: 'https://via.placeholder.com/100' },
-        { name: '모델 E', similarity: 23, image: 'https://via.placeholder.com/100' }
+        { name: '모델 A', similarity: 87, image: 'dasique_eye30.jpg' },
+        { name: '모델 B', similarity: 63, image: 'espoir_lipstick_1.jpg.jpg' },
+        { name: '모델 C', similarity: 43, image: 'jungsaemmool_tint_1.jpg' },
+        { name: '모델 D', similarity: 23, image: 'wakemake_eye_3.jpg' },
+        { name: '모델 E', similarity: 23, image: './assets/deardahila_tint_1.jpg' }
     ];
-    
     
 
     return (
@@ -143,7 +144,14 @@ export default function UserProfile() {
             )}
             <div>
                 <h2 className="text-xl font-semibold mt-4 mb-2 p-6">나와 비슷한 모델</h2>
-                <SimilarModels models={userResembleModels} />
+                    <div className="flex h-full justify-center items-center border rounded-xl py-3 space-x-4">
+                    <img src="./assets/deardahila_tint_1.jpg"  className="inset-0 w-[150px] h-[150px] object-cover rounded-full border-2 border-[#ffb4c5] rounded-md shadow-xl" />
+                    <img src="./assets/dasique_eye30.jpg"  className="inset-0 w-[150px] h-[150px] object-cover rounded-full border-2 border-[#ffb4c5] rounded-md shadow-xl" />
+                    <img src="./assets/jungsaemmool_tint_1.jpg"  className="inset-0 w-[150px] h-[150px] object-cover rounded-full border-2 border-[#ffb4c5] rounded-md shadow-xl" />
+                    <img src="./assets/wakemake_eye_3.jpg" className="inset-0 w-[150px] h-[150px] object-cover rounded-full border-2 border-[#ffb4c5] rounded-md shadow-xl" />
+                    <img src="./assets/muzigaemansion_lip1.jpg" className="inset-0 w-[150px] h-[150px] object-cover rounded-full border-2 border-[#ffb4c5] rounded-md shadow-xl" />
+
+                    </div>            
             </div>
             <Footer />
         </>
