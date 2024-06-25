@@ -2,7 +2,7 @@
 import Header from "@/components/inc_header"
 import Footer from "@/components/inc_footer"
 import Swal from "sweetalert2"
-import { useEffect, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import axios from "axios"
 import LoadingProcess from "@/components/loadingProcess"
 import CardSimilarModel from "@/components/card_similarModel"
@@ -11,6 +11,7 @@ import './loading.css';
 import './loading2.css';
 import axiosInstance from "@/hooks/axiosConfig"
 import { Model } from '@/types/model';
+import Webcam from "react-webcam";
 
 
 
@@ -23,6 +24,8 @@ export default function Home() {
     const [error, setError] = useState<string | null>(null);
     const [cameraLoading, setCameraLoading] = useState(false); // 카메라 로딩 상태 추가
     const [cameraLoading2, setCameraLoading2] = useState(false); // 카메라 로딩 상태 추가
+    const [capturedImage, setCapturedImage] = useState<string | null>(null);
+    const webcamRef = useRef<Webcam>(null);
 
     useEffect(() => {
         // User UID 가져와서 저장
@@ -63,6 +66,8 @@ export default function Home() {
 
 
 
+
+
     // const [loading, setLoading] = useState(false);
     const [cameraOn, setCamera] = useState(false);
     const [cnt, setCnt] = useState(0);  // 상태를 바꾸기 위해 useState을 사용해야 한다. 
@@ -85,58 +90,86 @@ export default function Home() {
         setFaceAnalysisButtonState(prevState => !prevState);
     };
 
-    // 카메라켜기
-    const cameraClick = async () => {
-        setCameraLoading(true); // 카메라 로딩 시작
-        const newCameraOnState = !cameraOn; // 새로운 카메라 상태 계산
-        const buttonText = newCameraOnState ? "카메라끄기" : "카메라 사용하기"; // 새로운 버튼 텍스트 계산
-        setButtonText(buttonText);
-        setCamera(newCameraOnState); // cameraOn 상태를 토글합니다.
-        if (!cameraOn) {
-            setCamera(true);
-            setTimeout(() => setCameraLoading(false), 2000); // 예시로 2초 후에 로딩 상태를 false로 설정
+    // // 카메라켜기
+    // const cameraClick = async () => {
+    //     setCameraLoading(true); // 카메라 로딩 시작
+    //     const newCameraOnState = !cameraOn; // 새로운 카메라 상태 계산
+    //     const buttonText = newCameraOnState ? "카메라끄기" : "카메라 사용하기"; // 새로운 버튼 텍스트 계산
+    //     setButtonText(buttonText);
+    //     setCamera(newCameraOnState); // cameraOn 상태를 토글합니다.
+    //     if (!cameraOn) {
+    //         setCamera(true);
+    //         setTimeout(() => setCameraLoading(false), 2000); // 예시로 2초 후에 로딩 상태를 false로 설정
 
+    //     }
+    //     else {
+    //         setCamera(false);
+    //         setCameraLoading(false); // 카메라 끌 때 로딩 상태를 false로 설정
+    //     }
+    // }
+
+    const cameraClick = () => {
+        setCamera(prev => !prev);
+        setCapturedImage(null); // Clear any previously captured image
+    };
+
+    const takePhoto = () => {
+        if (webcamRef.current) {
+            const imageSrc = webcamRef.current.getScreenshot();
+            setCapturedImage(imageSrc);
+            // You can now send this image to your backend for analysis
+            sendImageToBackend(imageSrc);
         }
-        else {
-            setCamera(false);
-            setCameraLoading(false); // 카메라 끌 때 로딩 상태를 false로 설정
+    };
+
+    const sendImageToBackend = async (imageSrc: string) => {
+        try {
+            const response = await axiosInstance.post(`/analyze_image/${userUID}`, { image: imageSrc });
+            if (response.status === 200) {
+                setPhotoUrl(response.data.output_image_path);
+                setPhotoUrlState(true);
+                setFaceAnalysisButtonState(true);
+            }
+        } catch (error) {
+            console.error("Error sending image to backend:", error);
+            Swal.fire("Error", "Failed to send image for analysis", "error");
         }
-    }
+    };
 
     const cameraComingSoon = async () => {
         Swal.fire("준비 중인 기능", `곧 출시될 기능입니다. 이미지 업로드를 사용 부탁드려요`, "info");
     };
 
     // 사진찍기
-    const takePhoto = async () => {
-        try {
-            console.log('photoUrlState 값:', photoUrlState);
-            console.log('cameraLoading2 값:', cameraLoading2);
-            setCameraLoading2(true); // 카메라 로딩 시작
-            console.log('photoUrlState 값:', photoUrlState);
-            console.log('cameraLoading2 값:', cameraLoading2);
-            const response = await axiosInstance.post(`/camera_take_photo/${userUID}`, {
-                timeout: 30000,
-            });
-            if (response.status == 200) {
-                // setCamera(false);
-                setCamera(true);
-                setPhotoUrl(response.data.output_image_path);
-                setPhotoUrlState(prevState => !prevState);
-                console.log('photoUrlState 값:', photoUrlState);
-                console.log('cameraLoading2 값:', cameraLoading2);
-                console.log(response)
-                setFaceAnalysisButtonState(prevState => !prevState);
-                console.log('photoUrlState 값:', photoUrlState);
-                console.log('cameraLoading2 값:', cameraLoading2);
-            }
-        } catch (error) {
-            console.error("Error taking photo:", error); // 콘솔에 상세 오류 메시지 출력
-            Swal.fire("얼굴 인식 실패", `사진 찍는데 실패했습니다.`, "error"); // 사용자에게 오류 메시지 표시
-        } finally {
-            setCameraLoading2(false); // 두 번째 카메라 로딩 종료
-        }
-    }
+    // const takePhoto = async () => {
+    //     try {
+    //         console.log('photoUrlState 값:', photoUrlState);
+    //         console.log('cameraLoading2 값:', cameraLoading2);
+    //         setCameraLoading2(true); // 카메라 로딩 시작
+    //         console.log('photoUrlState 값:', photoUrlState);
+    //         console.log('cameraLoading2 값:', cameraLoading2);
+    //         const response = await axiosInstance.post(`/camera_take_photo/${userUID}`, {
+    //             timeout: 30000,
+    //         });
+    //         if (response.status == 200) {
+    //             // setCamera(false);
+    //             setCamera(true);
+    //             setPhotoUrl(response.data.output_image_path);
+    //             setPhotoUrlState(prevState => !prevState);
+    //             console.log('photoUrlState 값:', photoUrlState);
+    //             console.log('cameraLoading2 값:', cameraLoading2);
+    //             console.log(response)
+    //             setFaceAnalysisButtonState(prevState => !prevState);
+    //             console.log('photoUrlState 값:', photoUrlState);
+    //             console.log('cameraLoading2 값:', cameraLoading2);
+    //         }
+    //     } catch (error) {
+    //         console.error("Error taking photo:", error); // 콘솔에 상세 오류 메시지 출력
+    //         Swal.fire("얼굴 인식 실패", `사진 찍는데 실패했습니다.`, "error"); // 사용자에게 오류 메시지 표시
+    //     } finally {
+    //         setCameraLoading2(false); // 두 번째 카메라 로딩 종료
+    //     }
+    // }
 
     // 파일 업로드
     const onFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -242,15 +275,14 @@ export default function Home() {
                                     <div className="bg-white rounded-xl shadow-lg overflow-hidden">
                                         <div className="relative h-[400px] overflow-hidden flex justify-center items-center bg-gray-100">
                                             {cameraOn ? (
-                                                cameraLoading ? (
-                                                    <div className="loader"></div>
-                                                ) : (
-                                                    <img
-                                                        className="object-cover object-center w-full h-full"
-                                                        alt="Camera feed"
-                                                        src={`${baseUrl}/camera_video_feed`}
-                                                    />
-                                                )
+                                                <Webcam
+                                                    audio={false}
+                                                    ref={webcamRef}
+                                                    screenshotFormat="image/jpeg"
+                                                    videoConstraints={{ facingMode: "user" }}
+                                                />
+                                            ) : capturedImage ? (
+                                                <img src={capturedImage} alt="Captured" className="w-full h-full object-cover" />
                                             ) : (
                                                 <div className="text-center p-8">
                                                     <img
@@ -261,24 +293,22 @@ export default function Home() {
                                                     <p className="text-gray-500 text-lg">카메라 사용해서 사진을 찍어요</p>
                                                 </div>
                                             )}
-                                            {!cameraOn && (
-                                                <button
-                                                    onClick={cameraComingSoon} //나중에 이 부분을 실제 카메라로 바꿔주세요
-                                                    type="button"
-                                                    className="absolute bottom-4 left-1/2 transform -translate-x-1/2 bg-[#FF6F91] hover:bg-[#FF5B82] text-white font-medium rounded-full px-6 py-3 text-sm transition duration-300 ease-in-out flex items-center"
-                                                >
-                                                    <img src="./icons/camera.png" alt="Camera" className="w-5 h-5 mr-2" />
-                                                    {buttonText}
-                                                </button>
-                                            )}
                                         </div>
+                                        {/* <div className="p-6">
+                                            <button onClick={cameraClick} type="button">
+                                                {cameraOn ? "Turn Off Camera" : "Turn On Camera"}
+                                            </button>
+                                            <button onClick={takePhoto} type="button" disabled={!cameraOn}>
+                                                Take Photo
+                                            </button>
+                                        </div> */}
                                         <div className="p-6">
                                             <h4 className="text-xl font-semibold text-gray-800 mb-4">
                                                 {userData ? userData.names : 'Loading...'}
                                             </h4>
                                             <div className="flex gap-4 mb-6">
                                                 <button
-                                                    onClick={cameraComingSoon} // 나중에 이 부분을 실제 카메라로 바꿔주세요
+                                                    onClick={cameraClick} // 나중에 이 부분을 실제 카메라로 바꿔주세요
                                                     type="button"
                                                     className="flex-1 bg-white hover:bg-gray-50 text-gray-800 font-medium rounded-lg text-sm px-4 py-2.5 border border-gray-300 transition duration-300 ease-in-out flex items-center justify-center"
                                                 >

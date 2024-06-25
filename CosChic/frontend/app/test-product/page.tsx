@@ -39,6 +39,7 @@ const TestProductPage = () => {
     const [responseData2, setResponseData2] = useState<any>({});
     const [responseData3, setResponseData3] = useState(null);
     const [responseData4, setResponseData4] = useState<Product[]>([]);
+    const [reponseData5, setResponseData5] = useState(null);
     const [loading, setLoading] = useState<boolean>(false);
     const userUID = useUserUID(); // USER UID 가져오는 변수  
     const userEmail = useUserEmail(); // USER Email 가져오는 변수 
@@ -170,6 +171,23 @@ const TestProductPage = () => {
             } catch (error) {
                 console.error('Error fetching related products data:', error);
             }
+            try {
+                // 보낼때는 모두 보내줍니다
+                const formData5 = new FormData();
+                formData5.append('user_Full_Tail_Eye_Ratio', userFullTailEyeRatio);
+                formData5.append('user_Top_Lip_Ratio', userTopLipRatio);
+                formData5.append('user_Bottom_Lip_Ratio', userBottomLipRatio);
+                formData5.append('user_Right_Symmetry_Ratio', userRightSymmetryRatio);
+                formData5.append('user_Left_Symmerty_Ratio', userLeftSymmertyRatio);
+                formData5.append('user_Face_NoseHeight_Ratio', userFaceNoseHeightRatio);
+                formData5.append('user_Face_NoseWidth_Ratio', userFaceNoseWidthRatio);
+                console.log("ratio_data", formData5)
+                const LCResponse = await axiosInstance.post('/LC_result', formData5);
+                setResponseData5(LCResponse.data);
+                console.log("this is how the Langchain will appear", LCResponse.data)
+            } catch (error) {
+                console.error('Error fetching related products data:', error);
+            }
         };
 
         if (userUid && name) {
@@ -267,12 +285,23 @@ const TestProductPage = () => {
 
                     <ProductDetails product={responseData2} />
 
-                    <h2 className="text-xl font-semibold mb-2">나에게 맞는 화장법</h2>
-                    <div className="coming-soon-container flex items-center justify-center mb-10 bg-gradient-to-r from-pink-100 to-purple-100 p-8 rounded-2xl shadow-2xl">
-                        <div className="coming-soon-content text-center bg-white p-8 rounded-lg shadow-lg">
-                            <i className="fas fa-cog fa-spin text-blue-500 text-5xl mb-4"></i>
-                            <h2 className="text-2xl font-semibold text-gray-800 mb-2">준비 중</h2>
-                            <p className="text-gray-600 text-base">곧 새로운 기능으로 찾아뵙겠습니다!</p>
+                    <div className="mx-auto my-8">
+                        <h2 className="text-2xl font-bold mb-4 text-gray-800">나에게 맞는 화장법</h2>
+                        <div className="bg-gradient-to-r from-pink-100 to-purple-100 rounded-xl shadow-lg overflow-hidden">
+                            <div className="p-6 md:p-8">
+                                <div className="flex items-center mb-4">
+                                    <i className="fas fa-magic text-purple-500 text-2xl mr-3"></i>
+                                    <h3 className="text-lg font-semibold text-gray-700">맞춤 화장 팁</h3>
+                                </div>
+                                <p className="text-gray-600 leading-relaxed">
+                                    {reponseData5}
+                                </p>
+                            </div>
+                            <div className="bg-white bg-opacity-50 px-6 py-4">
+                                <p className="text-sm text-gray-500 italic">
+                                    당신의 얼굴 특징에 맞춰 개인화된 화장법을 제안해 드립니다.
+                                </p>
+                            </div>
                         </div>
                     </div>
 
