@@ -17,9 +17,6 @@ export default function IncHero() {
             >
                 <h1 className="w-full text-3xl font-bold text-[#FF6F91] m-4">COSCHIC</h1> {/* 배경 색 변경 */}
                 <ul className="hidden md:flex">
-                    <li className="p-2" style={{ color: '#FF6F91', width: '100px' }}>홈</li> {/* 글씨 색 변경 및 너비 수정 */}
-                    <li className="p-2" style={{ color: '#FF6F91', width: '100px' }}>팀소개</li> {/* 글씨 색 변경 및 너비 수정 */}
-                    <li className="p-2" style={{ color: '#FF6F91', width: '100px' }}>문의</li> {/* 글씨 색 변경 및 너비 수정 */}
                 </ul>
                 <div className="block md:hidden" onClick={handleNav}>
                     {!nav ? <FiMenu size={28} /> : <FiX size={28} />}

@@ -1,25 +1,48 @@
-
+import React from 'react';
+import { FaRobot, FaGift, FaBalanceScale, FaMagic } from 'react-icons/fa';
 
 export default function IncAnaly() {
     return (
-        <div className="ANALY">
-            <div className="w-full bg-white px-4">
-                <div className="max-w-[1240px] mx-auto grid md:grid-cols-2">
-                    <img className="w-[500px] mx-auto my-4" src="/assets/image/image.svg" alt='.' />
+        <div className="ANALY bg-gradient-to-b from-purple-100 to-white">
+            <div className="w-full px-4 py-16">
+                <div className="max-w-[1240px] mx-auto grid md:grid-cols-2 gap-20">
+                    <div className="w-full mx-auto my-4 relative">
+                        <div className="absolute inset-0 bg-purple-300 rounded-lg transform -rotate-6"></div>
+                        <video className="relative z-10 rounded-lg shadow-2xl" width="100%" height="auto" controls autoPlay muted loop>
+                            <source src="/videos/coschic.mp4" type="video/mp4" />
+                            Your browser does not support the video tag.
+                        </video>
+                    </div>
                     <div className="flex flex-col justify-center">
-                        <h1 className="text-[#8E65B7] font-bold p-2">인공지능을 통해 고객의 얼굴 유형에 맞춤형 화장품과 뷰티 스타일을 추천해주는 혁신적인 웹!!!</h1>
-                        <p className="p-2 md:text-5xl sm:text-4xl text-3xl font-bold md:py-6" style={{ color: '#FF6F91' }}>웹 기능</p>
-
-                        <div className="p-2">
-                            <p>1. 인공지능 기반 얼굴 인식: 고객이 얼굴 사진을 찍거나 업로드하면, 인공지능이 얼굴 유형을 정확하게 분석합니다.</p>
-                            <p>2. 맞춤형 화장품 추천: 개인 맞춤형 제품 추천: 고객의 얼굴 유형, 피부 상태, 선호하는 화장 스타일에 맞춰 최적의 화장품을 추천합니다.</p>
-                            <p>3. 브랜드 및 제품 비교: 여러 브랜드와 제품을 가격, 성분, 효과 등을 비교해 가장 적합한 제품을 선택할 수 있도록 도와줍니다.</p>
-                            <p>4. 맞춤형 뷰티 스타일 제안: 가상 메이크업 시뮬레이션: 다양한 화장품을 가상으로 시도해보고, 자신에게 가장 어울리는 메이크업 스타일을 찾을 수 있습니다.</p>
+                        <h2 className="text-[#8E65B7] font-bold text-2xl mb-2">내가 원하는 스타일, 나에게 맞게</h2>
+                        <h1 className="text-6xl font-extrabold mb-6 bg-clip-text text-transparent bg-gradient-to-r from-[#FF6F91] to-[#8E65B7]">
+                            COSCHIC
+                        </h1>
+                        <p className="text-gray-600 mb-8">
+                            나만을 위한 AI 뷰티 솔루션. COSCHIC으로 나만의 완벽한 스타을 발견해요.
+                        </p>
+                        <div className="grid grid-cols-2 gap-6">
+                            {[
+                                { icon: <FaRobot />, title: "AI 얼굴 인식", description: "정확한 얼굴 유형 분석" },
+                                { icon: <FaGift />, title: "맞춤형 추천", description: "개인화된 화장품 제안" },
+                                { icon: <FaBalanceScale />, title: "제품 비교", description: "최적의 선택을 위한 비교" },
+                                { icon: <FaMagic />, title: "가상 메이크업", description: "다양한 스타일 시뮬레이션" }
+                            ].map((item, index) => (
+                                <div key={index} className="flex items-start space-x-3">
+                                    <div className="text-purple-500 text-2xl">{item.icon}</div>
+                                    <div>
+                                        <h3 className="font-semibold text-gray-800">{item.title}</h3>
+                                        <p className="text-sm text-gray-600">{item.description}</p>
+                                    </div>
+                                </div>
+                            ))}
                         </div>
+                        <a href="/login" className="mt-8 bg-gradient-to-r from-[#FF6F91] to-[#8E65B7] text-center text-white font-bold py-3 px-6 rounded-full hover:shadow-lg transform hover:-translate-y-1 transition duration-300">
+                            지금 시작하기
+                        </a>
                     </div>
                 </div>
-
             </div>
         </div>
-    )
+    );
 }

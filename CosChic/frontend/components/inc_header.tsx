@@ -22,7 +22,7 @@ export default function Header() {
                 <div className="flex lg:flex-1">
                     <a href="#" className="-m-1.5 p-1.5">
                         <span className="">CosChic</span>
-                        <img className="h-8 w-auto" src="logo_SmartCctv.png" alt="" />
+                        {/* <img className="h-8 w-auto" src="logo_SmartCctv.png" alt="" /> */}
                     </a>
                 </div>
                 <div className="flex lg:hidden">
