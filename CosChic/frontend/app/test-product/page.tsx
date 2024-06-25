@@ -14,6 +14,7 @@ import styles from '@/styles/CardRelatedProduct.module.css';
 import axios from "axios";
 import { useUserEmail } from '@/hooks/useUserEmail';
 import UserFaceDetail from '@/components/userFaceDetail';
+import LoadingProcess from "@/components/loadingProcess"
 import axiosInstance from '@/hooks/axiosConfig';
 
 const TestProductPage = () => {
@@ -22,6 +23,7 @@ const TestProductPage = () => {
     const [responseData2, setResponseData2] = useState(null);
     const [responseData3, setResponseData3] = useState(null);
     const [responseData4, setResponseData4] = useState(null);
+    const [loading, setLoading] = useState<boolean>(false);
     const userUID = useUserUID(); // USER UID 가져오는 변수  
     const userEmail = useUserEmail(); // USER Email 가져오는 변수 
     const params = useSearchParams();
@@ -88,8 +90,11 @@ const TestProductPage = () => {
                 setUserUid(parsedData.UUID || null);
             } catch (error) {
                 console.error('Failed to parse user data from localStorage:', error);
+            } finally {
+                setLoading(false);
             }
         } else {
+            setLoading(false);
             console.error('No user data found in localStorage');
         }
         const timer = setTimeout(() => {
@@ -190,6 +195,9 @@ const TestProductPage = () => {
     return (
         <>
             <Header />
+            {loading ? (
+                <LoadingProcess />
+            ) : (
             <div className="container mx-auto p-6">
                 <h1 className="text-3xl font-bold mb-6 text-center text-gray-800">가상 메이크업 시뮬레이터</h1>
 
@@ -270,6 +278,7 @@ const TestProductPage = () => {
                 <div>
                 </div>
             </div>
+            )}
             <Footer />
         </>
     );

@@ -99,6 +99,7 @@ const CardSimilarModel = ({ models }) => {
                                         onClick={() => handleRedirect(model)}
                                     >
                                         Try Virtual Makeup
+                                    
                                     </button>
                                 </div>
                             </div>
