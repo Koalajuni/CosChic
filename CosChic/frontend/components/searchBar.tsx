@@ -1,13 +1,21 @@
 import React, { useState } from 'react';
 
-const SearchBar = ({ searchTerm, onChange, onSearch, category, setCategory }) => {
+interface SearchBarProps {
+    searchTerm: string;
+    onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
+    onSearch: (event: React.FormEvent<HTMLFormElement>) => void;
+    category: string;
+    setCategory: React.Dispatch<React.SetStateAction<string>>;
+}
+
+const SearchBar: React.FC<SearchBarProps> = ({ searchTerm, onChange, onSearch, category, setCategory }) => {
     const [dropdownOpen, setDropdownOpen] = useState(false);
 
     const toggleDropdown = () => {
         setDropdownOpen(!dropdownOpen);
     };
 
-    const handleCategorySelect = (selectedCategory) => {
+    const handleCategorySelect = (selectedCategory: string) => {
         setCategory(selectedCategory);
         setDropdownOpen(false);
     };

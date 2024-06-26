@@ -1,15 +1,22 @@
 "use client";
 import { useState, useEffect } from "react";
 
-export default function Pagination({ totalResults, resultsPerPage, currentPage, onPageChange }) {
+interface PaginationProps {
+    totalResults: number;
+    resultsPerPage: number;
+    currentPage: number;
+    onPageChange: (page: number) => void;
+}
+
+const Pagination: React.FC<PaginationProps> = ({ totalResults, resultsPerPage, currentPage, onPageChange }) => {
     const totalPages = Math.max(1, Math.ceil(totalResults / resultsPerPage));
-    const [visiblePages, setVisiblePages] = useState([]);
+    const [visiblePages, setVisiblePages] = useState<number[]>([]);
 
     useEffect(() => {
         if (totalPages <= 10) {
-            setVisiblePages([...Array(totalPages).keys()].map(i => i + 1));
+            setVisiblePages(Array.from({ length: totalPages }, (_, index) => index + 1));
         } else if (currentPage <= 6) {
-            setVisiblePages([...Array(10).keys()].map(i => i + 1));
+            setVisiblePages(Array.from({ length: 10 }, (_, index) => index + 1));
         } else {
             let startPage = currentPage - 5;
             let endPage = currentPage + 4;
@@ -17,11 +24,12 @@ export default function Pagination({ totalResults, resultsPerPage, currentPage, 
                 endPage = totalPages;
                 startPage = endPage - 9;
             }
-            setVisiblePages([...Array(endPage - startPage + 1).keys()].map(i => i + startPage));
+            setVisiblePages(Array.from({ length: endPage - startPage + 1 }, (_, index) => startPage + index));
         }
     }, [totalPages, currentPage]);
 
-    const handleClick = (page) => {
+
+    const handleClick = (page: number) => {
         onPageChange(page);
         if (page > 6 && totalPages > 10) {
             let startPage = page - 5;
@@ -30,9 +38,9 @@ export default function Pagination({ totalResults, resultsPerPage, currentPage, 
                 endPage = totalPages;
                 startPage = endPage - 9;
             }
-            setVisiblePages([...Array(endPage - startPage + 1).keys()].map(i => i + startPage));
+            setVisiblePages(Array.from({ length: endPage - startPage + 1 }, (_, index) => index + startPage));
         } else if (page <= 6 && totalPages > 10) {
-            setVisiblePages([...Array(10).keys()].map(i => i + 1));
+            setVisiblePages(Array.from({ length: 10 }, (_, index) => index + 1));
         }
     };
 
@@ -88,3 +96,5 @@ export default function Pagination({ totalResults, resultsPerPage, currentPage, 
         </div>
     );
 }
+
+export default Pagination;

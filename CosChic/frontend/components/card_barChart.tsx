@@ -1,7 +1,16 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { CountUp } from 'countup.js';
 
-const CardBarChart = ({ eye, nose, lips, eyebrows, total, contour }) => {
+interface CardBarChartProps {
+    eye: string;
+    nose: string;
+    lips: string;
+    eyebrows: string;
+    total: string;
+    contour: string;
+}
+
+const CardBarChart: React.FC<CardBarChartProps> = ({ eye, nose, lips, eyebrows, total, contour }) => {
     const [cardOpen, setCardOpen] = useState(false);
     const totalRef = useRef<HTMLHeadingElement>(null);
     const cardRef = useRef<HTMLDivElement>(null);
@@ -50,13 +59,15 @@ const CardBarChart = ({ eye, nose, lips, eyebrows, total, contour }) => {
     ];
 
     useEffect(() => {
-        if (cardOpen) {
+        if (cardOpen && totalRef.current) {
             const countUpTotal = new CountUp(totalRef.current, totalNumber, { duration: 0.9 });
             countUpTotal.start();
             sessions.forEach((session, i) => {
-                const deviceRef = document.querySelector(`[data-device-index="${i}"]`);
-                const countUpDevice = new CountUp(deviceRef, session.size, { duration: 1.6 });
-                countUpDevice.start();
+                const deviceRef = document.querySelector(`[data-device-index="${i}"]`) as HTMLElement;
+                if (deviceRef) {
+                    const countUpDevice = new CountUp(deviceRef, session.size, { duration: 1.6 });
+                    countUpDevice.start();
+                }
             });
         }
     }, [cardOpen, totalNumber]);

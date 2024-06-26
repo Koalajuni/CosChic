@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import React, { useState } from 'react';
 import Header from "@/components/inc_header";
 import Footer from '@/components/inc_footer';
@@ -11,11 +11,15 @@ const ContactPage = () => {
     const [successMessage, setSuccessMessage] = useState('');
     const [errorMessage, setErrorMessage] = useState('');
 
-    const handleSubmit = async (e) => {
+    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
 
         try {
-            const response = await axiosInstance.post('/send_email', { email, subject, message });
+            const response = await axiosInstance.post('/send_email', { email, subject, message }, {
+                headers: {
+                    'Content-Type': 'application/json',
+                }
+            });
 
             if (response.status === 200) {
                 setSuccessMessage('Message sent successfully!');

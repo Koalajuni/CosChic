@@ -2,7 +2,17 @@ import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { FaShoppingBag, FaTag, FaCopyright, FaList } from 'react-icons/fa';
 
-const ProductDetails = ({ product }) => {
+interface Product {
+    productImage: string;
+    productName: string;
+    brandName: string;
+    price: number;
+    categoryId: string;
+    productUrl: string;
+    category: string;
+}
+
+const ProductDetails = ({ product }: { product: Product }) => {
     const [isHovered, setIsHovered] = useState(false);
 
     useEffect(() => {
@@ -21,7 +31,7 @@ const ProductDetails = ({ product }) => {
         }
     }, []);
 
-    const getCategoryIcon = (category) => {
+    const getCategoryIcon = (category: string) => {
         switch (category) {
             case 'lipstick':
                 return <FaTag className="text-pink-500" />;

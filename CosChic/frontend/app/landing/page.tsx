@@ -3,7 +3,7 @@ import IncNavbar from "@/components/inc_navbar";
 import IncHero from "@/components/inc_landingHero";
 import IncAnaly from "@/components/inc_landingText";
 import IncNews from "@/components/inc_news";
-import IncTestText from "@/components/test_landingText";
+import IncLandingExplanation from "@/components/inc_landingExplanation";
 
 export default function Main() {
     return (
@@ -14,8 +14,11 @@ export default function Main() {
             <hr className='border-black-400' />
             {/* <div className="min-h-[30vh]"></div> */}
             {/* </div> */}
-            {/* <IncAnaly /> */}
-            <IncTestText />
+            <hr className='border-black-400' />
+            <IncAnaly />
+            {/* <IncTestText /> */}
+            <hr className='border-black-400' />
+            <IncLandingExplanation />
             <hr className='border-black-400' />
             <IncHero />
             <hr className='border-black-400' />

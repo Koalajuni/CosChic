@@ -15,7 +15,9 @@ export default function UserProfile() {
     const [userData, setUserData] = useState<any | null>(null);
     const [loading, setLoading] = useState<boolean>(true);
     const [error, setError] = useState<string | null>(null);
-    const [image, setImage] = useState<string>('https://pds.joongang.co.kr/news/component/htmlphoto_mmdata/202306/04/138bdfca-3e86-4c09-9632-d22df52a0484.jpg');
+    const [image, setImage] = useState<string>('/assets/logo.png');
+    const [responseData3, setResponseData3] = useState(null);
+    const [imagePath, setImagePath] = useState('');
     const fileInput = useRef<HTMLInputElement>(null);
 
     useEffect(() => {
@@ -92,12 +94,13 @@ export default function UserProfile() {
     };
 
     const userResembleModels = [
-        { name: '모델 A', similarity: 87, image: 'https://via.placeholder.com/100' },
-        { name: '모델 B', similarity: 63, image: 'https://via.placeholder.com/100' },
-        { name: '모델 C', similarity: 43, image: 'https://via.placeholder.com/100' },
-        { name: '모델 D', similarity: 23, image: 'https://via.placeholder.com/100' },
-        { name: '모델 E', similarity: 23, image: 'https://via.placeholder.com/100' }
+        { name: '모델 A', similarity: 87, image: 'dasique_eye30.jpg' },
+        { name: '모델 B', similarity: 63, image: 'espoir_lipstick_1.jpg.jpg' },
+        { name: '모델 C', similarity: 43, image: 'jungsaemmool_tint_1.jpg' },
+        { name: '모델 D', similarity: 23, image: 'wakemake_eye_3.jpg' },
+        { name: '모델 E', similarity: 23, image: './assets/deardahila_tint_1.jpg' }
     ];
+    
 
 
     return (
@@ -110,13 +113,13 @@ export default function UserProfile() {
             ) : (
                 <div className="h-full flex justify-center">
                     <div className="px-3 py-2">
-                        <div className="flex flex-wrap border shadow rounded-lg p-3 dark:bg-gray-600 items-center flex-col">
-                            <div style={profileImageStyle} onClick={() => fileInput.current?.click()} />
-                            <input type="file" style={{ display: "none" }} ref={fileInput} onChange={onFileChange} accept="image/*" />
+                        <div className="flex flex-wrap border shadow rounded-lg p-3 dark:bg-gray-600 items-center flex-col ">
+                            <div className="hover:translate-y-1 hover:bg-[#e9b4c0]" style={profileImageStyle} onClick={() => fileInput.current?.click()} />
+                            <input type="file" style={{ display: "none" }} ref={fileInput} onChange={onFileChange} />
 
                             {userData && (
                                 <>
-                                    <p className="font-serif font-semibold p-4">{userData.names}</p>
+                                    <p className="font-serif font-semibold p-4  text-black">{userData.names}</p>
                                     <span className="text-sm text-gray-400">
                                         {userData.email}
                                     </span>
@@ -129,13 +132,20 @@ export default function UserProfile() {
                         </div>
                     </div>
                     <div>
-                        <CardProfileInformation name={userData?.names} email={userData?.email} age={userData?.age} gender={userData?.gender} UUID={userUID} />
+                        <CardProfileInformation name={userData?.names} email={userData?.email} age={userData?.age} gender={userData?.gender} UUID={userUID || ''} />
                     </div>
                 </div>
             )}
             <div>
                 <h2 className="text-xl font-semibold mt-4 mb-2 p-6">나와 비슷한 모델</h2>
-                <SimilarModels models={userResembleModels} />
+                    <div className="flex h-full justify-center items-center border rounded-xl py-3 space-x-4">
+                    <img src="./assets/deardahila_tint_1.jpg"  className="inset-0 w-[150px] h-[150px] object-cover rounded-full border-2 border-[#ffb4c5] rounded-md shadow-xl" />
+                    <img src="./assets/dasique_eye30.jpg"  className="inset-0 w-[150px] h-[150px] object-cover rounded-full border-2 border-[#ffb4c5] rounded-md shadow-xl" />
+                    <img src="./assets/jungsaemmool_tint_1.jpg"  className="inset-0 w-[150px] h-[150px] object-cover rounded-full border-2 border-[#ffb4c5] rounded-md shadow-xl" />
+                    <img src="./assets/wakemake_eye_3.jpg" className="inset-0 w-[150px] h-[150px] object-cover rounded-full border-2 border-[#ffb4c5] rounded-md shadow-xl" />
+                    <img src="./assets/muzigaemansion_lip1.jpg" className="inset-0 w-[150px] h-[150px] object-cover rounded-full border-2 border-[#ffb4c5] rounded-md shadow-xl" />
+
+                    </div>            
             </div>
             <Footer />
         </>

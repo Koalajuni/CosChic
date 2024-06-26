@@ -4,7 +4,15 @@ import axios from 'axios';
 import styles from '@/styles/CardProfileInformation.module.css';
 import axiosInstance from '@/hooks/axiosConfig';
 
-const CardProfileInformation = ({ name, email, age, gender, UUID }) => {
+interface CardProfileInformationProps {
+    name?: string;
+    email?: string;
+    age?: string;
+    gender?: string;
+    UUID: string | null;
+}
+
+const CardProfileInformation: React.FC<CardProfileInformationProps> = ({ name, email, age, gender, UUID }) => {
     const [formData, setFormData] = useState({
         names: name || "홍길동",
         email: email || "coschic@gmail.com",
@@ -20,7 +28,7 @@ const CardProfileInformation = ({ name, email, age, gender, UUID }) => {
         });
     }, [name, email, age, gender]);
 
-    const handleChange = (e) => {
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
         setFormData({
             ...formData,
@@ -28,7 +36,7 @@ const CardProfileInformation = ({ name, email, age, gender, UUID }) => {
         });
     };
 
-    const handleSubmit = async (e) => {
+    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         try {
             const response = await axios.put(`http://211.216.177.2:18000/api/v1/userdata/${UUID}`, formData);
@@ -45,13 +53,13 @@ const CardProfileInformation = ({ name, email, age, gender, UUID }) => {
                 <div className="flex flex-wrap border shadow rounded-lg p-3 dark:bg-gray-600">
                     <h2 className="text-xl text-gray-600 dark:text-gray-300 pb-2">나의 계정:</h2>
 
-                    <div className="flex flex-col gap-2 w-full border-gray-400">
+                    <div className="flex flex-col gap-2 w-full  border-gray-400">
 
                         <div>
                             <label className="text-gray-600 dark:text-gray-400">이름
                             </label>
                             <input
-                                className="w-full py-3 border border-slate-200 rounded-lg px-3 focus:outline-none focus:border-slate-500 hover:shadow dark:bg-gray-600 dark:text-gray-100"
+                                className="w-full py-3 border border-slate-200 rounded-lg px-3 focus:outline-none text-black focus:border-slate-500 hover:shadow dark:bg-gray-600 dark:text-gray-100"
                                 type="text"
                                 name="names"
                                 placeholder="이름"
@@ -62,7 +70,7 @@ const CardProfileInformation = ({ name, email, age, gender, UUID }) => {
                         <div>
                             <label className="text-gray-600 dark:text-gray-400">이메일</label>
                             <input
-                                className="w-full py-3 border border-slate-200 rounded-lg px-3 focus:outline-none focus:border-slate-500 hover:shadow dark:bg-gray-600 dark:text-gray-100"
+                                className="w-full py-3 border border-slate-200 rounded-lg px-3 focus:outline-none text-black focus:border-slate-500 hover:shadow dark:bg-gray-600 dark:text-gray-100"
                                 type="text"
                                 name="email"
                                 placeholder="{user.email}"
@@ -72,7 +80,7 @@ const CardProfileInformation = ({ name, email, age, gender, UUID }) => {
                         <div>
                             <label className="text-gray-600 dark:text-gray-400">나이</label>
                             <input
-                                className="w-full py-3 border border-slate-200 rounded-lg px-3 focus:outline-none focus:border-slate-500 hover:shadow dark:bg-gray-600 dark:text-gray-100"
+                                className="w-full py-3 border border-slate-200 rounded-lg px-3 focus:outline-none text-black focus:border-slate-500 hover:shadow dark:bg-gray-600 dark:text-gray-100"
                                 type="text"
                                 name="age"
                                 value={formData.age}
@@ -83,7 +91,7 @@ const CardProfileInformation = ({ name, email, age, gender, UUID }) => {
                         <div>
                             <label className="text-gray-600 dark:text-gray-400">성별</label>
                             <input
-                                className="w-full py-3 border border-slate-200 rounded-lg px-3 focus:outline-none focus:border-slate-500 hover:shadow dark:bg-gray-600 dark:text-gray-100"
+                                className="w-full py-3 border border-slate-200 rounded-lg px-3 focus:outline-none text-black focus:border-slate-500 hover:shadow dark:bg-gray-600 dark:text-gray-100"
                                 name="gender"
                                 value={formData.gender}
                                 placeholder="gender"
