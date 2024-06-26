@@ -37,3 +37,10 @@ class Recommend(models.Model):
     recImage = models.CharField(max_length=255)
     def __str__(self):
         return self.recDate
+    
+class Feedback(models.Model):
+    feedbackEmail = models.CharField(max_length=50)
+    feedbackTitle = models.CharField(max_length=50)
+    feedbackMessage = models.CharField(max_length=255)
+    def __str__(self):
+        return self.feedbackEmail

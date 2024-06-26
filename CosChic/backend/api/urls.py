@@ -13,6 +13,7 @@ urlpatterns = [
     #랜딩 페이지
     path('v1/live_video',landing_views.live_video, name='landing_video'),
     path('v1/get_most_common_name', landing_views.get_most_common_name, name="get_most_common_name"),
+    
 
     # 일반
     path('v1/', index_views.api_index, name='api_index'),
@@ -21,6 +22,10 @@ urlpatterns = [
     # 카메라  views/camera_views 파일에 있는 함수 
     path('v1/camera_video_feed', camera_views.video_feed, name='camera_video_feed'),
     path('v1/camera_take_photo/<str:UUID>', camera_views.take_photo, name='camera_take_photo'),
+    path('v1/analyze_image/<str:UUID>', camera_views.analyze_image, name='analyze_image'),
+    
+    
+    
     # 원본이미지 저장 
     path('v1/orgIMG/<str:UUID>', camera_views.img_send, name='img_send'),
 
@@ -41,6 +46,7 @@ urlpatterns = [
     path('v1/get_all_users', test_product_views.get_all_users, name='get_all_users'),
     path('v1/other_models', test_product_views.other_models, name='other_models'),
     path('v1/asso_product', test_product_views.asso_product, name='asso_product'),
+    path('v1/LC_result', test_product_views.LC_result, name='LC_result'),
 
     #검색
     path('v1/search', product_views.search, name='search_query'),

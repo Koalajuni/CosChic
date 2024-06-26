@@ -10,6 +10,9 @@ import os
 from api.models import UserData, Product, Recommend
 from .mediapipe_class import FaceMeshDetector
 from .faiss_class import CosChicFaiss
+from django.core.files.base import ContentFile
+import base64
+
 
 global eye_ratio
 global eyebrow_ratio
@@ -66,7 +69,7 @@ def video_feed(request):
 
 def stream():
 
-    cap = cv2.VideoCapture(0)
+    cap = cv2.VideoCapture(1)
     
     while True:
         ret, frame = cap.read()
@@ -75,11 +78,6 @@ def stream():
             print("cant find the camera")
             break
 
-        ######### 인공지능 돌아가는 부분 #############
-
-        # todo: Dlib, Faiss 코드 돌아가는 곳
-
-        ##########################################
 
         image_bytes = cv2.imencode('.jpg', frame)[1].tobytes()
         yield (b'--frame\r\n'
@@ -287,4 +285,80 @@ def faiss_analysis(request, UUID):
 
 
         return JsonResponse(jsonData, status=202)
+    
+@csrf_exempt
+def analyze_image(request, UUID):
+    global eye_ratio, eyebrow_ratio, nose_ratio, lip_ratio, face_ratio, full_eyesize_ratio, \
+            full_tail_eye_ratio, top_lip_ratio, bottom_lip_ratio, right_symmetry_ratio, left_symmetry_ratio, \
+                face_nose_height_ratio, face_nose_width_ratio  # Global variable declaration
+
+    try:
+        if request.method == 'POST':
+            print('Request method:', request.method)
+            uuid = UUID
+            print(f"uuid 받음 : {uuid}")
+            image_data = request.POST.get('image')
+            
+            if image_data:
+                # Generate timestamp
+                now = datetime.datetime.now()
+                nowString = now.strftime('%Y-%m-%d %H_%M_%S')
+
+                # Convert base64 image to file
+                format, imgstr = image_data.split(';base64,')
+                ext = format.split('/')[-1]
+                image_file = ContentFile(base64.b64decode(imgstr), name=f'image.{ext}')
+                
+                # Save the uploaded image to the media directory
+                url = f'./media/org_img/{nowString}.jpg'
+                with open(url, 'wb+') as destination:
+                    destination.write(image_file.read())
+
+                # Save image to db
+                try:
+                    user = UserData.objects.get(UUID=uuid)
+                except UserData.DoesNotExist:
+                    return JsonResponse({'error': '해당 UUID를 가진 유저가 없습니다.'}, status=404)
+                
+                # Update user's org_image field
+                user.orgImage = url  
+                user.save()
+
+                output_image = f'./media/mediapipe/output_{nowString}.jpg' 
+            
+                # Process image with FaceMeshDetector
+                detector = FaceMeshDetector(url, output_image)
+                eye_ratio, eyebrow_ratio, nose_ratio, lip_ratio, face_ratio, full_eyesize_ratio, \
+                full_tail_eye_ratio, top_lip_ratio, bottom_lip_ratio, right_symmetry_ratio, left_symmetry_ratio, \
+                face_nose_height_ratio, face_nose_width_ratio = detector.process_image()
+
+                output_image_path = f'http://211.216.177.2:18000/media/mediapipe/output_{nowString}.jpg' 
+                
+                # Include output_image_path in JSON response
+                return JsonResponse({
+                    "message": "Image processed successfully", 
+                    "output_image_path": output_image_path,
+                    "analysis_results": {
+                        "eye_ratio": eye_ratio,
+                        "eyebrow_ratio": eyebrow_ratio,
+                        "nose_ratio": nose_ratio,
+                        "lip_ratio": lip_ratio,
+                        "face_ratio": face_ratio,
+                        "full_eyesize_ratio": full_eyesize_ratio,
+                        "full_tail_eye_ratio": full_tail_eye_ratio,
+                        "top_lip_ratio": top_lip_ratio,
+                        "bottom_lip_ratio": bottom_lip_ratio,
+                        "right_symmetry_ratio": right_symmetry_ratio,
+                        "left_symmetry_ratio": left_symmetry_ratio,
+                        "face_nose_height_ratio": face_nose_height_ratio,
+                        "face_nose_width_ratio": face_nose_width_ratio
+                    }
+                }, status=200)
+            else:
+                return JsonResponse({"error": "No image data received"}, status=400)
         
+        return JsonResponse({"error": "Invalid request method"}, status=405)
+        
+    except Exception as e:
+        print(f"Error processing request: {e}")
+        return JsonResponse({"error": str(e)}, status=500)

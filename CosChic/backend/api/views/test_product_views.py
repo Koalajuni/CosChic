@@ -14,6 +14,7 @@ from django.db import connection
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from .beautygan_class import *
+from .langchain_class import *
 from django.conf import settings
 from os.path import join
 import os
@@ -314,3 +315,35 @@ def asso_product (request):
             return JsonResponse({'error': str(e)}, status=500)
     else:
         return JsonResponse({'error': 'Only POST requests are allowed.'}, status=405)
+    
+    
+# lnag_chain 함수
+@csrf_exempt
+def LC_result (request):
+    if request.method == 'POST':
+        # try:
+            # 4개만 일단 받아왔습니다.
+        user_Full_Tail_Eye_Ratio = request.POST.get('user_Full_Tail_Eye_Ratio')
+        user_Top_Lip_Ratio = request.POST.get('user_Top_Lip_Ratio')
+        user_Bottom_Lip_Ratio = request.POST.get('user_Bottom_Lip_Ratio')
+        user_Right_Symmetry_Ratio = request.POST.get('user_Right_Symmetry_Ratio')
+        
+        user_email = request.POST.get('user_email')
+        
+        LC = RAGPipeline()
+        LC_result_data = LC.run(f"내 눈 비율은 {user_Full_Tail_Eye_Ratio},\n"
+                    f"이고 윗입술 비율은 {user_Top_Lip_Ratio},\n"
+                    f"이고 아래입술 비율은 {user_Bottom_Lip_Ratio},\n"
+                    f"이고 유사도 비율은 {user_Right_Symmetry_Ratio} 인데 화장법 알려줘")
+        print(LC_result_data)
+
+        if not user_Full_Tail_Eye_Ratio:
+            return JsonResponse({'error': 'ratio not found for the given condition.'}, status=404)
+            
+        return JsonResponse(LC_result_data,safe=False, status=200)
+        
+        # except Exception as e:
+        #     return JsonResponse({'error': str(e)}, status=500)
+    else:
+        return JsonResponse({'error': 'Only POST requests are allowed.'}, status=405)
+

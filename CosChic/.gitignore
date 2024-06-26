@@ -8,3 +8,6 @@ frontend/venv
 backend/.DS_Store
 .env
 backend/api/migrations
+backend/LCdb/
+backend/docs/
+backend/nohup.out
