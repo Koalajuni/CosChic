@@ -10,6 +10,9 @@ __pycache__/
 model/
 pretrained/
 media/
+LCdb/
+docs/
+nohup.out
 
 # Distribution / packaging
 .Python
