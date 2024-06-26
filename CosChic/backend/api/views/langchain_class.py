@@ -8,10 +8,14 @@ from langchain_core.runnables import RunnablePassthrough
 from langchain_community.chat_models import ChatOpenAI
 from langchain_core.output_parsers import StrOutputParser
 from langchain import hub
+from dotenv import load_dotenv
+
+
+load_dotenv()
 
 class RAGPipeline:
     def __init__(self, persist_directory='LCdb', llm_model="gpt-3.5-turbo-0125", temperature=0.5):
-        os.environ["OPENAI_API_KEY"] = 'sk-proj-mdUCTVAEC3sNfgZN7FooT3BlbkFJ6URSqOvcr2YURTWja1sc'
+        os.environ["OPENAI_API_KEY"] = os.getenv('OPENAI_KEY')
         self.doc_path = '/home/ai/ai/chicbytes/CosChic/backend/docs/pdf_file.pdf'
         self.persist_directory = persist_directory
         self.llm_model = llm_model
