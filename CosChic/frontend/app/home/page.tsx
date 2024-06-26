@@ -116,9 +116,10 @@ export default function Home() {
     const takePhoto = () => {
         if (webcamRef.current) {
             const imageSrc = webcamRef.current.getScreenshot();
-            setCapturedImage(imageSrc);
-            // You can now send this image to your backend for analysis
-            sendImageToBackend(imageSrc);
+            if (imageSrc) {
+                setCapturedImage(imageSrc);
+                sendImageToBackend(imageSrc);
+            }
         }
     };
 

@@ -93,59 +93,78 @@ export default function UserProfile() {
 
     };
 
-    const userResembleModels = [
-        { name: '모델 A', similarity: 87, image: 'dasique_eye30.jpg' },
-        { name: '모델 B', similarity: 63, image: 'espoir_lipstick_1.jpg.jpg' },
-        { name: '모델 C', similarity: 43, image: 'jungsaemmool_tint_1.jpg' },
-        { name: '모델 D', similarity: 23, image: 'wakemake_eye_3.jpg' },
+    const models = [
+        { name: '모델 A', similarity: 87, image: './assets/dasique_eye30.jpg' },
+        { name: '모델 B', similarity: 63, image: './assets/muzigaemansion_lip1.jpg' },
+        { name: '모델 C', similarity: 43, image: './assets/jungsaemmool_tint_1.jpg' },
+        { name: '모델 D', similarity: 23, image: './assets/wakemake_eye_3.jpg' },
         { name: '모델 E', similarity: 23, image: './assets/deardahila_tint_1.jpg' }
     ];
-    
+
 
 
     return (
         <>
             <Header />
-            {loading ? (
-                <div>Loading...</div>
-            ) : error ? (
-                <div>Error: {error}</div>
-            ) : (
-                <div className="h-full flex justify-center">
-                    <div className="px-3 py-2">
-                        <div className="flex flex-wrap border shadow rounded-lg p-3 dark:bg-gray-600 items-center flex-col ">
-                            <div className="hover:translate-y-1 hover:bg-[#e9b4c0]" style={profileImageStyle} onClick={() => fileInput.current?.click()} />
-                            <input type="file" style={{ display: "none" }} ref={fileInput} onChange={onFileChange} />
-
-                            {userData && (
-                                <>
-                                    <p className="font-serif font-semibold p-4  text-black">{userData.names}</p>
-                                    <span className="text-sm text-gray-400">
-                                        {userData.email}
-                                    </span>
-                                    <span className="text-sm text-gray-400">
-                                        {userData.gender}
-                                    </span>
-                                    <span></span>
-                                </>
-                            )}
+            <div className="container mx-auto px-4 py-8">
+                {loading ? (
+                    <div className="text-center">Loading...</div>
+                ) : error ? (
+                    <div className="text-center text-red-500">Error: {error}</div>
+                ) : (
+                    <div className="flex flex-col md:flex-row gap-8">
+                        <div className="md:w-1/3">
+                            <div className="bg-white shadow-lg rounded-lg p-6 text-center">
+                                <div className="relative w-48 h-48 mx-auto mb-4">
+                                    <img
+                                        src={image}
+                                        alt="Profile"
+                                        className="w-full h-full object-cover rounded-full border-4 border-pink-200"
+                                    />
+                                    <button
+                                        onClick={() => fileInput.current?.click()}
+                                        className="absolute bottom-0 right-0 bg-pink-500 text-white p-2 rounded-full hover:bg-pink-600 transition"
+                                    >
+                                        <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+                                        </svg>
+                                    </button>
+                                </div>
+                                <input type="file" className="hidden" ref={fileInput} onChange={onFileChange} />
+                                {userData && (
+                                    <>
+                                        <h2 className="text-2xl font-bold mb-2">{userData.names}</h2>
+                                        <p className="text-gray-600 mb-1">{userData.email}</p>
+                                        <p className="text-gray-600">{userData.gender}</p>
+                                    </>
+                                )}
+                            </div>
+                        </div>
+                        <div className="md:w-2/3">
+                            <CardProfileInformation
+                                name={userData?.names}
+                                email={userData?.email}
+                                age={userData?.age}
+                                gender={userData?.gender}
+                                UUID={userUID || ''}
+                            />
                         </div>
                     </div>
-                    <div>
-                        <CardProfileInformation name={userData?.names} email={userData?.email} age={userData?.age} gender={userData?.gender} UUID={userUID || ''} />
+                )}
+                <div className="mt-12">
+                    <h2 className="text-2xl font-bold mb-6">나와 비슷한 모델</h2>
+                    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6">
+                        {models.map((model, index) => (
+                            <div key={index} className="bg-white rounded-lg shadow-lg overflow-hidden">
+                                <img src={model.image} alt={model.name} className="w-full h-48 object-cover" />
+                                <div className="p-4">
+                                    <h3 className="font-semibold text-lg mb-2">{model.name}</h3>
+                                    <p className="text-sm text-gray-600">유사도: {model.similarity}%</p>
+                                </div>
+                            </div>
+                        ))}
                     </div>
                 </div>
-            )}
-            <div>
-                <h2 className="text-xl font-semibold mt-4 mb-2 p-6">나와 비슷한 모델</h2>
-                    <div className="flex h-full justify-center items-center border rounded-xl py-3 space-x-4">
-                    <img src="./assets/deardahila_tint_1.jpg"  className="inset-0 w-[150px] h-[150px] object-cover rounded-full border-2 border-[#ffb4c5] rounded-md shadow-xl" />
-                    <img src="./assets/dasique_eye30.jpg"  className="inset-0 w-[150px] h-[150px] object-cover rounded-full border-2 border-[#ffb4c5] rounded-md shadow-xl" />
-                    <img src="./assets/jungsaemmool_tint_1.jpg"  className="inset-0 w-[150px] h-[150px] object-cover rounded-full border-2 border-[#ffb4c5] rounded-md shadow-xl" />
-                    <img src="./assets/wakemake_eye_3.jpg" className="inset-0 w-[150px] h-[150px] object-cover rounded-full border-2 border-[#ffb4c5] rounded-md shadow-xl" />
-                    <img src="./assets/muzigaemansion_lip1.jpg" className="inset-0 w-[150px] h-[150px] object-cover rounded-full border-2 border-[#ffb4c5] rounded-md shadow-xl" />
-
-                    </div>            
             </div>
             <Footer />
         </>

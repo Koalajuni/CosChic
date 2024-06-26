@@ -1,6 +1,6 @@
 // CardSearchProduct.js
 "use client";
-import React from 'react';
+import React, { Suspense } from 'react';
 import Swal from "sweetalert2"
 
 
@@ -48,6 +48,7 @@ const CardSearchProduct: React.FC<CardSearchProductProps> = ({ image, title, des
                 </div>
             </div>
         </section>
+
     );
 };
 

@@ -28,12 +28,12 @@ const CardProfileInformation: React.FC<CardProfileInformationProps> = ({ name, e
         });
     }, [name, email, age, gender]);
 
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
         const { name, value } = e.target;
-        setFormData({
-            ...formData,
+        setFormData(prevData => ({
+            ...prevData,
             [name]: value,
-        });
+        }));
     };
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -48,62 +48,62 @@ const CardProfileInformation: React.FC<CardProfileInformationProps> = ({ name, e
     };
 
     return (
-        <div className="w-full flex justify-start mt-2 px-8">
-            <form className="max-w-2xl" onSubmit={handleSubmit}>
-                <div className="flex flex-wrap border shadow rounded-lg p-3 dark:bg-gray-600">
-                    <h2 className="text-xl text-gray-600 dark:text-gray-300 pb-2">나의 계정:</h2>
-
-                    <div className="flex flex-col gap-2 w-full  border-gray-400">
-
-                        <div>
-                            <label className="text-gray-600 dark:text-gray-400">이름
-                            </label>
-                            <input
-                                className="w-full py-3 border border-slate-200 rounded-lg px-3 focus:outline-none text-black focus:border-slate-500 hover:shadow dark:bg-gray-600 dark:text-gray-100"
-                                type="text"
-                                name="names"
-                                placeholder="이름"
-                                value={formData.names}
-                                onChange={handleChange} />
-                        </div>
-
-                        <div>
-                            <label className="text-gray-600 dark:text-gray-400">이메일</label>
-                            <input
-                                className="w-full py-3 border border-slate-200 rounded-lg px-3 focus:outline-none text-black focus:border-slate-500 hover:shadow dark:bg-gray-600 dark:text-gray-100"
-                                type="text"
-                                name="email"
-                                placeholder="{user.email}"
-                                value={formData.email}
-                                onChange={handleChange} />
-                        </div>
-                        <div>
-                            <label className="text-gray-600 dark:text-gray-400">나이</label>
-                            <input
-                                className="w-full py-3 border border-slate-200 rounded-lg px-3 focus:outline-none text-black focus:border-slate-500 hover:shadow dark:bg-gray-600 dark:text-gray-100"
-                                type="text"
-                                name="age"
-                                value={formData.age}
-                                placeholder="20"
-                                onChange={handleChange} />
-                        </div>
-
-                        <div>
-                            <label className="text-gray-600 dark:text-gray-400">성별</label>
-                            <input
-                                className="w-full py-3 border border-slate-200 rounded-lg px-3 focus:outline-none text-black focus:border-slate-500 hover:shadow dark:bg-gray-600 dark:text-gray-100"
-                                name="gender"
-                                value={formData.gender}
-                                placeholder="gender"
-                                onChange={handleChange} />
-
-                        </div>
-                        <div className="flex justify-end">
-                            <button
-                                className="py-1.5 px-3 m-1 text-center bg-violet-700 border rounded-md text-white  hover:bg-violet-500 hover:text-gray-100 dark:text-gray-200 dark:bg-violet-700"
-                                type="submit">저장하기</button>
-                        </div>
+        <div className="bg-white shadow-lg rounded-lg p-6">
+            <h2 className="text-2xl font-bold mb-4 text-gray-800">내 계정 정보</h2>
+            <form onSubmit={handleSubmit}>
+                <div className="space-y-4">
+                    <div>
+                        <label className="block text-sm font-medium text-gray-700">이름</label>
+                        <input
+                            className="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-pink-500 focus:border-pink-500"
+                            type="text"
+                            name="names"
+                            value={formData.names}
+                            onChange={handleChange}
+                        />
                     </div>
+                    <div>
+                        <label className="block text-sm font-medium text-gray-700">이메일</label>
+                        <input
+                            className="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-pink-500 focus:border-pink-500"
+                            type="email"
+                            name="email"
+                            value={formData.email}
+                            onChange={handleChange}
+                        />
+                    </div>
+                    <div>
+                        <label className="block text-sm font-medium text-gray-700">나이</label>
+                        <input
+                            className="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-pink-500 focus:border-pink-500"
+                            type="number"
+                            name="age"
+                            value={formData.age}
+                            onChange={handleChange}
+                        />
+                    </div>
+                    <div>
+                        <label className="block text-sm font-medium text-gray-700">성별</label>
+                        <select
+                            className="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-pink-500 focus:border-pink-500"
+                            name="gender"
+                            value={formData.gender}
+                            onChange={handleChange}
+                        >
+                            <option value="">선택하세요</option>
+                            <option value="male">남성</option>
+                            <option value="female">여성</option>
+                            <option value="other">기타</option>
+                        </select>
+                    </div>
+                </div>
+                <div className="mt-6">
+                    <button
+                        type="submit"
+                        className="w-full px-4 py-2 text-white bg-pink-500 rounded-md hover:bg-pink-600 focus:outline-none focus:ring-2 focus:ring-pink-500 focus:ring-offset-2"
+                    >
+                        저장하기
+                    </button>
                 </div>
             </form>
         </div>
