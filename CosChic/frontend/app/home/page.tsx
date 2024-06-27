@@ -81,7 +81,7 @@ export default function Home() {
     // const [selfRef, setSelRef] = ("");
     // const [refImage, setRefImage] = useState(-1);
     const [refId, setRefId] = useState(-1);
-    const baseUrl = 'https://211.216.177.2:18000/api/v1';
+    const baseUrl = 'http://211.216.177.2:18000/api/v1';
 
     const [buttonText, setButtonText] = useState("카메라 사용하기");
 
