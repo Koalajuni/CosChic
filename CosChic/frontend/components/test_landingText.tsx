@@ -7,8 +7,8 @@ const IncTestText = () => {
     const [cameraOn, setCamera] = useState(false);
     const [analyzedName, setAnalyzedName] = useState(null);
     const [loading, setLoading] = useState(false);
-    const [capturedImage, setCapturedImage] = useState(null);
-    const webcamRef = useRef(null);
+    const [capturedImage, setCapturedImage] = useState<string | null>(null);
+    const webcamRef = useRef<Webcam | null>(null);
 
     const cameraClick = () => {
         setCamera(prev => !prev);
@@ -17,9 +17,13 @@ const IncTestText = () => {
     };
 
     const captureImage = () => {
-        const imageSrc = webcamRef.current.getScreenshot();
-        setCapturedImage(imageSrc);
-        setCamera(false);
+        if (webcamRef.current) {
+            const imageSrc = webcamRef.current.getScreenshot();
+            setCapturedImage(imageSrc);
+            setCamera(false);
+        } else {
+            console.error("Webcam not available");
+        }
     };
 
     const analyzeClick = async () => {
