@@ -362,3 +362,76 @@ def analyze_image(request, UUID):
     except Exception as e:
         print(f"Error processing request: {e}")
         return JsonResponse({"error": str(e)}, status=500)
+    
+
+@csrf_exempt
+def get_similarCeleb(request):
+    global eye_ratio, eyebrow_ratio, nose_ratio, lip_ratio, face_ratio, full_eyesize_ratio, \
+            full_tail_eye_ratio, top_lip_ratio, bottom_lip_ratio, right_symmetry_ratio, left_symmetry_ratio, \
+                face_nose_height_ratio, face_nose_width_ratio  # 전역 변수 선언
+    if request.method == 'POST':
+        
+        image_data = request.POST.get('image')
+            
+        if image_data:
+            # Generate timestamp
+            now = datetime.datetime.now()
+            nowString = now.strftime('%Y-%m-%d %H_%M_%S')
+
+            # Convert base64 image to file
+            format, imgstr = image_data.split(';base64,')
+            ext = format.split('/')[-1]
+            image_file = ContentFile(base64.b64decode(imgstr), name=f'image.{ext}')
+            
+            # Save the uploaded image to the media directory
+            url = f'./media/org_img/{nowString}.jpg'
+            with open(url, 'wb+') as destination:
+                destination.write(image_file.read())
+
+            output_image = f'./media/mediapipe/output_{nowString}.jpg' 
+        
+            # Process image with FaceMeshDetector
+            detector = FaceMeshDetector(url, output_image)
+            eye_ratio, eyebrow_ratio, nose_ratio, lip_ratio, face_ratio, full_eyesize_ratio, \
+            full_tail_eye_ratio, top_lip_ratio, bottom_lip_ratio, right_symmetry_ratio, left_symmetry_ratio, \
+            face_nose_height_ratio, face_nose_width_ratio = detector.process_image()
+
+            output_image_path = f'http://211.216.177.2:18000/media/mediapipe/output_{nowString}.jpg' 
+            
+            # lipsSimilarity = abs(100 - (abs(lip_ratio - model_lip_ratio)* 5))
+            # eyeSimilarity = abs(100 - (abs(eye_ratio - model_eye_ratio) * 20))
+            # noseSimilarity = abs(100 - (abs(nose_ratio - model_nose_ratio)))
+            # contourSimilarity = abs(100 - (abs(face_ratio - model_face_ratio)))
+            # eyebrowSimilarity = abs(100 - (abs(eyebrow_ratio - model_eyebrow_ratio)*20))
+            # final_similarity = (lipsSimilarity + eyeSimilarity + eyebrowSimilarity + contourSimilarity + noseSimilarity) / 5
+            final_similarity = (eye_ratio + nose_ratio + lip_ratio + face_ratio + eyebrow_ratio) / 5
+
+        
+        
+        print("request faiss analysis")
+        # 유저 사진 가져오기
+        # 유저 객체 가져오기
+        userImage = url
+        print(userImage)
+        
+        # faiss 분석
+        model = CosChicFaiss()
+        similarFace = model.landingpage_detect_faces(userImage,
+                        r'./pretrained/Similarlabels.npy',  # pre-train 모델경로 맞게 수정 
+                        r'./pretrained/SimilarFace_20240702.bin')
+        
+        base_url ="http://211.216.177.2:18000/media/similarCeleb"
+
+        similarFaceDir = os.path.join("./media/similarCeleb", similarFace)
+        try:
+            files = os.listdir(similarFaceDir)
+            if files:
+                celebrityImage = f"{base_url}/{similarFace}/{files[0]}"
+            else:
+                celebrityImage = output_image_path
+        except FileNotFoundError:
+            celebrityImage = output_image_path
+
+        print("similarFace:", similarFace)
+        jsonData ={"most_similar_celebrity":similarFace,"celebrity_image":celebrityImage, "user_image":output_image_path, "similarity_score":final_similarity}
+        return JsonResponse(jsonData, status=202)

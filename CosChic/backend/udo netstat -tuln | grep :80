@@ -1,0 +1,17 @@
+[0;1;31m●[0m nginx.service - A high performance web server and a reverse proxy server
+     Loaded: loaded (/lib/systemd/system/nginx.service; enabled; vendor preset: enabled)
+     Active: [0;1;31mfailed[0m (Result: exit-code) since Tue 2024-07-02 13:34:54 KST; 28s ago
+       Docs: man:nginx(8)
+    Process: 847658 ExecStartPre=/usr/sbin/nginx -t -q -g daemon on; master_process on; (code=exited, status=0/SUCCESS)
+    Process: 847659 ExecStart=/usr/sbin/nginx -g daemon on; master_process on; [0;1;31m(code=exited, status=1/FAILURE)[0m
+
+Jul 02 13:34:52 ubuntu systemd[1]: Starting A high performance web server and a reverse proxy server...
+Jul 02 13:34:52 ubuntu nginx[847659]: nginx: [emerg] bind() to 0.0.0.0:80 failed (98: Address already in use)
+Jul 02 13:34:52 ubuntu nginx[847659]: nginx: [emerg] bind() to 0.0.0.0:80 failed (98: Address already in use)
+Jul 02 13:34:53 ubuntu nginx[847659]: nginx: [emerg] bind() to 0.0.0.0:80 failed (98: Address already in use)
+Jul 02 13:34:53 ubuntu nginx[847659]: nginx: [emerg] bind() to 0.0.0.0:80 failed (98: Address already in use)
+Jul 02 13:34:54 ubuntu nginx[847659]: nginx: [emerg] bind() to 0.0.0.0:80 failed (98: Address already in use)
+Jul 02 13:34:54 ubuntu nginx[847659]: nginx: [emerg] still could not bind()
+Jul 02 13:34:54 ubuntu systemd[1]: [0;1;39m[0;1;31m[0;1;39mnginx.service: Control process exited, code=exited, status=1/FAILURE[0m
+Jul 02 13:34:54 ubuntu systemd[1]: [0;1;38;5;185m[0;1;39m[0;1;38;5;185mnginx.service: Failed with result 'exit-code'.[0m
+Jul 02 13:34:54 ubuntu systemd[1]: [0;1;31m[0;1;39m[0;1;31mFailed to start A high performance web server and a reverse proxy server.[0m

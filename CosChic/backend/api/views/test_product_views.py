@@ -276,7 +276,7 @@ def other_models (request):
                     images = os.listdir(modelFolderPath)
                     if images:
                         firstImage = images[0]
-                        modelPhotoUrl = f'http://211.216.177.2:18000/media/model_img/{model}/{firstImage}' 
+                        modelPhotoUrl = f'://211.216.177.2:18000/media/model_img/{model}/{firstImage}' 
 
                         model_data.append({
                             'names': model,

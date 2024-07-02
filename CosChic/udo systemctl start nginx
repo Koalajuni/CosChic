@@ -1,0 +1,25 @@
+[0;1;32m●[0m nginx.service - A high performance web server and a reverse proxy server
+     Loaded: loaded (/lib/systemd/system/nginx.service; enabled; vendor preset: enabled)
+     Active: [0;1;32mactive (running)[0m since Fri 2024-06-28 09:31:33 KST; 19min ago
+       Docs: man:nginx(8)
+    Process: 36452 ExecStartPre=/usr/sbin/nginx -t -q -g daemon on; master_process on; (code=exited, status=0/SUCCESS)
+    Process: 36453 ExecStart=/usr/sbin/nginx -g daemon on; master_process on; (code=exited, status=0/SUCCESS)
+    Process: 36751 ExecReload=/usr/sbin/nginx -g daemon on; master_process on; -s reload (code=exited, status=0/SUCCESS)
+   Main PID: 36454 (nginx)
+      Tasks: 9 (limit: 37120)
+     Memory: 7.2M
+     CGroup: /system.slice/nginx.service
+             ├─36454 nginx: master process /usr/sbin/nginx -g daemon on; master_process on;
+             ├─36752 nginx: worker process
+             ├─36753 nginx: worker process
+             ├─36754 nginx: worker process
+             ├─36755 nginx: worker process
+             ├─36757 nginx: worker process
+             ├─36758 nginx: worker process
+             ├─36759 nginx: worker process
+             └─36760 nginx: worker process
+
+Jun 28 09:31:33 ubuntu systemd[1]: Starting A high performance web server and a reverse proxy server...
+Jun 28 09:31:33 ubuntu systemd[1]: Started A high performance web server and a reverse proxy server.
+Jun 28 09:35:07 ubuntu systemd[1]: Reloading A high performance web server and a reverse proxy server.
+Jun 28 09:35:07 ubuntu systemd[1]: Reloaded A high performance web server and a reverse proxy server.

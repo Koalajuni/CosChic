@@ -30,8 +30,17 @@ SECRET_KEY = os.getenv('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+SECURE_SSL_REDIRECT = False
+SESSION_COOKIE_SECURE = True
+CSRF_COOKIE_SECURE = True
+SECURE_HSTS_SECONDS = 31536000  # 1 year
+SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+SECURE_HSTS_PRELOAD = True
+SECURE_BROWSER_XSS_FILTER = True
+SECURE_CONTENT_TYPE_NOSNIFF = True
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ['211.216.177.2', 'coschic.co','www.coschic.co']
 
 
 # Application definition
@@ -79,6 +88,8 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'backend.wsgi.application'
+
+ACCOUNT_DEFAULT_HTTP_PROTOCOL = "https"
 
 
 # Database
@@ -152,6 +163,9 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 # CORS_ORIGIN_WHITELIST = ['http://127.0.0.1:8000'
 # ,'http://localhost:18000']#(포트 지정)
 CORS_ALLOW_ALL_ORIGINS = True #(모든 포트 허용)
+CORS_ALLOWED_ORIGINS = [
+    "https://coschic.vercel.app",
+]
 
 #HTTP methods 추가
 CORS_ALLOW_METHODS = (

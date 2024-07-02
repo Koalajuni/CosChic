@@ -23,6 +23,8 @@ urlpatterns = [
     path('v1/camera_video_feed', camera_views.video_feed, name='camera_video_feed'),
     path('v1/camera_take_photo/<str:UUID>', camera_views.take_photo, name='camera_take_photo'),
     path('v1/analyze_image/<str:UUID>', camera_views.analyze_image, name='analyze_image'),
+    path('v1/get_similarCeleb', camera_views.get_similarCeleb, name='get_similarCeleb'),
+    
     
     
     
