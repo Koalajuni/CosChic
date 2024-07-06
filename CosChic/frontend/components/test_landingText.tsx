@@ -1,19 +1,27 @@
 "use client"
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useRef } from 'react';
 import Webcam from 'react-webcam';
 import axiosInstance from '@/hooks/axiosConfig';
 
+interface Celebrity {
+    name: string;
+    similarity: number;
+    celebImage: string;
+    userImage: string;
+}
+
 const IncTestText = () => {
     const [cameraOn, setCamera] = useState(false);
-    const [analyzedName, setAnalyzedName] = useState(null);
+    const [analyzedCelebrity, setAnalyzedCelebrity] = useState<Celebrity | null>(null);
     const [loading, setLoading] = useState(false);
     const [capturedImage, setCapturedImage] = useState<string | null>(null);
     const webcamRef = useRef<Webcam | null>(null);
+    const [showStyleAnalysisPrompt, setShowStyleAnalysisPrompt] = useState(false);
 
     const cameraClick = () => {
         setCamera(prev => !prev);
         setCapturedImage(null);
-        setAnalyzedName(null);
+        setAnalyzedCelebrity(null);
     };
 
     const captureImage = () => {
@@ -33,10 +41,15 @@ const IncTestText = () => {
         }
         setLoading(true);
         try {
-            // Convert base64 image to blob
             const response = await axiosInstance.post(`/get_similarCeleb`, { image: capturedImage });
             if (response.data) {
-                setAnalyzedName(response.data.most_similar_celebrity);
+                setAnalyzedCelebrity({
+                    name: response.data.most_similar_celebrity,
+                    similarity: Math.round(response.data.similarity_score),
+                    celebImage: response.data.celebrity_image,
+                    userImage: response.data.user_image, // This should be the modified user image from the backend
+                });
+                setShowStyleAnalysisPrompt(true);
             } else {
                 console.error("Analysis failed");
             }
@@ -50,6 +63,7 @@ const IncTestText = () => {
         <div className="IncTestText">
             <div className="w-full bg-white px-4">
                 <div className="max-w-[1240px] mx-auto grid md:grid-cols-2">
+                    {/* Left column - webcam/image capture */}
                     <div className="mb-10 py-10 mr-16">
                         <div className="border relative rounded-lg h-[350px] flex justify-center items-center bg-white overflow-hidden">
                             {cameraOn ? (
@@ -76,30 +90,82 @@ const IncTestText = () => {
                                 </div>
                             )}
                         </div>
+                        {analyzedCelebrity && showStyleAnalysisPrompt && (
+                            <div className="mt-8 flex flex-col items-center animate-pulse">
+                                <svg className="w-20 h-20 text-[#FF6F91]" fill="none" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path d="M19 14l-7 7m0 0l-7-7m7 7V3"></path>
+                                </svg>
+                                <p className="mt-2 text-lg font-semibold text-[#FF6F91]">나에게 맞는 스타일 분석</p>
+                            </div>
+                        )}
                     </div>
+
+                    {/* Right column - celebrity match section */}
                     <div className="flex flex-col mt-6 justify-start">
-                        <p className="p-2 md:text-5xl sm:text-4xl text-3xl text-black font-bold md:py-4" style={{ color: '#FF6F91' }}>나랑 닮은 연예인은?</p>
-                        <div className="p-2 gap-10">
-                            <p>1. 인공지능 기반 얼굴 인식: 고객이 얼굴 사진을 찍거나 업로드하면,</p>
-                            <p>인공지능이 얼굴 유형을 정확하게 분석합니다.</p>
-                            <p>&nbsp;</p>
-                            <p>2. 맞춤형 화장품 추천: </p>
-                            <p>   고객의 얼굴 유형, 피부 상태, 선호하는 화장 스타일에 맞춰 최적의 화장품을 추천합니다.</p>
-                        </div>
-                        <div className="p-2 md:text-2xl sm:text-2xl text-2xl font-bold mt-10">
-                            <p>나랑 가장 닮은 연예인은:</p>
-                            {analyzedName && <h3>{analyzedName}</h3>}
-                        </div>
-                        <div className="mt-2 p-2">
-                            <button onClick={cameraClick} disabled={loading} type="button" className="jusitfy-start bg-[#C598F0] w-[200px] rounded-md font-medium my-2 gap-4 mx-auto py-3 text-white">
+                        <h2 className="p-2 md:text-5xl sm:text-4xl text-3xl font-bold md:py-4" style={{ color: '#FF6F91' }}>나랑 닮은 연예인은?</h2>
+
+                        {analyzedCelebrity ? (
+                            <div className="mt-6 bg-white rounded-lg shadow-lg overflow-hidden">
+                                <div className="flex">
+                                    <div className="w-1/2 p-2">
+                                        <img
+                                            src={analyzedCelebrity.userImage}
+                                            alt="Your photo"
+                                            className="w-full h-64 object-cover rounded"
+                                        />
+                                        <p className="text-center mt-2 font-semibold">You</p>
+                                    </div>
+                                    <div className="w-1/2 p-2">
+                                        <img
+                                            src={analyzedCelebrity.celebImage}
+                                            alt={analyzedCelebrity.name}
+                                            className="w-full h-64 object-cover rounded"
+                                        />
+                                        <p className="text-center mt-2 font-semibold">{analyzedCelebrity.name}</p>
+                                    </div>
+                                </div>
+                                <div className="p-6">
+                                    <h3 className="font-bold text-2xl mb-2">Similarity Match</h3>
+                                    <div className="mt-4 bg-gray-200 rounded-full">
+                                        <div
+                                            className="bg-pink-500 text-xs font-medium text-white text-center p-2 leading-none rounded-full"
+                                            style={{ width: `${analyzedCelebrity.similarity}%` }}
+                                        >
+                                            {analyzedCelebrity.similarity}% Match
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        ) : (
+                            <div className="mt-6 p-6 bg-gray-100 rounded-lg">
+                                <p className="text-center text-gray-600">
+                                    Capture an image and click "분석하기" to see your celebrity match!
+                                </p>
+                            </div>
+                        )}
+
+                        <div className="mt-6 p-2 flex flex-col sm:flex-row gap-4">
+                            <button
+                                onClick={cameraClick}
+                                disabled={loading}
+                                className="bg-[#C598F0] rounded-md font-medium py-3 px-6 text-white transition duration-300 ease-in-out hover:bg-[#B080D0]"
+                            >
                                 {cameraOn ? "카메라 끄기" : "카메라 켜기"}
                             </button>
                             {cameraOn && (
-                                <button onClick={captureImage} disabled={loading} type="button" className="jusitfy-start bg-[#8E65B7] w-[200px] rounded-md font-medium my-2 mx-auto py-3 text-white">
+                                <button
+                                    onClick={captureImage}
+                                    disabled={loading}
+                                    className="bg-[#8E65B7] rounded-md font-medium py-3 px-6 text-white transition duration-300 ease-in-out hover:bg-[#7A51A3]"
+                                >
                                     사진 찍기
                                 </button>
                             )}
-                            <button onClick={analyzeClick} disabled={!capturedImage || loading} type="button" className="jusitfy-start bg-[#FF6F91] w-[200px] rounded-md font-medium my-2 mx-auto py-3 text-white">
+                            <button
+                                onClick={analyzeClick}
+                                disabled={!capturedImage || loading}
+                                className="bg-[#FF6F91] rounded-md font-medium py-3 px-6 text-white transition duration-300 ease-in-out hover:bg-[#FF5A7D]"
+                            >
                                 {loading ? "분석 중..." : "분석하기"}
                             </button>
                         </div>
