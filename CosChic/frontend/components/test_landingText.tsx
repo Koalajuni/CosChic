@@ -125,21 +125,21 @@ const IncTestText = () => {
                                     </div>
                                 </div>
                                 <div className="p-6">
-                                    <h3 className="font-bold text-2xl mb-2">Similarity Match</h3>
+                                    <h3 className="font-bold text-2xl text-[#C598F0] mb-2">나와 이정도로 비슷해요</h3>
                                     <div className="mt-4 bg-gray-200 rounded-full">
                                         <div
                                             className="bg-pink-500 text-xs font-medium text-white text-center p-2 leading-none rounded-full"
                                             style={{ width: `${analyzedCelebrity.similarity}%` }}
                                         >
-                                            {analyzedCelebrity.similarity}% Match
+                                            {analyzedCelebrity.similarity}%
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         ) : (
                             <div className="mt-6 p-6 bg-gray-100 rounded-lg">
-                                <p className="text-center text-gray-600">
-                                    Capture an image and click "분석하기" to see your celebrity match!
+                                <p className="text-center text-[#C598F0]">
+                                    "카메라로 얼굴을 찍은 후 나의 얼굴과 가장 닮은 연예인을 찾아봐요!"
                                 </p>
                             </div>
                         )}

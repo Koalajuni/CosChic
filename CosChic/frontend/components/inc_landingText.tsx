@@ -19,14 +19,14 @@ export default function IncAnaly() {
                             COSCHIC
                         </h1>
                         <p className="text-gray-600 mb-8">
-                            나만을 위한 AI 뷰티 솔루션. COSCHIC으로 나만의 완벽한 스타을 발견해요.
+                            나만을 위한 개인 스타일리스트, 나에게 맞는 스타일을 추천 받아요
                         </p>
                         <div className="grid grid-cols-2 gap-6">
                             {[
                                 { icon: <FaRobot />, title: "AI 얼굴 인식", description: "정확한 얼굴 유형 분석" },
                                 { icon: <FaGift />, title: "맞춤형 추천", description: "개인화된 화장품 제안" },
                                 { icon: <FaBalanceScale />, title: "제품 비교", description: "최적의 선택을 위한 비교" },
-                                { icon: <FaMagic />, title: "가상 메이크업", description: "다양한 스타일 시뮬레이션" }
+                                { icon: <FaMagic />, title: "가상 메이크업", description: "얼굴에 바로 입혀봐요" }
                             ].map((item, index) => (
                                 <div key={index} className="flex items-start space-x-3">
                                     <div className="text-purple-500 text-2xl">{item.icon}</div>
@@ -38,7 +38,7 @@ export default function IncAnaly() {
                             ))}
                         </div>
                         <a href="/login" className="mt-8 bg-gradient-to-r from-[#FF6F91] to-[#8E65B7] text-center text-white font-bold py-3 px-6 rounded-full hover:shadow-lg transform hover:-translate-y-1 transition duration-300">
-                            지금 시작하기
+                            내 스타일 분석하기
                         </a>
                     </div>
                 </div>
