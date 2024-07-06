@@ -39,7 +39,7 @@ const CardProfileInformation: React.FC<CardProfileInformationProps> = ({ name, e
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         try {
-            const response = await axios.put(`https://211.216.177.2:18000/api/v1/userdata/${UUID}`, formData);
+            const response = await axios.put(`https://api.coschic.co/api/v1/userdata/${UUID}`, formData);
             console.log('Data submitted successfully:', response.data);
             window.location.reload();
         } catch (error) {

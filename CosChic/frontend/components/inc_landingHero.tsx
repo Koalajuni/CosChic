@@ -23,7 +23,7 @@ export default function IncHero() {
                         />
                     </p>
                 </div>
-                <a href="/login" className="bg-[#C598F0] w-[200px] rounded-md font-medium my-6 mx-auto py-3 text-white">지금 시작하기</a>
+                <a href="/login" className="bg-[#C598F0] w-[200px] rounded-md font-medium my-6 mx-auto py-3 text-white">스타일 분석하기</a>
             </div>
         </div>
     )

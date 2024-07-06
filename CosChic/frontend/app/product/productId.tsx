@@ -51,7 +51,7 @@ const ProductPage = () => {
     const router = useRouter();
     const { productId } = router.query;
 
-    const userProfileImage = 'https://via.placeholder.com/150';
+    const userProfileImage = 'http://via.placeholder.com/150';
     const userResembleModels = [
         { name: '모델 A', similarity: 87, image: 'https://via.placeholder.com/100' },
         { name: '모델 B', similarity: 63, image: 'https://via.placeholder.com/100' },
