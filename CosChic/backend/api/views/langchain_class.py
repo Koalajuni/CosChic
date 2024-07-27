@@ -66,12 +66,3 @@ class RAGPipeline:
         answer = chain.invoke(question)
         return answer
 
-# 예시 사용법
-
-# from converted_script import *
-
-# model = RAGPipeline(api_key='sk-proj-mdUCTVAEC3sNfgZN7FooT3BlbkFJ6URSqOvcr2YURTWja1sc',
-#                     doc_path='./docs/pdf_file.pdf')
-
-# print(model.run(question= "안녕"))
-
